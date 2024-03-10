@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Nft-Java/blc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/blc/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-aop/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-aop/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-api/common-api-base/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-api/common-api-base/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-api/common-api-blc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-api/common-api-blc/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mp/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mp/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mq/common-mq-base/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mq/common-mq-base/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mq/common-mq-blc-user/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mq/common-mq-blc-user/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mq/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mq/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mvc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-mvc/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-redis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-redis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-threadPool/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-threadPool/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-util/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-util/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Java/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
