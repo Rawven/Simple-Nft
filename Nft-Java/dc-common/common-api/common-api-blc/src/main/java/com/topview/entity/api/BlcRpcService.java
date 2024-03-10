@@ -49,4 +49,5 @@ public interface BlcRpcService {
     void createPool(UserKey userKey, CreatePoolDTO dto);
 
     void mint(UserKey userKey, Integer poolId);
+
 }

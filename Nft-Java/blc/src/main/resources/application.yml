@@ -1,0 +1,40 @@
+dubbo:
+  protocol:
+    name: dubbo
+  registry:
+    address: nacos://10.21.32.154:8848
+    group: dubbo
+    parameters:
+      namespace: d7a1b125-8d08-47f5-bb6c-2020abe9f6f8
+spring:
+  redis:
+    address: redis://10.21.32.221:6379
+    password: 123456
+  cloud:
+    stream:
+      bindings:
+        producer-out-0:
+          destination: eventBlcToIm
+        producer-out-1:
+          destination: eventBlcToIm
+      rocketmq:
+        bindings:
+          producer-out-1:
+            producer:
+              sync: false
+              group: output-1
+          producer-out-0:
+            producer:
+              sync: false
+              group: output-0
+    nacos:
+      discovery:
+        server-addr: 10.21.32.154:8848
+server:
+  port: 8881
+jwt:
+  key: 爱你老妈
+  expire: 604800000
+logging:
+  level:
+    com.topview.api.*: DEBUG

@@ -1,0 +1,14 @@
+dubbo:
+  registries:
+    nacos:
+      protocol: nacos
+      timeout: 3s
+      address: 10.21.32.154:8848
+  consumer:
+    references:
+      Provider: # 存根类名
+        protocol: dubbo # dubbo 协议，默认 hessian2 序列化方式
+        interface: org.apache.dubbo.UserProvider # 接口需要与Java侧对应
+  logger:
+    zap-config:
+      level: info # 日志级别
