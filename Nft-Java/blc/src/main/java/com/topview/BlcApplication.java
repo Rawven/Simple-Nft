@@ -3,6 +3,7 @@ package com.topview;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * blc application
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2024/03/09
  */
 @SpringBootApplication
+@EnableAspectJAutoProxy
 @EnableDubbo
 public class BlcApplication {
     public static void main(String[] args) {

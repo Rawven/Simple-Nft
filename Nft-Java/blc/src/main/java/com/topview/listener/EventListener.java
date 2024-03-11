@@ -3,8 +3,8 @@ package com.topview.listener;
 import com.topview.client.ChainClient;
 import com.topview.constant.BlcToUserTag;
 import com.topview.constant.MqConstant;
-import com.topview.entity.struct.DataStruct;
 import com.topview.event.BlcNotice;
+import com.topview.entity.struct.DataStruct;
 import com.topview.util.JsonUtil;
 import com.topview.util.MqUtil;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class EventListener {
         //加载abi解码工具
         abiCodec = new ContractCodec(client.getCryptoSuite(), false);
         //加载abi字符串
-        poolLogicAbi = new String(Files.readAllBytes(Paths.get("src/main/resources/solidity/abi/PoolLogic.abi")));
+        poolLogicAbi = new String(Files.readAllBytes(Paths.get("Nft-Java/blc/src/main/resources/solidity/abi/PoolLogic.abi")));
         //开启监听
         //TODO 待优化
         createListen();

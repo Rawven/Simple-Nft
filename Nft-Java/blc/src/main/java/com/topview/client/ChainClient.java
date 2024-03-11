@@ -1,12 +1,12 @@
 package com.topview.client;
 
 import cn.hutool.core.convert.Convert;
+import com.topview.api.UserKey;
 import com.topview.blc.PoolData;
 import com.topview.blc.PoolLogic;
 import com.topview.blc.UserData;
 import com.topview.blc.UserLogic;
 import com.topview.config.ContractProperty;
-import com.topview.entity.dto.UserKey;
 import com.topview.util.JsonUtil;
 import java.io.InputStream;
 import javax.annotation.PostConstruct;
@@ -72,31 +72,31 @@ public class ChainClient {
     }
 
     public <T> T getContractAdminInstance(Class<T> tClass) {
-        return getContractInstance(tClass, new UserKey().setUserKey(adminKeyPair.getHexPrivateKey()));
+        return getContractInstance(tClass, adminKeyPair.getHexPrivateKey());
     }
 
-    public <T> T getContractInstance(Class<T> tClass, UserKey userKey) {
-        RBucket<Object> bucket = redissonClient.getBucket(tClass.getSimpleName() + userKey.getUserKey());
+    public <T> T getContractInstance(Class<T> tClass, String userKey) {
+        RBucket<Object> bucket = redissonClient.getBucket(tClass.getSimpleName() + userKey);
         if (bucket.isExists()) {
             return JsonUtil.jsonToObj(bucket.get().toString(), tClass);
         } else {
             if (tClass.isInstance(PoolData.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey.getUserKey());
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
                 PoolData load = PoolData.load(ContractProperty.poolDataAddress, client, cryptoKeyPair);
                 bucket.set(load);
                 return Convert.convert(tClass, load);
             } else if (tClass.isInstance(PoolLogic.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey.getUserKey());
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
                 PoolLogic load = PoolLogic.load(ContractProperty.poolLogicAddress, client, cryptoKeyPair);
                 bucket.set(load);
                 return Convert.convert(tClass, load);
             } else if (tClass.isInstance(UserLogic.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey.getUserKey());
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
                 UserLogic load = UserLogic.load(ContractProperty.userLogicAddress, client, cryptoKeyPair);
                 bucket.set(load);
                 return Convert.convert(tClass, load);
             } else if (tClass.isInstance(UserData.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey.getUserKey());
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
                 UserData load = UserData.load(ContractProperty.userDataAddress, client, cryptoKeyPair);
                 bucket.set(load);
                 return Convert.convert(tClass, load);

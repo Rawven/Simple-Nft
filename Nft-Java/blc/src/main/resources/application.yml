@@ -1,4 +1,6 @@
 dubbo:
+  application:
+    name: blc
   protocol:
     name: dubbo
   registry:
@@ -32,9 +34,16 @@ spring:
         server-addr: 10.21.32.154:8848
 server:
   port: 8881
-jwt:
-  key: 爱你老妈
-  expire: 604800000
+fisco:
+  group: group0
+  file-path: /fisco-config-dev.yml
+  contract:
+    admin: "2dbbf6b8894ed9b002445d7286124eb03291a574a23d5b3a92af654726e1ad92"
+    address:
+      poolData : "0x4c703e7fd58c4272dce1aeb76aee613f0a992d9b"
+      poolLogic: "0x6aae64261da2680e5a181d16d164ba3ebce28d7d"
+      userLogic: "0x18b94e5f1a58a282ad41d1c44b741eac3991ece0"
+      userData: "0xcf260dcdec960120593199824e237dfad1e94f59"
 logging:
   level:
     com.topview.api.*: DEBUG

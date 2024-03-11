@@ -8,7 +8,7 @@ cryptoMaterial:
 
 network:
   peers:
-    - "124.71.213.174:20200"
+    - "10.21.32.192:20200"
 
 amop:
 #  - publicKeys: [ "conf/amop/consumer_public_key_1.pem" ]
@@ -17,11 +17,7 @@ amop:
 #    privateKey: "conf/amop/consumer_private_key.p12"
 #    topicName: "PrivateTopic2"
 
-account:
-  #  keyStoreDir: "account"
-  accountFilePath: "account/admin_key_0x720fa5d41557624e24ba9771266de383e2b8f47c.pem"
-  accountFileFormat: "pem"
-  accountAddress: "0xDc9AE3AE3Ec8acA2768e1690DD20c76942552Fcf"
+
 #  password: ""
 
 

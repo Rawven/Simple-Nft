@@ -2,22 +2,28 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="common-mvc" />
-        <module name="common-api-blc" />
-        <module name="common-util" />
-        <module name="common-api-base" />
-        <module name="common-mq-blc-user" />
-        <module name="common-mq-base" />
         <module name="blc" />
-        <module name="common-aop" />
-        <module name="common-threadPool" />
-        <module name="common-mp" />
-        <module name="common-redis" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common-aop" target="11" />
+      <module name="common-api" target="11" />
+      <module name="common-api-base" target="11" />
+      <module name="common-api-blc" target="11" />
+      <module name="common-mp" target="11" />
+      <module name="common-mq" target="11" />
+      <module name="common-mq-base" target="11" />
+      <module name="common-mq-blc-user" target="11" />
+      <module name="common-mvc" target="11" />
+      <module name="common-redis" target="11" />
+      <module name="common-threadPool" target="11" />
+      <module name="common-util" target="11" />
+      <module name="dc-common" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

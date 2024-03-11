@@ -9,7 +9,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>dc-common</module>
         <module>blc</module>
     </modules>
     <properties>
@@ -30,6 +29,11 @@
         <ipfs>1.3.3</ipfs>
         <log>1.4.7</log>
         <dubbo>3.1.2</dubbo>
+        <grpc.version>1.58.0</grpc.version>
+        <protobuf-java.version>3.22.0</protobuf-java.version>
+        <protoc.version>3.22.2</protoc.version>
+        <protobuf-java.version>3.24.3</protobuf-java.version>
+        <os.detected.classifier>windows-x86_64</os.detected.classifier>
     </properties>
     <dependencyManagement>
         <dependencies>
