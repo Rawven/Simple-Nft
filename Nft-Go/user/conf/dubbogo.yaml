@@ -1,0 +1,13 @@
+dubbo:
+  registries:
+    nacos:
+      protocol: nacos
+      address: 10.21.32.154:8848
+  protocols:
+    triple:
+      name: tri
+      port: 20000
+  provider:
+    services:
+      GreeterServerImpl:
+        interface: "com.topview.api.BlcRpcService" # read from stub
