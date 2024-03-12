@@ -28,7 +28,7 @@
         <juint>4.13.2</juint>
         <ipfs>1.3.3</ipfs>
         <log>1.4.7</log>
-        <dubbo>3.1.2</dubbo>
+        <dubbo>3.3.0-beta.1</dubbo>
         <grpc.version>1.58.0</grpc.version>
         <protobuf-java.version>3.22.0</protobuf-java.version>
         <protoc.version>3.22.2</protoc.version>
@@ -37,11 +37,6 @@
     </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo-bom</artifactId>
-                <version>3.1.2</version>
-            </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>

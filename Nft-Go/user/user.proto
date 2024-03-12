@@ -25,7 +25,7 @@ message Response {
 }
 
 service User {
-  rpc register(LoginRequest) returns (Response);
-  rpc login(RegisterRequest) returns (Response);
+  rpc register(RegisterRequest) returns (Response);
+  rpc login(LoginRequest) returns (Response);
   rpc logout(Empty) returns (Response);
 }

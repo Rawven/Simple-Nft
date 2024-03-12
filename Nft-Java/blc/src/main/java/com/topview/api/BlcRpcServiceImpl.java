@@ -11,10 +11,12 @@ import com.topview.entity.struct.DataStruct;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicArray;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.tuples.generated.Tuple2;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.tuples.generated.Tuple6;
+import org.fisco.bcos.sdk.v3.crypto.keypair.CryptoKeyPair;
 import org.fisco.bcos.sdk.v3.model.TransactionReceipt;
 import org.fisco.bcos.sdk.v3.transaction.model.exception.ContractException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +28,19 @@ import org.springframework.util.Assert;
  * @author 刘家辉
  * @date 2024/03/08
  */
-@DubboService(interfaceClass = BlcRpcService.class, version = "1.0.0", timeout = 15000)
+@DubboService(interfaceClass = com.topview.api.BlcRpcService.class, version = "1.0.0",register = true,group = "dubbo",timeout = 15000)
 public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     @Autowired
     private ChainClient client;
 
     @Override
-    public Empty signUp(SignUpRequest request) {
-              signUp(request.getAddress());
-              return Empty.getDefaultInstance();
+    public SignUpResponse signUp(Empty empty) {
+           return signUp();
+    }
+
+    @Override
+    public CompletableFuture<SignUpResponse> signUpAsync(Empty request) {
+        return null;
     }
 
     @Override
@@ -44,8 +50,18 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     @Override
+    public CompletableFuture<UserBalanceResponse> getUserBalanceAsync(UserBalanceRequest request) {
+        return null;
+    }
+
+    @Override
     public ActivityAmountResponse getActivityAmount(Empty request) {
         return ActivityAmountResponse.newBuilder().setAmount(getActivityAmount()).build();
+    }
+
+    @Override
+    public CompletableFuture<ActivityAmountResponse> getActivityAmountAsync(Empty request) {
+        return null;
     }
 
     @Override
@@ -57,13 +73,28 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     @Override
+    public CompletableFuture<Empty> createActivityAsync(CreateActivityRequest request) {
+        return null;
+    }
+
+    @Override
     public com.topview.api.ActivityAndPool getIdToActivity(GetIdToActivityRequest request) {
         return getIdToActivity(request.getId());
     }
 
     @Override
+    public CompletableFuture<ActivityAndPool> getIdToActivityAsync(GetIdToActivityRequest request) {
+        return null;
+    }
+
+    @Override
     public com.topview.api.BeforeMintDTO beforeMint(BeforeMintRequest request) {
         return beforeMint(request.getId());
+    }
+
+    @Override
+    public CompletableFuture<BeforeMintDTO> beforeMintAsync(BeforeMintRequest request) {
+        return null;
     }
 
     @Override
@@ -73,14 +104,30 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     @Override
+    public CompletableFuture<Empty> getDcFromActivityAsync(GetDcFromActivityRequest request) {
+        return null;
+    }
+
+    @Override
     public UserStatusResponse getUserStatus(GetUserStatusRequest request) {
         Long status = getUserStatus(request.getHash());
         return  UserStatusResponse.newBuilder().setStatus(status).build();
     }
 
     @Override
+    public CompletableFuture<UserStatusResponse> getUserStatusAsync(GetUserStatusRequest request) {
+        return null;
+    }
+
+    @Override
     public com.topview.api.CheckDcAndReturnTimeOutputDTO checkDcAndReturnTime(CheckDcAndReturnTimeRequest request) {
         return checkDcAndReturnTime(request.getDto());
+    }
+
+    @Override
+    public CompletableFuture<CheckDcAndReturnTimeOutputDTO> checkDcAndReturnTimeAsync(
+        CheckDcAndReturnTimeRequest request) {
+        return null;
     }
 
     @Override
@@ -90,9 +137,19 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     @Override
+    public CompletableFuture<GetHashToDcIdResponse> getHashToDcIdAsync(GetHashToDcIdRequest request) {
+        return null;
+    }
+
+    @Override
     public Empty give(GiveRequest request) {
         give(request.getGiveDTO());
         return Empty.getDefaultInstance();
+    }
+
+    @Override
+    public CompletableFuture<Empty> giveAsync(GiveRequest request) {
+        return null;
     }
 
     @Override
@@ -101,8 +158,19 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     @Override
+    public CompletableFuture<DcHistoryAndMessageOutputDTO> getDcHistoryAndMessageAsync(
+        GetDcHistoryAndMessageRequest request) {
+        return null;
+    }
+
+    @Override
     public PoolAmountResponse getPoolAmount(Empty request) {
         return PoolAmountResponse.newBuilder().setAmount(getPoolAmount()).build();
+    }
+
+    @Override
+    public CompletableFuture<PoolAmountResponse> getPoolAmountAsync(Empty request) {
+        return null;
     }
 
     @Override
@@ -112,16 +180,27 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     @Override
+    public CompletableFuture<Empty> createPoolAsync(CreatePoolRequest request) {
+        return null;
+    }
+
+    @Override
     public Empty mint(MintRequest request) {
         mint(request.getUserKey().getUserKey(), request.getPoolId());
         return  Empty.getDefaultInstance();
     }
 
-    private void signUp(String address) {
-        UserLogic contract = client.getContractAdminInstance(UserLogic.class);
-        TransactionReceipt transactionReceipt = contract.signUp(address);
-        Assert.isTrue(transactionReceipt.isStatusOK(), "注册失败");
+    @Override
+    public CompletableFuture<Empty> mintAsync(MintRequest request) {
+        return null;
+    }
 
+    private SignUpResponse signUp() {
+        CryptoKeyPair pair = client.getCryptoSuite().getCryptoKeyPair();
+        UserLogic contract = client.getContractAdminInstance(UserLogic.class);
+        TransactionReceipt transactionReceipt = contract.signUp(pair.getAddress());
+        Assert.isTrue(transactionReceipt.isStatusOK(), "注册失败");
+        return SignUpResponse.newBuilder().setAddress(pair.getAddress()).setPrivateKey(pair.getHexPrivateKey()).build();
     }
 
     private String getUserBalance(String address) {

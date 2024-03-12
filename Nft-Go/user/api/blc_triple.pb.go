@@ -29,7 +29,7 @@ const _ = grpc_go.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BlcRpcServiceClient interface {
-	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment)
+	SignUp(ctx context.Context, in *emptypb.Empty, opts ...grpc_go.CallOption) (*SignUpResponse, common.ErrorWithAttachment)
 	GetUserBalance(ctx context.Context, in *UserBalanceRequest, opts ...grpc_go.CallOption) (*UserBalanceResponse, common.ErrorWithAttachment)
 	GetActivityAmount(ctx context.Context, in *emptypb.Empty, opts ...grpc_go.CallOption) (*ActivityAmountResponse, common.ErrorWithAttachment)
 	CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment)
@@ -51,7 +51,7 @@ type blcRpcServiceClient struct {
 }
 
 type BlcRpcServiceClientImpl struct {
-	SignUp                 func(ctx context.Context, in *SignUpRequest) (*emptypb.Empty, error)
+	SignUp                 func(ctx context.Context, in *emptypb.Empty) (*SignUpResponse, error)
 	GetUserBalance         func(ctx context.Context, in *UserBalanceRequest) (*UserBalanceResponse, error)
 	GetActivityAmount      func(ctx context.Context, in *emptypb.Empty) (*ActivityAmountResponse, error)
 	CreateActivity         func(ctx context.Context, in *CreateActivityRequest) (*emptypb.Empty, error)
@@ -80,8 +80,8 @@ func NewBlcRpcServiceClient(cc *triple.TripleConn) BlcRpcServiceClient {
 	return &blcRpcServiceClient{cc}
 }
 
-func (c *blcRpcServiceClient) SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment) {
-	out := new(emptypb.Empty)
+func (c *blcRpcServiceClient) SignUp(ctx context.Context, in *emptypb.Empty, opts ...grpc_go.CallOption) (*SignUpResponse, common.ErrorWithAttachment) {
+	out := new(SignUpResponse)
 	interfaceKey := ctx.Value(constant.InterfaceKey).(string)
 	return out, c.cc.Invoke(ctx, "/"+interfaceKey+"/SignUp", in, out)
 }
@@ -174,7 +174,7 @@ func (c *blcRpcServiceClient) Mint(ctx context.Context, in *MintRequest, opts ..
 // All implementations must embed UnimplementedBlcRpcServiceServer
 // for forward compatibility
 type BlcRpcServiceServer interface {
-	SignUp(context.Context, *SignUpRequest) (*emptypb.Empty, error)
+	SignUp(context.Context, *emptypb.Empty) (*SignUpResponse, error)
 	GetUserBalance(context.Context, *UserBalanceRequest) (*UserBalanceResponse, error)
 	GetActivityAmount(context.Context, *emptypb.Empty) (*ActivityAmountResponse, error)
 	CreateActivity(context.Context, *CreateActivityRequest) (*emptypb.Empty, error)
@@ -197,7 +197,7 @@ type UnimplementedBlcRpcServiceServer struct {
 	proxyImpl protocol.Invoker
 }
 
-func (UnimplementedBlcRpcServiceServer) SignUp(context.Context, *SignUpRequest) (*emptypb.Empty, error) {
+func (UnimplementedBlcRpcServiceServer) SignUp(context.Context, *emptypb.Empty) (*SignUpResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
 }
 func (UnimplementedBlcRpcServiceServer) GetUserBalance(context.Context, *UserBalanceRequest) (*UserBalanceResponse, error) {
@@ -271,7 +271,7 @@ func RegisterBlcRpcServiceServer(s grpc_go.ServiceRegistrar, srv BlcRpcServiceSe
 }
 
 func _BlcRpcService_SignUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc_go.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SignUpRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}

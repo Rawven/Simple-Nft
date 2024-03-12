@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/Nft-Java/test/src/main/resources/archetype-resources" includeSubdirectories="true" />
+    </excludeFromCompile>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -24,6 +27,7 @@
       <module name="common-threadPool" target="11" />
       <module name="common-util" target="11" />
       <module name="dc-common" target="11" />
+      <module name="test" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

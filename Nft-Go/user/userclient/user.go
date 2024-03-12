@@ -19,8 +19,8 @@ type (
 	Response        = user.Response
 
 	User interface {
-		Register(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
-		Login(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
+		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
+		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
 		Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 	}
 
@@ -35,12 +35,12 @@ func NewUser(cli zrpc.Client) User {
 	}
 }
 
-func (m *defaultUser) Register(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error) {
+func (m *defaultUser) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Register(ctx, in, opts...)
 }
 
-func (m *defaultUser) Login(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error) {
+func (m *defaultUser) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Login(ctx, in, opts...)
 }

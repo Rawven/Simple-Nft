@@ -28,8 +28,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
-	Register(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
-	Login(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
 	Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -41,7 +41,7 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 	return &userClient{cc}
 }
 
-func (c *userClient) Register(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error) {
+func (c *userClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	err := c.cc.Invoke(ctx, User_Register_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -50,7 +50,7 @@ func (c *userClient) Register(ctx context.Context, in *LoginRequest, opts ...grp
 	return out, nil
 }
 
-func (c *userClient) Login(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error) {
+func (c *userClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	err := c.cc.Invoke(ctx, User_Login_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -72,8 +72,8 @@ func (c *userClient) Logout(ctx context.Context, in *Empty, opts ...grpc.CallOpt
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
 type UserServer interface {
-	Register(context.Context, *LoginRequest) (*Response, error)
-	Login(context.Context, *RegisterRequest) (*Response, error)
+	Register(context.Context, *RegisterRequest) (*Response, error)
+	Login(context.Context, *LoginRequest) (*Response, error)
 	Logout(context.Context, *Empty) (*Response, error)
 	mustEmbedUnimplementedUserServer()
 }
@@ -82,10 +82,10 @@ type UserServer interface {
 type UnimplementedUserServer struct {
 }
 
-func (UnimplementedUserServer) Register(context.Context, *LoginRequest) (*Response, error) {
+func (UnimplementedUserServer) Register(context.Context, *RegisterRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUserServer) Login(context.Context, *RegisterRequest) (*Response, error) {
+func (UnimplementedUserServer) Login(context.Context, *LoginRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedUserServer) Logout(context.Context, *Empty) (*Response, error) {
@@ -105,7 +105,7 @@ func RegisterUserServer(s grpc.ServiceRegistrar, srv UserServer) {
 }
 
 func _User_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
+	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -117,13 +117,13 @@ func _User_Register_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: User_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).Register(ctx, req.(*LoginRequest))
+		return srv.(UserServer).Register(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterRequest)
+	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: User_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).Login(ctx, req.(*RegisterRequest))
+		return srv.(UserServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

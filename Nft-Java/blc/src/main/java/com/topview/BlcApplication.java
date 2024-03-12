@@ -13,7 +13,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @SpringBootApplication
 @EnableAspectJAutoProxy
-@EnableDubbo
+@EnableDubbo(scanBasePackages = "com.topview.api")
 public class BlcApplication {
     public static void main(String[] args) {
         SpringApplication.run(BlcApplication.class, args);

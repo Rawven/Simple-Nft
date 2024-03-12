@@ -80,25 +80,25 @@ public class ChainClient {
         if (bucket.isExists()) {
             return JsonUtil.jsonToObj(bucket.get().toString(), tClass);
         } else {
-            if (tClass.isInstance(PoolData.class)) {
+            if (tClass == PoolData.class) {
                 CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
                 PoolData load = PoolData.load(ContractProperty.poolDataAddress, client, cryptoKeyPair);
-                bucket.set(load);
+                bucket.set(JsonUtil.objToJson(load));
                 return Convert.convert(tClass, load);
-            } else if (tClass.isInstance(PoolLogic.class)) {
+            } else if (tClass==(PoolLogic.class)) {
                 CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
                 PoolLogic load = PoolLogic.load(ContractProperty.poolLogicAddress, client, cryptoKeyPair);
-                bucket.set(load);
+                bucket.set(JsonUtil.objToJson(load));
                 return Convert.convert(tClass, load);
-            } else if (tClass.isInstance(UserLogic.class)) {
+            } else if (tClass==(UserLogic.class)) {
                 CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
                 UserLogic load = UserLogic.load(ContractProperty.userLogicAddress, client, cryptoKeyPair);
-                bucket.set(load);
+                bucket.set(JsonUtil.objToJson(load));
                 return Convert.convert(tClass, load);
-            } else if (tClass.isInstance(UserData.class)) {
+            } else if (tClass==(UserData.class)) {
                 CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
                 UserData load = UserData.load(ContractProperty.userDataAddress, client, cryptoKeyPair);
-                bucket.set(load);
+                bucket.set(JsonUtil.objToJson(load));
                 return Convert.convert(tClass, load);
             } else {
                 throw new RuntimeException("未知合约");

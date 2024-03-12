@@ -10,6 +10,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/Nft-Java/dc-common/pom.xml" />
+        <option value="$PROJECT_DIR$/Nft-Java/test/pom.xml" />
       </set>
     </option>
   </component>

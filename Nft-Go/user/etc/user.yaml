@@ -1,6 +1,5 @@
 Name: user.rpc
 ListenOn: 0.0.0.0:8080
-Etcd:
+nacos:
   Hosts:
-  - 127.0.0.1:2379
-  Key: user.rpc
+  - 10.21.32.154:8848
