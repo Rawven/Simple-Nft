@@ -8,6 +8,7 @@ import (
 	"errors"
 	"github.com/spf13/viper"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"strconv"
 
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/pb/user"
@@ -30,18 +31,16 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, error) {
-	// todo: add your logic here and delete this line
-
+	//链上注册
 	dubbo, err := api.GetBlcDubbo()
 	if err != nil {
 		return nil, errors.New("dubbo连接失败")
 	}
-
 	result, err := dubbo.SignUp(l.ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, err
 	}
-
+	//本地注册
 	mod := model.User{
 		Username:   in.GetUsername(),
 		Password:   in.GetPassword(),
@@ -55,8 +54,17 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 	if tx.Error != nil {
 		return &user.Response{Message: tx.Error.Error()}, nil
 	}
+	role := model.UserRole{
+		ID:     0,
+		UserID: mod.ID,
+		RoleID: 2,
+	}
+	tx = db.Create(&role)
+	if tx.Error != nil {
+		return &user.Response{Message: tx.Error.Error()}, nil
+	}
 	key := viper.Get("key")
-	token, err := global.GetJwt(key.(string))
+	token, err := global.GetJwt(key.(string), strconv.Itoa(mod.ID))
 	if err != nil {
 		return &user.Response{Message: err.Error()}, nil
 	}

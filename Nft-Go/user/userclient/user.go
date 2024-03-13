@@ -17,11 +17,14 @@ type (
 	LoginRequest    = user.LoginRequest
 	RegisterRequest = user.RegisterRequest
 	Response        = user.Response
+	UploadRequest   = user.UploadRequest
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
 		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
 		Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
+		RefreshTokens(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
+		Upload(ctx context.Context, opts ...grpc.CallOption) (user.User_UploadClient, error)
 	}
 
 	defaultUser struct {
@@ -48,4 +51,14 @@ func (m *defaultUser) Login(ctx context.Context, in *LoginRequest, opts ...grpc.
 func (m *defaultUser) Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Logout(ctx, in, opts...)
+}
+
+func (m *defaultUser) RefreshTokens(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.RefreshTokens(ctx, in, opts...)
+}
+
+func (m *defaultUser) Upload(ctx context.Context, opts ...grpc.CallOption) (user.User_UploadClient, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.Upload(ctx, opts...)
 }

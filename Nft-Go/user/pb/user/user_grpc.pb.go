@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	User_Register_FullMethodName = "/user.User/register"
-	User_Login_FullMethodName    = "/user.User/login"
-	User_Logout_FullMethodName   = "/user.User/logout"
+	User_Register_FullMethodName      = "/user.User/register"
+	User_Login_FullMethodName         = "/user.User/login"
+	User_Logout_FullMethodName        = "/user.User/logout"
+	User_RefreshTokens_FullMethodName = "/user.User/refreshTokens"
+	User_Upload_FullMethodName        = "/user.User/upload"
 )
 
 // UserClient is the client API for User service.
@@ -31,6 +33,8 @@ type UserClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
 	Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
+	RefreshTokens(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
+	Upload(ctx context.Context, opts ...grpc.CallOption) (User_UploadClient, error)
 }
 
 type userClient struct {
@@ -68,6 +72,49 @@ func (c *userClient) Logout(ctx context.Context, in *Empty, opts ...grpc.CallOpt
 	return out, nil
 }
 
+func (c *userClient) RefreshTokens(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, User_RefreshTokens_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) Upload(ctx context.Context, opts ...grpc.CallOption) (User_UploadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &User_ServiceDesc.Streams[0], User_Upload_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userUploadClient{stream}
+	return x, nil
+}
+
+type User_UploadClient interface {
+	Send(*UploadRequest) error
+	CloseAndRecv() (*Response, error)
+	grpc.ClientStream
+}
+
+type userUploadClient struct {
+	grpc.ClientStream
+}
+
+func (x *userUploadClient) Send(m *UploadRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *userUploadClient) CloseAndRecv() (*Response, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(Response)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -75,6 +122,8 @@ type UserServer interface {
 	Register(context.Context, *RegisterRequest) (*Response, error)
 	Login(context.Context, *LoginRequest) (*Response, error)
 	Logout(context.Context, *Empty) (*Response, error)
+	RefreshTokens(context.Context, *Empty) (*Response, error)
+	Upload(User_UploadServer) error
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -90,6 +139,12 @@ func (UnimplementedUserServer) Login(context.Context, *LoginRequest) (*Response,
 }
 func (UnimplementedUserServer) Logout(context.Context, *Empty) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedUserServer) RefreshTokens(context.Context, *Empty) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshTokens not implemented")
+}
+func (UnimplementedUserServer) Upload(User_UploadServer) error {
+	return status.Errorf(codes.Unimplemented, "method Upload not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -158,6 +213,50 @@ func _User_Logout_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_RefreshTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).RefreshTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_RefreshTokens_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).RefreshTokens(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_Upload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(UserServer).Upload(&userUploadServer{stream})
+}
+
+type User_UploadServer interface {
+	SendAndClose(*Response) error
+	Recv() (*UploadRequest, error)
+	grpc.ServerStream
+}
+
+type userUploadServer struct {
+	grpc.ServerStream
+}
+
+func (x *userUploadServer) SendAndClose(m *Response) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *userUploadServer) Recv() (*UploadRequest, error) {
+	m := new(UploadRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -177,7 +276,17 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "logout",
 			Handler:    _User_Logout_Handler,
 		},
+		{
+			MethodName: "refreshTokens",
+			Handler:    _User_RefreshTokens_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "upload",
+			Handler:       _User_Upload_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "user.proto",
 }
