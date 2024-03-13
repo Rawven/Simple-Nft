@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageConst;
-import org.redisson.api.RedissonClient;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 
@@ -32,34 +30,8 @@ public class MqUtil {
             new Event(data), headers);
     }
 
-    public static boolean checkMsgIsvalid(Message<Event> msg, RedissonClient redissonClient) {
-        Object id = msg.getHeaders().get(MqConstant.HEADER_KEYS);
-        if (id == null || redissonClient.getBucket(HEAD + id).isExists()) {
-            log.info("--RocketMq 重复或非法的消息，不处理");
-            return true;
-        }
-        return false;
-    }
 
-    public static void protectMsg(Message<Event> msg, RedissonClient redissonClient) {
-        Object id = msg.getHeaders().get(MqConstant.HEADER_KEYS);
-        redissonClient.getBucket(HEAD + id).set(id, MqConstant.EXPIRE_TIME, TimeUnit.MINUTES);
-    }
 
-    public static boolean checkMsgIsvalid(Message<Event> msg, StringRedisTemplate template) {
-        Object id = msg.getHeaders().get(MqConstant.HEADER_KEYS);
-        if (id == null || Boolean.TRUE.equals(template.hasKey(HEAD + id))) {
-            log.info("--RocketMq 重复或非法的消息，不处理");
-            return true;
-        }
-        return false;
-    }
 
-    public static void protectMsg(Message<Event> msg, StringRedisTemplate template) {
-        Object id = msg.getHeaders().get(MqConstant.HEADER_KEYS);
-        if (id == null) {
-            throw new RuntimeException("消息id为空");
-        }
-        template.opsForValue().set(HEAD + id, id.toString(), MqConstant.EXPIRE_TIME, TimeUnit.MINUTES);
-    }
+
 }

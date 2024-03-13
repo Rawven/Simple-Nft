@@ -1,6 +1,8 @@
 package com.topview.client;
 
 import cn.hutool.core.convert.Convert;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.topview.api.UserKey;
 import com.topview.blc.PoolData;
 import com.topview.blc.PoolLogic;
@@ -20,10 +22,9 @@ import org.fisco.bcos.sdk.v3.config.model.ConfigProperty;
 import org.fisco.bcos.sdk.v3.crypto.CryptoSuite;
 import org.fisco.bcos.sdk.v3.crypto.keypair.CryptoKeyPair;
 import org.fisco.bcos.sdk.v3.model.CryptoType;
-import org.redisson.api.RBucket;
-import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
@@ -42,6 +43,7 @@ public class ChainClient {
     private Client client;
     private CryptoKeyPair adminKeyPair;
     private CryptoSuite cryptoSuite;
+    private Cache<Object, Object> localCache;
     @Value("${fisco.file-path}")
     private String fiscoConfigPath;
     @Value("${fisco.group}")
@@ -49,7 +51,7 @@ public class ChainClient {
     @Value("${fisco.contract.admin}")
     private String adminPrivateKey;
     @Autowired
-    private RedissonClient redissonClient;
+    private ContractProperty contractProperty;
 
     @PostConstruct
     public void init() {
@@ -66,6 +68,10 @@ public class ChainClient {
             // 从十六进制私钥字符串hexPrivateKey加载私钥对象
             adminKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(adminPrivateKey);
             client = sdk.getClient(groupId);
+            localCache = Caffeine.newBuilder()
+                .maximumSize(500)
+                .initialCapacity(10)
+                .recordStats().build();
         } catch (ConfigException e) {
             log.error("sdk初始化失败", e);
         }
@@ -76,29 +82,29 @@ public class ChainClient {
     }
 
     public <T> T getContractInstance(Class<T> tClass, String userKey) {
-        RBucket<Object> bucket = redissonClient.getBucket(tClass.getSimpleName() + userKey);
-        if (bucket.isExists()) {
-            return JsonUtil.jsonToObj(bucket.get().toString(), tClass);
+        Object contract = localCache.getIfPresent(userKey + "_" + tClass.getName());
+        if (contract!= null) {
+            return Convert.convert(tClass,contract);
         } else {
             if (tClass == PoolData.class) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
-                PoolData load = PoolData.load(ContractProperty.poolDataAddress, client, cryptoKeyPair);
-                bucket.set(JsonUtil.objToJson(load));
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(userKey);
+                PoolData load = PoolData.load(contractProperty.poolDataAddress, client, cryptoKeyPair);
+                localCache.put(userKey + "_" + tClass.getName(), load);
                 return Convert.convert(tClass, load);
             } else if (tClass==(PoolLogic.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
-                PoolLogic load = PoolLogic.load(ContractProperty.poolLogicAddress, client, cryptoKeyPair);
-                bucket.set(JsonUtil.objToJson(load));
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(userKey);
+                PoolLogic load = PoolLogic.load(contractProperty.poolLogicAddress, client, cryptoKeyPair);
+                localCache.put(userKey + "_" + tClass.getName(), load);
                 return Convert.convert(tClass, load);
             } else if (tClass==(UserLogic.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
-                UserLogic load = UserLogic.load(ContractProperty.userLogicAddress, client, cryptoKeyPair);
-                bucket.set(JsonUtil.objToJson(load));
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(userKey);
+                UserLogic load = UserLogic.load(contractProperty.userLogicAddress, client, cryptoKeyPair);
+                localCache.put(userKey + "_" + tClass.getName(), load);
                 return Convert.convert(tClass, load);
             } else if (tClass==(UserData.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
-                UserData load = UserData.load(ContractProperty.userDataAddress, client, cryptoKeyPair);
-                bucket.set(JsonUtil.objToJson(load));
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(userKey);
+                UserData load = UserData.load(contractProperty.userDataAddress, client, cryptoKeyPair);
+                localCache.put(userKey + "_" + tClass.getName(), load);
                 return Convert.convert(tClass, load);
             } else {
                 throw new RuntimeException("未知合约");

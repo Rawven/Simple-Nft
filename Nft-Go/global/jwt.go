@@ -10,10 +10,11 @@ type JwtBlc struct {
 	jwt.StandardClaims
 }
 
-func GetJwt(key string) (string, error) {
+func GetJwt(key string, userId string) (string, error) {
 	claims := JwtBlc{
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 2).Unix(),
+			Id:        userId,
 			Issuer:    "Rawven",
 		},
 	}

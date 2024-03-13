@@ -17,6 +17,10 @@ message RegisterRequest{
   string email = 3;
 }
 
+message UploadRequest {
+  bytes data=1;
+}
+
 
 message Response {
   string message = 1;
@@ -28,4 +32,6 @@ service User {
   rpc register(RegisterRequest) returns (Response);
   rpc login(LoginRequest) returns (Response);
   rpc logout(Empty) returns (Response);
+  rpc refreshTokens(Empty) returns (Response);
+  rpc upload(stream UploadRequest) returns (Response);
 }

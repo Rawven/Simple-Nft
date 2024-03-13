@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicArray;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.tuples.generated.Tuple2;
@@ -28,6 +29,7 @@ import org.springframework.util.Assert;
  * @author 刘家辉
  * @date 2024/03/08
  */
+@Slf4j
 @DubboService(interfaceClass = com.topview.api.BlcRpcService.class, version = "1.0.0",register = true,group = "dubbo",timeout = 15000)
 public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     @Autowired
@@ -197,8 +199,14 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
 
     private SignUpResponse signUp() {
         CryptoKeyPair pair = client.getCryptoSuite().getCryptoKeyPair();
+        log.error(pair.getAddress());
         UserLogic contract = client.getContractAdminInstance(UserLogic.class);
         TransactionReceipt transactionReceipt = contract.signUp(pair.getAddress());
+        log.error(String.valueOf(transactionReceipt == null));
+        log.error(transactionReceipt.getOutput());
+
+        log.error(transactionReceipt.getMessage());
+        log.error(transactionReceipt.getLogEntries().toString());
         Assert.isTrue(transactionReceipt.isStatusOK(), "注册失败");
         return SignUpResponse.newBuilder().setAddress(pair.getAddress()).setPrivateKey(pair.getHexPrivateKey()).build();
     }

@@ -13,12 +13,12 @@ import org.springframework.context.annotation.Configuration;
 
 public class ContractProperty {
     @Value("${fisco.contract.address.poolData}")
-    public static String poolDataAddress;
+    public  String poolDataAddress;
     @Value("${fisco.contract.address.poolLogic}")
-    public static String poolLogicAddress;
+    public  String poolLogicAddress;
     @Value("${fisco.contract.address.userData}")
-    public static String userDataAddress;
+    public  String userDataAddress;
     @Value("${fisco.contract.address.userLogic}")
-    public static String userLogicAddress;
+    public  String userLogicAddress;
 
 }

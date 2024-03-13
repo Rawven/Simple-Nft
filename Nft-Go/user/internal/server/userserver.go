@@ -36,3 +36,13 @@ func (s *UserServer) Logout(ctx context.Context, in *user.Empty) (*user.Response
 	l := logic.NewLogoutLogic(ctx, s.svcCtx)
 	return l.Logout(in)
 }
+
+func (s *UserServer) RefreshTokens(ctx context.Context, in *user.Empty) (*user.Response, error) {
+	l := logic.NewRefreshTokensLogic(ctx, s.svcCtx)
+	return l.RefreshTokens(in)
+}
+
+func (s *UserServer) Upload(stream user.User_UploadServer) error {
+	l := logic.NewUploadLogic(stream.Context(), s.svcCtx)
+	return l.Upload(stream)
+}
