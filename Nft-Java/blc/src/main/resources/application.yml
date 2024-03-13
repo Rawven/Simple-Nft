@@ -34,10 +34,10 @@ fisco:
   contract:
     admin: "2dbbf6b8894ed9b002445d7286124eb03291a574a23d5b3a92af654726e1ad92"
     address:
-      poolData : "0x4c703e7fd58c4272dce1aeb76aee613f0a992d9b"
-      poolLogic: "0x6aae64261da2680e5a181d16d164ba3ebce28d7d"
-      userLogic: "0x18b94e5f1a58a282ad41d1c44b741eac3991ece0"
-      userData: "0xcf260dcdec960120593199824e237dfad1e94f59"
+      poolData : "0x02c387f81f33bd252d5b6ad5952fcffa54edf5d7"
+      poolLogic: "0xe117a3ad55a3c69adab5731fd21f0b1ee61a9667"
+      userLogic: "0x7d9f2565ac99b30f2e3f26dd09c13aecbe08962f"
+      userData: "0x92c9e53ccc9ff54413cac75a0952f8e2f907b977"
 logging:
   level:
     com.topview.api.*: DEBUG

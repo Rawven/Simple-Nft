@@ -50,6 +50,8 @@ public class ChainClient {
     private String groupId;
     @Value("${fisco.contract.admin}")
     private String adminPrivateKey;
+    @Autowired
+    private ContractProperty contractProperty;
 
     @PostConstruct
     public void init() {
@@ -85,23 +87,23 @@ public class ChainClient {
             return Convert.convert(tClass,contract);
         } else {
             if (tClass == PoolData.class) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
-                PoolData load = PoolData.load(ContractProperty.poolDataAddress, client, cryptoKeyPair);
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(userKey);
+                PoolData load = PoolData.load(contractProperty.poolDataAddress, client, cryptoKeyPair);
                 localCache.put(userKey + "_" + tClass.getName(), load);
                 return Convert.convert(tClass, load);
             } else if (tClass==(PoolLogic.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
-                PoolLogic load = PoolLogic.load(ContractProperty.poolLogicAddress, client, cryptoKeyPair);
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(userKey);
+                PoolLogic load = PoolLogic.load(contractProperty.poolLogicAddress, client, cryptoKeyPair);
                 localCache.put(userKey + "_" + tClass.getName(), load);
                 return Convert.convert(tClass, load);
             } else if (tClass==(UserLogic.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
-                UserLogic load = UserLogic.load(ContractProperty.userLogicAddress, client, cryptoKeyPair);
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(userKey);
+                UserLogic load = UserLogic.load(contractProperty.userLogicAddress, client, cryptoKeyPair);
                 localCache.put(userKey + "_" + tClass.getName(), load);
                 return Convert.convert(tClass, load);
             } else if (tClass==(UserData.class)) {
-                CryptoKeyPair cryptoKeyPair = cryptoSuite.getCryptoKeyPair().createKeyPair(userKey);
-                UserData load = UserData.load(ContractProperty.userDataAddress, client, cryptoKeyPair);
+                CryptoKeyPair cryptoKeyPair = cryptoSuite.getKeyPairFactory().createKeyPair(userKey);
+                UserData load = UserData.load(contractProperty.userDataAddress, client, cryptoKeyPair);
                 localCache.put(userKey + "_" + tClass.getName(), load);
                 return Convert.convert(tClass, load);
             } else {
