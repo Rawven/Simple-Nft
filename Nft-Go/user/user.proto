@@ -6,6 +6,20 @@ option go_package="./user";
 message Empty{
 
 }
+
+message Notice {
+  string title = 1;
+  string description = 2;
+  string publishTime = 3;
+  string userAddress = 4;
+  int32 id = 5;
+  int32 Type = 6;
+}
+
+message NoticeList {
+  repeated Notice notices = 1;
+}
+
 message LoginRequest {
   string username = 1;
   string password = 2;
@@ -22,6 +36,14 @@ message UploadRequest {
   bytes data=1;
 }
 
+message TitleNoticeRequest {
+  string title = 1;
+}
+
+message IdNoticeRequest {
+  int32 id = 1;
+}
+
 
 message Response {
   string message = 1;
@@ -35,4 +57,7 @@ service User {
   rpc logout(Empty) returns (Response);
   rpc refreshTokens(Empty) returns (Response);
   rpc upload(stream UploadRequest) returns (Response);
+  rpc getAllNotices(Empty) returns (NoticeList);
+  rpc getNoticeByTitle(TitleNoticeRequest) returns (NoticeList);
+  rpc getNoticeById(IdNoticeRequest) returns (Notice);
 }

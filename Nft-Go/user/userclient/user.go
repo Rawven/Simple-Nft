@@ -13,11 +13,15 @@ import (
 )
 
 type (
-	Empty           = user.Empty
-	LoginRequest    = user.LoginRequest
-	RegisterRequest = user.RegisterRequest
-	Response        = user.Response
-	UploadRequest   = user.UploadRequest
+	Empty              = user.Empty
+	IdNoticeRequest    = user.IdNoticeRequest
+	LoginRequest       = user.LoginRequest
+	Notice             = user.Notice
+	NoticeList         = user.NoticeList
+	RegisterRequest    = user.RegisterRequest
+	Response           = user.Response
+	TitleNoticeRequest = user.TitleNoticeRequest
+	UploadRequest      = user.UploadRequest
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
@@ -25,6 +29,9 @@ type (
 		Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 		RefreshTokens(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 		Upload(ctx context.Context, opts ...grpc.CallOption) (user.User_UploadClient, error)
+		GetAllNotices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NoticeList, error)
+		GetNoticeByTitle(ctx context.Context, in *TitleNoticeRequest, opts ...grpc.CallOption) (*NoticeList, error)
+		GetNoticeById(ctx context.Context, in *IdNoticeRequest, opts ...grpc.CallOption) (*Notice, error)
 	}
 
 	defaultUser struct {
@@ -61,4 +68,19 @@ func (m *defaultUser) RefreshTokens(ctx context.Context, in *Empty, opts ...grpc
 func (m *defaultUser) Upload(ctx context.Context, opts ...grpc.CallOption) (user.User_UploadClient, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Upload(ctx, opts...)
+}
+
+func (m *defaultUser) GetAllNotices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NoticeList, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetAllNotices(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetNoticeByTitle(ctx context.Context, in *TitleNoticeRequest, opts ...grpc.CallOption) (*NoticeList, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetNoticeByTitle(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetNoticeById(ctx context.Context, in *IdNoticeRequest, opts ...grpc.CallOption) (*Notice, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetNoticeById(ctx, in, opts...)
 }

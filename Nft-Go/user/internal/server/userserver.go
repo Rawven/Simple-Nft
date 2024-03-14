@@ -46,3 +46,18 @@ func (s *UserServer) Upload(stream user.User_UploadServer) error {
 	l := logic.NewUploadLogic(stream.Context(), s.svcCtx)
 	return l.Upload(stream)
 }
+
+func (s *UserServer) GetAllNotices(ctx context.Context, in *user.Empty) (*user.NoticeList, error) {
+	l := logic.NewGetAllNoticesLogic(ctx, s.svcCtx)
+	return l.GetAllNotices(in)
+}
+
+func (s *UserServer) GetNoticeByTitle(ctx context.Context, in *user.TitleNoticeRequest) (*user.NoticeList, error) {
+	l := logic.NewGetNoticeByTitleLogic(ctx, s.svcCtx)
+	return l.GetNoticeByTitle(in)
+}
+
+func (s *UserServer) GetNoticeById(ctx context.Context, in *user.IdNoticeRequest) (*user.Notice, error) {
+	l := logic.NewGetNoticeByIdLogic(ctx, s.svcCtx)
+	return l.GetNoticeById(in)
+}
