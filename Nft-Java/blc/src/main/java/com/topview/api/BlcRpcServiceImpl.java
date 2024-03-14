@@ -198,15 +198,9 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     private SignUpResponse signUp() {
-        CryptoKeyPair pair = client.getCryptoSuite().getCryptoKeyPair();
-        log.error(pair.getAddress());
+        CryptoKeyPair pair = client.getCryptoSuite().generateRandomKeyPair();
         UserLogic contract = client.getContractAdminInstance(UserLogic.class);
         TransactionReceipt transactionReceipt = contract.signUp(pair.getAddress());
-        log.error(String.valueOf(transactionReceipt == null));
-        log.error(transactionReceipt.getOutput());
-
-        log.error(transactionReceipt.getMessage());
-        log.error(transactionReceipt.getLogEntries().toString());
         Assert.isTrue(transactionReceipt.isStatusOK(), "注册失败");
         return SignUpResponse.newBuilder().setAddress(pair.getAddress()).setPrivateKey(pair.getHexPrivateKey()).build();
     }

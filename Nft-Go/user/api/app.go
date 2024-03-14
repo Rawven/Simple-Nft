@@ -3,7 +3,7 @@ package api
 import (
 	"dubbo.apache.org/dubbo-go/v3/config"
 	_ "dubbo.apache.org/dubbo-go/v3/imports"
-	"log/slog"
+	"github.com/dubbogo/gost/log/logger"
 )
 
 // 引入生成的接口结构
@@ -15,7 +15,7 @@ func InitDubbo() {
 	if err := config.Load(); err != nil {
 		panic(err)
 	}
-	slog.Error("dubbo init success")
+	logger.Info("dubbo init success")
 }
 
 func GetBlcDubbo() (*BlcRpcServiceClientImpl, error) {

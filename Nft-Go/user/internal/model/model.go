@@ -7,6 +7,7 @@ type User struct {
 	PrivateKey string `json:"private_key"`
 	Address    string `json:"address"`
 	Email      string `json:"email"`
+	Avatar     string `json:"avatar"`
 }
 
 type Role struct {

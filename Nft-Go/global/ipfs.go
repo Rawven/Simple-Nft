@@ -3,6 +3,7 @@ package global
 import (
 	"bytes"
 	"context"
+	"github.com/dubbogo/gost/log/logger"
 	shell "github.com/ipfs/go-ipfs-api"
 	"io/ioutil"
 )
@@ -20,6 +21,7 @@ func InitIpfs(url string) {
 		Url: url,
 		Sh:  sh,
 	}
+	logger.Info("ipfs connect success")
 }
 
 func GetIpfs() Ipfs {
