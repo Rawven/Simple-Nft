@@ -94,12 +94,17 @@ func main() {
 			}
 			// ack message
 			for _, mv := range mvs {
+				//TODO 处理消息
+
+				tag := *mv.GetTag()
+				if tag == "xxxxxx" {
+
+				} else if tag == "xxxxxx" {
+
+				}
+
 				simpleConsumer.Ack(context.TODO(), mv)
-				fmt.Println(mv)
 			}
-			fmt.Println("wait a moment")
-			fmt.Println()
-			time.Sleep(time.Second * 3)
 		}
 	}()
 	// run for a while
