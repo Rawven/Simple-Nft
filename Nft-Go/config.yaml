@@ -1,6 +1,6 @@
 mysql:
   dsn: root:root@tcp(10.21.32.154:3306)/nft-go?charset=utf8mb4&parseTime=True&loc=Local
 redis:
-  address: redis://10.21.32.221:6379
+  address: 10.21.32.221:6379
   password: 123456
-jwt: rawven
+key: rawven

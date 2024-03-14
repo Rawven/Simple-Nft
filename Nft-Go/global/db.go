@@ -1,11 +1,11 @@
 package global
 
 import (
+	"github.com/dubbogo/gost/log/logger"
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"log/slog"
 )
 
 var dbMysql *gorm.DB
@@ -17,14 +17,14 @@ func init() {
 	viper.SetConfigType("yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
-		slog.Error("viper read config failed, err:", err)
+		logger.Info("viper read config failed, err:", err)
 	}
 }
 
 func InitMysql() {
 	dsn := viper.GetString("mysql.dsn")
 	dbMysql, _ = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	slog.Info("mysql connect success")
+	logger.Info("mysql connect success")
 }
 
 func GetMysql() *gorm.DB {
@@ -37,7 +37,7 @@ func InitRedis() {
 		Password: viper.GetString("redis.password"), // no password set
 		DB:       0,                                 // use default DB
 	})
-	slog.Info("redis connect success")
+	logger.Info("redis connect success")
 
 }
 func GetRedis() *redis.Client {
