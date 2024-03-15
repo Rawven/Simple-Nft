@@ -59,188 +59,197 @@ public class UserData extends Contract {
         return ABI;
     }
 
-    public BigInteger getBalanceOf(String _user) throws ContractException {
-        final Function function = new Function(FUNC_GETBALANCEOF, 
-                Arrays.<Type>asList(new Address(_user)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
-        return executeCallWithSingleValueReturn(function, BigInteger.class);
-    }
-
-    public void getBalanceOf(String _user, CallCallback callback) throws ContractException {
-        final Function function = new Function(FUNC_GETBALANCEOF, 
-                Arrays.<Type>asList(new Address(_user)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
-        asyncExecuteCall(function, callback);
-    }
-
-    public BigInteger getUserStatus(String _user) throws ContractException {
-        final Function function = new Function(FUNC_GETUSERSTATUS, 
-                Arrays.<Type>asList(new Address(_user)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
-        return executeCallWithSingleValueReturn(function, BigInteger.class);
-    }
-
-    public void getUserStatus(String _user, CallCallback callback) throws ContractException {
-        final Function function = new Function(FUNC_GETUSERSTATUS, 
-                Arrays.<Type>asList(new Address(_user)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
-        asyncExecuteCall(function, callback);
-    }
-
-    public TransactionReceipt resetBalanceOf(String _user) {
-        final Function function = new Function(
-                FUNC_RESETBALANCEOF, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return executeTransaction(function);
-    }
-
-    public String getSignedTransactionForResetBalanceOf(String _user) {
-        final Function function = new Function(
-                FUNC_RESETBALANCEOF, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return createSignedTransaction(function);
-    }
-
-    public String resetBalanceOf(String _user, TransactionCallback callback) {
-        final Function function = new Function(
-                FUNC_RESETBALANCEOF, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return asyncExecuteTransaction(function, callback);
-    }
-
-    public Tuple1<String> getResetBalanceOfInput(TransactionReceipt transactionReceipt) {
-        String data = transactionReceipt.getInput().substring(10);
-        final Function function = new Function(FUNC_RESETBALANCEOF, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
-        List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple1<String>(
-
-                (String) results.get(0).getValue()
-                );
-    }
-
-    public TransactionReceipt resetUserStatus(String _user) {
-        final Function function = new Function(
-                FUNC_RESETUSERSTATUS, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return executeTransaction(function);
-    }
-
-    public String getSignedTransactionForResetUserStatus(String _user) {
-        final Function function = new Function(
-                FUNC_RESETUSERSTATUS, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return createSignedTransaction(function);
-    }
-
-    public String resetUserStatus(String _user, TransactionCallback callback) {
-        final Function function = new Function(
-                FUNC_RESETUSERSTATUS, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return asyncExecuteTransaction(function, callback);
-    }
-
-    public Tuple1<String> getResetUserStatusInput(TransactionReceipt transactionReceipt) {
-        String data = transactionReceipt.getInput().substring(10);
-        final Function function = new Function(FUNC_RESETUSERSTATUS, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
-        List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple1<String>(
-
-                (String) results.get(0).getValue()
-                );
-    }
-
-    public TransactionReceipt setBalanceOf(String _user, BigInteger _balance) {
-        final Function function = new Function(
-                FUNC_SETBALANCEOF, 
-                Arrays.<Type>asList(new Address(_user),
-                new Uint256(_balance)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return executeTransaction(function);
-    }
-
-    public String getSignedTransactionForSetBalanceOf(String _user, BigInteger _balance) {
-        final Function function = new Function(
-                FUNC_SETBALANCEOF, 
-                Arrays.<Type>asList(new Address(_user),
-                new Uint256(_balance)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return createSignedTransaction(function);
-    }
-
-    public String setBalanceOf(String _user, BigInteger _balance, TransactionCallback callback) {
-        final Function function = new Function(
-                FUNC_SETBALANCEOF, 
-                Arrays.<Type>asList(new Address(_user),
-                new Uint256(_balance)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return asyncExecuteTransaction(function, callback);
-    }
-
-    public Tuple2<String, BigInteger> getSetBalanceOfInput(TransactionReceipt transactionReceipt) {
-        String data = transactionReceipt.getInput().substring(10);
-        final Function function = new Function(FUNC_SETBALANCEOF, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Uint256>() {}));
-        List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple2<String, BigInteger>(
-
-                (String) results.get(0).getValue(), 
-                (BigInteger) results.get(1).getValue()
-                );
-    }
-
-    public TransactionReceipt setUserStatus(String _user) {
-        final Function function = new Function(
-                FUNC_SETUSERSTATUS, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return executeTransaction(function);
-    }
-
-    public String getSignedTransactionForSetUserStatus(String _user) {
-        final Function function = new Function(
-                FUNC_SETUSERSTATUS, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return createSignedTransaction(function);
-    }
-
-    public String setUserStatus(String _user, TransactionCallback callback) {
-        final Function function = new Function(
-                FUNC_SETUSERSTATUS, 
-                Arrays.<Type>asList(new Address(_user)),
-                Collections.<TypeReference<?>>emptyList(), 0);
-        return asyncExecuteTransaction(function, callback);
-    }
-
-    public Tuple1<String> getSetUserStatusInput(TransactionReceipt transactionReceipt) {
-        String data = transactionReceipt.getInput().substring(10);
-        final Function function = new Function(FUNC_SETUSERSTATUS, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
-        List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple1<String>(
-
-                (String) results.get(0).getValue()
-                );
-    }
-
     public static UserData load(String contractAddress, Client client, CryptoKeyPair credential) {
         return new UserData(contractAddress, client, credential);
     }
 
     public static UserData deploy(Client client, CryptoKeyPair credential) throws
-            ContractException {
+        ContractException {
         return deploy(UserData.class, client, credential, getBinary(client.getCryptoSuite()), getABI(), null, null);
+    }
+
+    public BigInteger getBalanceOf(String _user) throws ContractException {
+        final Function function = new Function(FUNC_GETBALANCEOF,
+            Arrays.<Type>asList(new Address(_user)),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+            }));
+        return executeCallWithSingleValueReturn(function, BigInteger.class);
+    }
+
+    public void getBalanceOf(String _user, CallCallback callback) throws ContractException {
+        final Function function = new Function(FUNC_GETBALANCEOF,
+            Arrays.<Type>asList(new Address(_user)),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+            }));
+        asyncExecuteCall(function, callback);
+    }
+
+    public BigInteger getUserStatus(String _user) throws ContractException {
+        final Function function = new Function(FUNC_GETUSERSTATUS,
+            Arrays.<Type>asList(new Address(_user)),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+            }));
+        return executeCallWithSingleValueReturn(function, BigInteger.class);
+    }
+
+    public void getUserStatus(String _user, CallCallback callback) throws ContractException {
+        final Function function = new Function(FUNC_GETUSERSTATUS,
+            Arrays.<Type>asList(new Address(_user)),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+            }));
+        asyncExecuteCall(function, callback);
+    }
+
+    public TransactionReceipt resetBalanceOf(String _user) {
+        final Function function = new Function(
+            FUNC_RESETBALANCEOF,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return executeTransaction(function);
+    }
+
+    public String getSignedTransactionForResetBalanceOf(String _user) {
+        final Function function = new Function(
+            FUNC_RESETBALANCEOF,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return createSignedTransaction(function);
+    }
+
+    public String resetBalanceOf(String _user, TransactionCallback callback) {
+        final Function function = new Function(
+            FUNC_RESETBALANCEOF,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return asyncExecuteTransaction(function, callback);
+    }
+
+    public Tuple1<String> getResetBalanceOfInput(TransactionReceipt transactionReceipt) {
+        String data = transactionReceipt.getInput().substring(10);
+        final Function function = new Function(FUNC_RESETBALANCEOF,
+            Arrays.<Type>asList(),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+            }));
+        List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
+        return new Tuple1<String>(
+
+            (String) results.get(0).getValue()
+        );
+    }
+
+    public TransactionReceipt resetUserStatus(String _user) {
+        final Function function = new Function(
+            FUNC_RESETUSERSTATUS,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return executeTransaction(function);
+    }
+
+    public String getSignedTransactionForResetUserStatus(String _user) {
+        final Function function = new Function(
+            FUNC_RESETUSERSTATUS,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return createSignedTransaction(function);
+    }
+
+    public String resetUserStatus(String _user, TransactionCallback callback) {
+        final Function function = new Function(
+            FUNC_RESETUSERSTATUS,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return asyncExecuteTransaction(function, callback);
+    }
+
+    public Tuple1<String> getResetUserStatusInput(TransactionReceipt transactionReceipt) {
+        String data = transactionReceipt.getInput().substring(10);
+        final Function function = new Function(FUNC_RESETUSERSTATUS,
+            Arrays.<Type>asList(),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+            }));
+        List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
+        return new Tuple1<String>(
+
+            (String) results.get(0).getValue()
+        );
+    }
+
+    public TransactionReceipt setBalanceOf(String _user, BigInteger _balance) {
+        final Function function = new Function(
+            FUNC_SETBALANCEOF,
+            Arrays.<Type>asList(new Address(_user),
+                new Uint256(_balance)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return executeTransaction(function);
+    }
+
+    public String getSignedTransactionForSetBalanceOf(String _user, BigInteger _balance) {
+        final Function function = new Function(
+            FUNC_SETBALANCEOF,
+            Arrays.<Type>asList(new Address(_user),
+                new Uint256(_balance)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return createSignedTransaction(function);
+    }
+
+    public String setBalanceOf(String _user, BigInteger _balance, TransactionCallback callback) {
+        final Function function = new Function(
+            FUNC_SETBALANCEOF,
+            Arrays.<Type>asList(new Address(_user),
+                new Uint256(_balance)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return asyncExecuteTransaction(function, callback);
+    }
+
+    public Tuple2<String, BigInteger> getSetBalanceOfInput(TransactionReceipt transactionReceipt) {
+        String data = transactionReceipt.getInput().substring(10);
+        final Function function = new Function(FUNC_SETBALANCEOF,
+            Arrays.<Type>asList(),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+            }, new TypeReference<Uint256>() {
+            }));
+        List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
+        return new Tuple2<String, BigInteger>(
+
+            (String) results.get(0).getValue(),
+            (BigInteger) results.get(1).getValue()
+        );
+    }
+
+    public TransactionReceipt setUserStatus(String _user) {
+        final Function function = new Function(
+            FUNC_SETUSERSTATUS,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return executeTransaction(function);
+    }
+
+    public String getSignedTransactionForSetUserStatus(String _user) {
+        final Function function = new Function(
+            FUNC_SETUSERSTATUS,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return createSignedTransaction(function);
+    }
+
+    public String setUserStatus(String _user, TransactionCallback callback) {
+        final Function function = new Function(
+            FUNC_SETUSERSTATUS,
+            Arrays.<Type>asList(new Address(_user)),
+            Collections.<TypeReference<?>>emptyList(), 0);
+        return asyncExecuteTransaction(function, callback);
+    }
+
+    public Tuple1<String> getSetUserStatusInput(TransactionReceipt transactionReceipt) {
+        String data = transactionReceipt.getInput().substring(10);
+        final Function function = new Function(FUNC_SETUSERSTATUS,
+            Arrays.<Type>asList(),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+            }));
+        List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
+        return new Tuple1<String>(
+
+            (String) results.get(0).getValue()
+        );
     }
 }

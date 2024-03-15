@@ -6,7 +6,10 @@ import (
 	"Nft-Go/user/internal/config"
 	server2 "Nft-Go/user/internal/server"
 	"Nft-Go/user/internal/svc"
+	"Nft-Go/user/mq"
 	"Nft-Go/user/pb/user"
+	"Nft-Go/user/sse"
+	"github.com/dubbogo/gost/log/logger"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -14,15 +17,19 @@ import (
 )
 
 func main() {
+	//config
+	global.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
 	//db
 	global.InitMysql()
 	global.InitRedis()
 	global.InitIpfs("localhost:5001")
-
+	//sse
+	sse.InitSse()
+	//mq
+	mq.InitMq()
 	//api
 	api.InitDubbo()
-
-	//config
+	//other
 	log := logc.LogConf{
 		Encoding: "plain",
 	}
@@ -33,6 +40,6 @@ func main() {
 	s := zrpc.MustNewServer(c.RpcServerConf, func(server *grpc.Server) {
 		user.RegisterUserServer(server, server2.NewUserServer(ctx))
 	})
-
+	logger.Info("server start success")
 	s.Start()
 }

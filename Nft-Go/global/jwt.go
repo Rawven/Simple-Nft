@@ -34,5 +34,4 @@ func ParseToken(token string) (*JwtBlc, error) {
 		return claims, nil
 	}
 	return nil, errors.New("token无效")
-
 }

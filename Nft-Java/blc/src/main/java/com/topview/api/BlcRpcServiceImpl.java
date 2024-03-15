@@ -30,14 +30,14 @@ import org.springframework.util.Assert;
  * @date 2024/03/08
  */
 @Slf4j
-@DubboService(interfaceClass = com.topview.api.BlcRpcService.class, version = "1.0.0",register = true,group = "dubbo",timeout = 15000)
+@DubboService(interfaceClass = com.topview.api.BlcRpcService.class, version = "1.0.0", register = true, group = "dubbo", timeout = 15000)
 public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     @Autowired
     private ChainClient client;
 
     @Override
     public SignUpResponse signUp(Empty empty) {
-           return signUp();
+        return signUp();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     @Override
     public UserStatusResponse getUserStatus(GetUserStatusRequest request) {
         Long status = getUserStatus(request.getHash());
-        return  UserStatusResponse.newBuilder().setStatus(status).build();
+        return UserStatusResponse.newBuilder().setStatus(status).build();
     }
 
     @Override
@@ -189,7 +189,7 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     @Override
     public Empty mint(MintRequest request) {
         mint(request.getUserKey().getUserKey(), request.getPoolId());
-        return  Empty.getDefaultInstance();
+        return Empty.getDefaultInstance();
     }
 
     @Override
@@ -227,7 +227,7 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
 
     private void createActivity(String userKey, CreateActivityDTO args) {
         PoolLogic contract = client.getContractInstance(PoolLogic.class, userKey);
-        TransactionReceipt activity = contract.createActivity(args.getName(), args.getPassword().toByteArray(),args.getCid(), args.getDcName(), BigInteger.valueOf(args.getAmount()));
+        TransactionReceipt activity = contract.createActivity(args.getName(), args.getPassword().toByteArray(), args.getCid(), args.getDcName(), BigInteger.valueOf(args.getAmount()));
         Assert.isTrue(activity.isStatusOK(), "创建活动失败");
     }
 
@@ -283,7 +283,7 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
             for (ByteString byteString : list) {
                 hashList.add(byteString.toByteArray());
             }
-            Tuple2<Boolean, List<BigInteger>> tuple2 = contract.checkDcAndReturnTime(dto.getOwner(),hashList);
+            Tuple2<Boolean, List<BigInteger>> tuple2 = contract.checkDcAndReturnTime(dto.getOwner(), hashList);
             List<BigInteger> value2 = tuple2.getValue2();
             List<Long> timeList = new ArrayList<>();
             for (BigInteger bigInteger : value2) {

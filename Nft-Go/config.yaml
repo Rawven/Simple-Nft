@@ -4,3 +4,6 @@ redis:
   address: 10.21.32.221:6379
   password: 123456
 key: rawven
+rocketmq:
+  group: testGroup
+  nameserver: 10.21.32.221:9876

@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Nft-Go/gateway/blc.pb" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Nft-Go/gateway/hello.pb.go" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Nft-Go/gateway/user.pb" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/Nft-Java/blc/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Nft-Java/blc/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Nft-Java/dc-common/common-aop/src/main/java" charset="UTF-8" />

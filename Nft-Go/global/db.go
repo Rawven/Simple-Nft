@@ -11,8 +11,8 @@ import (
 var dbMysql *gorm.DB
 var dbRedis *redis.Client
 
-func init() {
-	viper.AddConfigPath("D:\\CodeProjects\\Nft-Project\\Nft-Go")
+func InitConfig(path string) {
+	viper.AddConfigPath(path)
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	err := viper.ReadInConfig()

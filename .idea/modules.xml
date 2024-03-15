@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Nft-Go.iml" filepath="$PROJECT_DIR$/Nft-Go.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Nft-Project.iml" filepath="$PROJECT_DIR$/.idea/Nft-Project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/gateway.iml" filepath="$PROJECT_DIR$/gateway.iml" />
     </modules>
   </component>
 </project>

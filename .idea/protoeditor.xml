@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProtobufLanguageSettings">
+    <option name="importPathEntries">
+      <list>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/Nft-Java/blc/target/protoc-dependencies/8c845a7181833ae7205c4ce373a6a676" />
+        </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/Nft-Java/blc/target/protoc-dependencies/8c845a7181833ae7205c4ce373a6a676" />
+        </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/Nft-Java/blc/target/protoc-dependencies/025728869d2112cce4961a820a8cf92d" />
+        </ImportPathEntry>
+      </list>
+    </option>
+  </component>
+</project>
