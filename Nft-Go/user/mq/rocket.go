@@ -18,6 +18,9 @@
 package mq
 
 import (
+	"Nft-Go/global"
+	"Nft-Go/user/internal/logic"
+	"Nft-Go/user/internal/model"
 	"context"
 	"dubbo.apache.org/dubbo-go/v3/logger/zap"
 	"github.com/apache/rocketmq-client-go/v2"
@@ -25,6 +28,7 @@ import (
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/rlog"
 	"github.com/dubbogo/gost/log/logger"
+	"github.com/spf13/viper"
 	"os"
 )
 
@@ -33,15 +37,38 @@ func InitMq() {
 	// 设置推送消费者
 	c, _ := rocketmq.NewPushConsumer(
 		//消费组
-		consumer.WithGroupName("testGroup"),
+		consumer.WithGroupName(viper.Get("rocketmq.group").(string)),
 		// namesrv地址
-		consumer.WithNameServer([]string{"10.21.32.221:9876"}),
+		consumer.WithNameServer([]string{viper.Get("rocketmq.nameserver").(string)}),
+		consumer.WithConsumerModel(consumer.BroadCasting),
 	)
 	// 必须先在 开始前
 	err := c.Subscribe("Nft-Go", consumer.MessageSelector{}, func(ctx context.Context, ext ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
 		for i := range ext {
-			logger.Info("subscribe callback:%v \n", ext[i])
+			logger.Info("Rocketmq Received:%v \n", ext[i])
+			json := global.GetFastJson()
+			data, err := json.ParseBytes(ext[i].Body)
+			switch ext[i].GetTags() {
+			case "createUser":
+				if err != nil {
+					return 0, err
+				}
+				err = logic.SaveNotice(model.Notice{
+					Title:       data.Get("title").String(),
+					Description: data.Get("description").String(),
+					PublishTime: data.Get("publishTime").String(),
+					UserAddress: data.Get("userAddress").String(),
+					Type:        data.Get("type").GetInt(),
+				})
+				if err != nil {
+					return 0, err
+				}
+				break
+			default:
+				break
+			}
 		}
+
 		return consumer.ConsumeSuccess, nil
 	})
 	if err != nil {
