@@ -8,6 +8,7 @@ import (
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/mq"
 	"Nft-Go/user/pb/user"
+	"Nft-Go/user/sse"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logc"
@@ -22,6 +23,8 @@ func main() {
 	global.InitMysql()
 	global.InitRedis()
 	global.InitIpfs("localhost:5001")
+	//sse
+	sse.InitSse()
 	//mq
 	mq.InitMq()
 	//api

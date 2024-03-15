@@ -49,7 +49,7 @@ func InitMq() {
 			json := global.GetFastJson()
 			data, err := json.ParseBytes(ext[i].Body)
 			switch ext[i].GetTags() {
-			case "createUser":
+			case "createPoolNotice":
 				if err != nil {
 					return 0, err
 				}
@@ -60,6 +60,7 @@ func InitMq() {
 					UserAddress: data.Get("userAddress").String(),
 					Type:        data.Get("type").GetInt(),
 				})
+				//TODO 发送通知 sse通知所有用户
 				if err != nil {
 					return 0, err
 				}

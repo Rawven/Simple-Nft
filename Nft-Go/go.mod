@@ -16,6 +16,7 @@ require (
 	github.com/zeromicro/go-zero v1.6.3
 	google.golang.org/grpc v1.62.1
 	google.golang.org/protobuf v1.33.0
+	gopkg.in/antage/eventsource.v1 v1.0.0-20150318155416-803f4c5af225
 	gorm.io/driver/mysql v1.5.4
 	gorm.io/gorm v1.25.7
 )
@@ -76,7 +77,7 @@ require (
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1 // indirect
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
