@@ -23,8 +23,8 @@ func NewGiveDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GiveDcLogi
 	}
 }
 
-func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Empty, error) {
+func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.CommonResult, error) {
 	// todo: add your logic here and delete this line
 
-	return &nft.Empty{}, nil
+	return &nft.CommonResult{}, nil
 }

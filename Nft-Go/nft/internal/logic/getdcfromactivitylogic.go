@@ -23,8 +23,8 @@ func NewGetDcFromActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 	}
 }
 
-func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequest) (*nft.Empty, error) {
+func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequest) (*nft.CommonResult, error) {
 	// todo: add your logic here and delete this line
 
-	return &nft.Empty{}, nil
+	return &nft.CommonResult{}, nil
 }

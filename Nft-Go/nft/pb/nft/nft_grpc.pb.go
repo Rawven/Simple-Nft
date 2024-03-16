@@ -44,19 +44,19 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NftClient interface {
 	GetMessageByHash(ctx context.Context, in *GetMessageByHashRequest, opts ...grpc.CallOption) (*GetMessageByHashDTO, error)
-	CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*Empty, error)
-	GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*Empty, error)
+	CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*CommonResult, error)
+	GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*CommonResult, error)
 	GetAllActivity(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ActivityPageVOList, error)
 	GetOneActivity(ctx context.Context, in *GetOneActivityRequest, opts ...grpc.CallOption) (*ActivityDetailsVO, error)
 	SearchActivities(ctx context.Context, in *SearchActivitiesRequest, opts ...grpc.CallOption) (*ActivityPageVOList, error)
-	GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*Empty, error)
+	GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*CommonResult, error)
 	GetAllDc(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DcPageVOList, error)
 	SelectDc(ctx context.Context, in *SelectDcRequest, opts ...grpc.CallOption) (*DcPageVOList, error)
 	GetDcById(ctx context.Context, in *GetDcByIdRequest, opts ...grpc.CallOption) (*DcDetailVO, error)
 	GetMyDc(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DcPageVOList, error)
 	GetDigitalCollectionHistory(ctx context.Context, in *GetDigitalCollectionHistoryRequest, opts ...grpc.CallOption) (*CollectionMessageOnChainVO, error)
-	CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*Empty, error)
-	BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*Empty, error)
+	CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*CommonResult, error)
+	BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*CommonResult, error)
 	SelectPool(ctx context.Context, in *SelectPoolRequest, opts ...grpc.CallOption) (*PoolPageVOList, error)
 	GetPoolById(ctx context.Context, in *GetPoolByIdRequest, opts ...grpc.CallOption) (*PoolDetailsVO, error)
 	GetAllPool(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolPageVOList, error)
@@ -80,8 +80,8 @@ func (c *nftClient) GetMessageByHash(ctx context.Context, in *GetMessageByHashRe
 	return out, nil
 }
 
-func (c *nftClient) CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *nftClient) CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*CommonResult, error) {
+	out := new(CommonResult)
 	err := c.cc.Invoke(ctx, Nft_CreateActivity_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -89,8 +89,8 @@ func (c *nftClient) CreateActivity(ctx context.Context, in *CreateActivityReques
 	return out, nil
 }
 
-func (c *nftClient) GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *nftClient) GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*CommonResult, error) {
+	out := new(CommonResult)
 	err := c.cc.Invoke(ctx, Nft_GetDcFromActivity_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -125,8 +125,8 @@ func (c *nftClient) SearchActivities(ctx context.Context, in *SearchActivitiesRe
 	return out, nil
 }
 
-func (c *nftClient) GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *nftClient) GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*CommonResult, error) {
+	out := new(CommonResult)
 	err := c.cc.Invoke(ctx, Nft_GiveDc_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -179,8 +179,8 @@ func (c *nftClient) GetDigitalCollectionHistory(ctx context.Context, in *GetDigi
 	return out, nil
 }
 
-func (c *nftClient) CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *nftClient) CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*CommonResult, error) {
+	out := new(CommonResult)
 	err := c.cc.Invoke(ctx, Nft_CreatePool_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -188,8 +188,8 @@ func (c *nftClient) CreatePool(ctx context.Context, in *CreatePoolRequest, opts 
 	return out, nil
 }
 
-func (c *nftClient) BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *nftClient) BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*CommonResult, error) {
+	out := new(CommonResult)
 	err := c.cc.Invoke(ctx, Nft_BuyFromPool_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -238,19 +238,19 @@ func (c *nftClient) GetMyPool(ctx context.Context, in *Empty, opts ...grpc.CallO
 // for forward compatibility
 type NftServer interface {
 	GetMessageByHash(context.Context, *GetMessageByHashRequest) (*GetMessageByHashDTO, error)
-	CreateActivity(context.Context, *CreateActivityRequest) (*Empty, error)
-	GetDcFromActivity(context.Context, *GetDcFromActivityRequest) (*Empty, error)
+	CreateActivity(context.Context, *CreateActivityRequest) (*CommonResult, error)
+	GetDcFromActivity(context.Context, *GetDcFromActivityRequest) (*CommonResult, error)
 	GetAllActivity(context.Context, *Empty) (*ActivityPageVOList, error)
 	GetOneActivity(context.Context, *GetOneActivityRequest) (*ActivityDetailsVO, error)
 	SearchActivities(context.Context, *SearchActivitiesRequest) (*ActivityPageVOList, error)
-	GiveDc(context.Context, *GiveDcRequest) (*Empty, error)
+	GiveDc(context.Context, *GiveDcRequest) (*CommonResult, error)
 	GetAllDc(context.Context, *Empty) (*DcPageVOList, error)
 	SelectDc(context.Context, *SelectDcRequest) (*DcPageVOList, error)
 	GetDcById(context.Context, *GetDcByIdRequest) (*DcDetailVO, error)
 	GetMyDc(context.Context, *Empty) (*DcPageVOList, error)
 	GetDigitalCollectionHistory(context.Context, *GetDigitalCollectionHistoryRequest) (*CollectionMessageOnChainVO, error)
-	CreatePool(context.Context, *CreatePoolRequest) (*Empty, error)
-	BuyFromPool(context.Context, *BuyFromPoolRequest) (*Empty, error)
+	CreatePool(context.Context, *CreatePoolRequest) (*CommonResult, error)
+	BuyFromPool(context.Context, *BuyFromPoolRequest) (*CommonResult, error)
 	SelectPool(context.Context, *SelectPoolRequest) (*PoolPageVOList, error)
 	GetPoolById(context.Context, *GetPoolByIdRequest) (*PoolDetailsVO, error)
 	GetAllPool(context.Context, *Empty) (*PoolPageVOList, error)
@@ -265,10 +265,10 @@ type UnimplementedNftServer struct {
 func (UnimplementedNftServer) GetMessageByHash(context.Context, *GetMessageByHashRequest) (*GetMessageByHashDTO, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMessageByHash not implemented")
 }
-func (UnimplementedNftServer) CreateActivity(context.Context, *CreateActivityRequest) (*Empty, error) {
+func (UnimplementedNftServer) CreateActivity(context.Context, *CreateActivityRequest) (*CommonResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateActivity not implemented")
 }
-func (UnimplementedNftServer) GetDcFromActivity(context.Context, *GetDcFromActivityRequest) (*Empty, error) {
+func (UnimplementedNftServer) GetDcFromActivity(context.Context, *GetDcFromActivityRequest) (*CommonResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDcFromActivity not implemented")
 }
 func (UnimplementedNftServer) GetAllActivity(context.Context, *Empty) (*ActivityPageVOList, error) {
@@ -280,7 +280,7 @@ func (UnimplementedNftServer) GetOneActivity(context.Context, *GetOneActivityReq
 func (UnimplementedNftServer) SearchActivities(context.Context, *SearchActivitiesRequest) (*ActivityPageVOList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchActivities not implemented")
 }
-func (UnimplementedNftServer) GiveDc(context.Context, *GiveDcRequest) (*Empty, error) {
+func (UnimplementedNftServer) GiveDc(context.Context, *GiveDcRequest) (*CommonResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GiveDc not implemented")
 }
 func (UnimplementedNftServer) GetAllDc(context.Context, *Empty) (*DcPageVOList, error) {
@@ -298,10 +298,10 @@ func (UnimplementedNftServer) GetMyDc(context.Context, *Empty) (*DcPageVOList, e
 func (UnimplementedNftServer) GetDigitalCollectionHistory(context.Context, *GetDigitalCollectionHistoryRequest) (*CollectionMessageOnChainVO, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDigitalCollectionHistory not implemented")
 }
-func (UnimplementedNftServer) CreatePool(context.Context, *CreatePoolRequest) (*Empty, error) {
+func (UnimplementedNftServer) CreatePool(context.Context, *CreatePoolRequest) (*CommonResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePool not implemented")
 }
-func (UnimplementedNftServer) BuyFromPool(context.Context, *BuyFromPoolRequest) (*Empty, error) {
+func (UnimplementedNftServer) BuyFromPool(context.Context, *BuyFromPoolRequest) (*CommonResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BuyFromPool not implemented")
 }
 func (UnimplementedNftServer) SelectPool(context.Context, *SelectPoolRequest) (*PoolPageVOList, error) {

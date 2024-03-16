@@ -52,19 +52,19 @@ type (
 
 	Nft interface {
 		GetMessageByHash(ctx context.Context, in *GetMessageByHashRequest, opts ...grpc.CallOption) (*GetMessageByHashDTO, error)
-		CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*Empty, error)
-		GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*Empty, error)
+		CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*CommonResult, error)
+		GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*CommonResult, error)
 		GetAllActivity(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ActivityPageVOList, error)
 		GetOneActivity(ctx context.Context, in *GetOneActivityRequest, opts ...grpc.CallOption) (*ActivityDetailsVO, error)
 		SearchActivities(ctx context.Context, in *SearchActivitiesRequest, opts ...grpc.CallOption) (*ActivityPageVOList, error)
-		GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*Empty, error)
+		GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*CommonResult, error)
 		GetAllDc(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DcPageVOList, error)
 		SelectDc(ctx context.Context, in *SelectDcRequest, opts ...grpc.CallOption) (*DcPageVOList, error)
 		GetDcById(ctx context.Context, in *GetDcByIdRequest, opts ...grpc.CallOption) (*DcDetailVO, error)
 		GetMyDc(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DcPageVOList, error)
 		GetDigitalCollectionHistory(ctx context.Context, in *GetDigitalCollectionHistoryRequest, opts ...grpc.CallOption) (*CollectionMessageOnChainVO, error)
-		CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*Empty, error)
-		BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*Empty, error)
+		CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*CommonResult, error)
+		BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*CommonResult, error)
 		SelectPool(ctx context.Context, in *SelectPoolRequest, opts ...grpc.CallOption) (*PoolPageVOList, error)
 		GetPoolById(ctx context.Context, in *GetPoolByIdRequest, opts ...grpc.CallOption) (*PoolDetailsVO, error)
 		GetAllPool(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolPageVOList, error)
@@ -87,12 +87,12 @@ func (m *defaultNft) GetMessageByHash(ctx context.Context, in *GetMessageByHashR
 	return client.GetMessageByHash(ctx, in, opts...)
 }
 
-func (m *defaultNft) CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (m *defaultNft) CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*CommonResult, error) {
 	client := nft.NewNftClient(m.cli.Conn())
 	return client.CreateActivity(ctx, in, opts...)
 }
 
-func (m *defaultNft) GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (m *defaultNft) GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*CommonResult, error) {
 	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetDcFromActivity(ctx, in, opts...)
 }
@@ -112,7 +112,7 @@ func (m *defaultNft) SearchActivities(ctx context.Context, in *SearchActivitiesR
 	return client.SearchActivities(ctx, in, opts...)
 }
 
-func (m *defaultNft) GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (m *defaultNft) GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*CommonResult, error) {
 	client := nft.NewNftClient(m.cli.Conn())
 	return client.GiveDc(ctx, in, opts...)
 }
@@ -142,12 +142,12 @@ func (m *defaultNft) GetDigitalCollectionHistory(ctx context.Context, in *GetDig
 	return client.GetDigitalCollectionHistory(ctx, in, opts...)
 }
 
-func (m *defaultNft) CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (m *defaultNft) CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*CommonResult, error) {
 	client := nft.NewNftClient(m.cli.Conn())
 	return client.CreatePool(ctx, in, opts...)
 }
 
-func (m *defaultNft) BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (m *defaultNft) BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*CommonResult, error) {
 	client := nft.NewNftClient(m.cli.Conn())
 	return client.BuyFromPool(ctx, in, opts...)
 }

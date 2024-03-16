@@ -15,19 +15,19 @@ message CommonResult{
 
 service Nft {
   rpc GetMessageByHash (GetMessageByHashRequest) returns (GetMessageByHashDTO) {}
-  rpc CreateActivity (CreateActivityRequest) returns (Empty) {}
-  rpc GetDcFromActivity (GetDcFromActivityRequest) returns (Empty) {}
+  rpc CreateActivity (CreateActivityRequest) returns (CommonResult) {}
+  rpc GetDcFromActivity (GetDcFromActivityRequest) returns (CommonResult) {}
   rpc GetAllActivity (Empty) returns (ActivityPageVOList) {}
   rpc GetOneActivity (GetOneActivityRequest) returns (ActivityDetailsVO) {}
   rpc SearchActivities (SearchActivitiesRequest) returns (ActivityPageVOList) {}
-  rpc GiveDc (GiveDcRequest) returns (Empty) {}
+  rpc GiveDc (GiveDcRequest) returns (CommonResult) {}
   rpc GetAllDc (Empty) returns (DcPageVOList) {}
   rpc SelectDc (SelectDcRequest) returns (DcPageVOList) {}
   rpc GetDcById (GetDcByIdRequest) returns (DcDetailVO) {}
   rpc GetMyDc (Empty) returns (DcPageVOList) {}
   rpc GetDigitalCollectionHistory (GetDigitalCollectionHistoryRequest) returns (CollectionMessageOnChainVO) {}
-  rpc CreatePool (CreatePoolRequest) returns (Empty) {}
-  rpc BuyFromPool (BuyFromPoolRequest) returns (Empty) {}
+  rpc CreatePool (CreatePoolRequest) returns (CommonResult) {}
+  rpc BuyFromPool (BuyFromPoolRequest) returns (CommonResult) {}
   rpc SelectPool (SelectPoolRequest) returns (PoolPageVOList) {}
   rpc GetPoolById (GetPoolByIdRequest) returns (PoolDetailsVO) {}
   rpc GetAllPool (Empty) returns (PoolPageVOList) {}

@@ -27,12 +27,12 @@ func (s *NftServer) GetMessageByHash(ctx context.Context, in *nft.GetMessageByHa
 	return l.GetMessageByHash(in)
 }
 
-func (s *NftServer) CreateActivity(ctx context.Context, in *nft.CreateActivityRequest) (*nft.Empty, error) {
+func (s *NftServer) CreateActivity(ctx context.Context, in *nft.CreateActivityRequest) (*nft.CommonResult, error) {
 	l := logic.NewCreateActivityLogic(ctx, s.svcCtx)
 	return l.CreateActivity(in)
 }
 
-func (s *NftServer) GetDcFromActivity(ctx context.Context, in *nft.GetDcFromActivityRequest) (*nft.Empty, error) {
+func (s *NftServer) GetDcFromActivity(ctx context.Context, in *nft.GetDcFromActivityRequest) (*nft.CommonResult, error) {
 	l := logic.NewGetDcFromActivityLogic(ctx, s.svcCtx)
 	return l.GetDcFromActivity(in)
 }
@@ -52,7 +52,7 @@ func (s *NftServer) SearchActivities(ctx context.Context, in *nft.SearchActiviti
 	return l.SearchActivities(in)
 }
 
-func (s *NftServer) GiveDc(ctx context.Context, in *nft.GiveDcRequest) (*nft.Empty, error) {
+func (s *NftServer) GiveDc(ctx context.Context, in *nft.GiveDcRequest) (*nft.CommonResult, error) {
 	l := logic.NewGiveDcLogic(ctx, s.svcCtx)
 	return l.GiveDc(in)
 }
@@ -82,12 +82,12 @@ func (s *NftServer) GetDigitalCollectionHistory(ctx context.Context, in *nft.Get
 	return l.GetDigitalCollectionHistory(in)
 }
 
-func (s *NftServer) CreatePool(ctx context.Context, in *nft.CreatePoolRequest) (*nft.Empty, error) {
+func (s *NftServer) CreatePool(ctx context.Context, in *nft.CreatePoolRequest) (*nft.CommonResult, error) {
 	l := logic.NewCreatePoolLogic(ctx, s.svcCtx)
 	return l.CreatePool(in)
 }
 
-func (s *NftServer) BuyFromPool(ctx context.Context, in *nft.BuyFromPoolRequest) (*nft.Empty, error) {
+func (s *NftServer) BuyFromPool(ctx context.Context, in *nft.BuyFromPoolRequest) (*nft.CommonResult, error) {
 	l := logic.NewBuyFromPoolLogic(ctx, s.svcCtx)
 	return l.BuyFromPool(in)
 }

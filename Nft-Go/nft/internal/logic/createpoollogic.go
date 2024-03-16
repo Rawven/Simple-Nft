@@ -23,8 +23,8 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 	}
 }
 
-func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Empty, error) {
+func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResult, error) {
 	// todo: add your logic here and delete this line
 
-	return &nft.Empty{}, nil
+	return &nft.CommonResult{}, nil
 }
