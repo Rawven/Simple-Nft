@@ -18,9 +18,10 @@
 package mq
 
 import (
-	"Nft-Go/global"
+	"Nft-Go/common/util"
 	"Nft-Go/user/internal/logic"
 	"Nft-Go/user/internal/model"
+	"Nft-Go/user/sse"
 	"context"
 	"dubbo.apache.org/dubbo-go/v3/logger/zap"
 	"github.com/apache/rocketmq-client-go/v2"
@@ -46,7 +47,7 @@ func InitMq() {
 	err := c.Subscribe("Nft-Go", consumer.MessageSelector{}, func(ctx context.Context, ext ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
 		for i := range ext {
 			logger.Info("Rocketmq Received:%v \n", ext[i])
-			json := global.GetFastJson()
+			json := util.GetFastJson()
 			data, err := json.ParseBytes(ext[i].Body)
 			switch ext[i].GetTags() {
 			case "createPoolNotice":
@@ -60,7 +61,8 @@ func InitMq() {
 					UserAddress: data.Get("userAddress").String(),
 					Type:        data.Get("type").GetInt(),
 				})
-				//TODO 发送通知 sse通知所有用户
+				//发送通知 sse通知所有用户
+				sse.SendNotificationToAllUser(data.Get("title").String() + data.Get("description").String())
 				if err != nil {
 					return 0, err
 				}

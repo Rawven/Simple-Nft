@@ -1,0 +1,5 @@
+Name: nft.rpc
+ListenOn: 0.0.0.0:9090
+nacos:
+  Hosts:
+  - 10.21.32.154:8848

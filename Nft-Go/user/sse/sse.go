@@ -1,7 +1,7 @@
 package sse
 
 import (
-	"Nft-Go/global"
+	"Nft-Go/common/util"
 	"github.com/nacos-group/nacos-sdk-go/common/logger"
 	"log"
 	"net/http"
@@ -24,7 +24,7 @@ func InitSse() {
 			http.Error(w, "Missing token", http.StatusBadRequest)
 			return
 		}
-		claim, err := global.ParseToken(token)
+		claim, err := util.ParseToken(token)
 		if err != nil {
 			return
 		}
@@ -49,7 +49,7 @@ func InitSse() {
 	logger.Info("Open URL http://localhost:8080/events?userID=<your-user-id> in your browser.")
 }
 
-func SendNotificationToUser(userID, message string) {
+func SendNotificationToSingleUser(userID, message string) {
 	mu.Lock()
 	userEs, ok := sessions[userID]
 	mu.Unlock()
@@ -58,4 +58,11 @@ func SendNotificationToUser(userID, message string) {
 		return
 	}
 	userEs.SendEventMessage(message, "", "")
+}
+func SendNotificationToAllUser(message string) {
+	mu.Lock()
+	for _, userEs := range sessions {
+		userEs.SendEventMessage(message, "", "")
+	}
+	mu.Unlock()
 }

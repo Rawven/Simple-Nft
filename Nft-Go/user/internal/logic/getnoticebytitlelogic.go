@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/global"
+	"Nft-Go/common/db"
 	"Nft-Go/user/internal/model"
 	"context"
 
@@ -27,7 +27,7 @@ func NewGetNoticeByTitleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *GetNoticeByTitleLogic) GetNoticeByTitle(in *user.TitleNoticeRequest) (*user.NoticeList, error) {
 	// todo: add your logic here and delete this line
-	mysql := global.GetMysql()
+	mysql := db.GetMysql()
 	var notices []model.Notice
 	mysql.Where("title like ?", "%"+in.Title+"%").Find(&notices)
 	var res []*user.Notice

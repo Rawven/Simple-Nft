@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/global"
+	"Nft-Go/common/db"
 	"context"
 	"github.com/dubbogo/grpc-go/metadata"
 
@@ -28,9 +28,10 @@ func NewLogoutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogoutLogi
 func (l *LogoutLogic) Logout(in *user.Empty) (*user.Response, error) {
 	// todo: add your logic here and delete this line
 	incomingContext, _ := metadata.FromIncomingContext(l.ctx)
-	id := incomingContext.Get("userId")
-	redis := global.GetRedis()
-	del := redis.Del(l.ctx, id[0])
+	userId := incomingContext.Get("userId")
+
+	redis := db.GetRedis()
+	del := redis.Del(l.ctx, userId[0])
 	if del.Val() == 0 {
 		return &user.Response{Message: "退出失败"}, nil
 	}

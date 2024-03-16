@@ -3,6 +3,19 @@ syntax = "proto3";
 package user;
 option go_package = "./user";
 
+
+service User {
+  rpc register(RegisterRequest) returns (Response);
+  rpc login(LoginRequest) returns (Response);
+  rpc logout(Empty) returns (Response);
+  rpc refreshTokens(Empty) returns (Response);
+  rpc upload(stream UploadRequest) returns (Response);
+  rpc getAllNotices(Empty) returns (NoticeList);
+  rpc getNoticeByTitle(TitleNoticeRequest) returns (NoticeList);
+  rpc getNoticeById(IdNoticeRequest) returns (Notice);
+}
+
+
 message Empty{
 
 }
@@ -49,15 +62,4 @@ message Response {
   string message = 1;
   uint32 code = 2;
   string data = 3;
-}
-
-service User {
-  rpc register(RegisterRequest) returns (Response);
-  rpc login(LoginRequest) returns (Response);
-  rpc logout(Empty) returns (Response);
-  rpc refreshTokens(Empty) returns (Response);
-  rpc upload(stream UploadRequest) returns (Response);
-  rpc getAllNotices(Empty) returns (NoticeList);
-  rpc getNoticeByTitle(TitleNoticeRequest) returns (NoticeList);
-  rpc getNoticeById(IdNoticeRequest) returns (Notice);
 }
