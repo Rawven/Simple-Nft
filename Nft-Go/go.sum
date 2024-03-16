@@ -597,6 +597,8 @@ github.com/dubbogo/net v0.0.4/go.mod h1:1CGOnM7X3he+qgGNqjeADuE5vKZQx/eMSeUkpU3u
 github.com/dubbogo/triple v1.0.9/go.mod h1:1t9me4j4CTvNDcsMZy6/OGarbRyAUSY0tFXGXHCp7Iw=
 github.com/dubbogo/triple v1.2.2-rc3 h1:9rxLqru35MmJkypCHJMiZb1VzwH+zmbPBend9Cq+VOI=
 github.com/dubbogo/triple v1.2.2-rc3/go.mod h1:9pgEahtmsY/avYJp3dzUQE8CMMVe1NtGBmUhfICKLJk=
+github.com/duke-git/lancet/v2 v2.3.0 h1:Ztie0qOnC4QgGYYqmpmQxbxkPcm54kqFXj1bwhiV8zg=
+github.com/duke-git/lancet/v2 v2.3.0/go.mod h1:zGa2R4xswg6EG9I6WnyubDbFO/+A/RROxIbXcwryTsc=
 github.com/dustin/go-humanize v0.0.0-20171111073723-bb3d318650d4/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=

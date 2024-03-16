@@ -13,6 +13,7 @@ import (
 )
 
 type (
+	AccountMessageVO                   = nft.AccountMessageVO
 	ActivityDetailsVO                  = nft.ActivityDetailsVO
 	ActivityPageVO                     = nft.ActivityPageVO
 	ActivityPageVOList                 = nft.ActivityPageVOList
@@ -25,6 +26,7 @@ type (
 	CreatePoolBO                       = nft.CreatePoolBO
 	CreatePoolRequest                  = nft.CreatePoolRequest
 	DcDetailVO                         = nft.DcDetailVO
+	DcOverviewVO                       = nft.DcOverviewVO
 	DcPageVO                           = nft.DcPageVO
 	DcPageVOList                       = nft.DcPageVOList
 	Empty                              = nft.Empty

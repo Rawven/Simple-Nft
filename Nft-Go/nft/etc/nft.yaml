@@ -1,6 +1,5 @@
 Name: nft.rpc
-ListenOn: 0.0.0.0:8080
-Etcd:
+ListenOn: 0.0.0.0:9090
+nacos:
   Hosts:
-  - 127.0.0.1:2379
-  Key: nft.rpc
+  - 10.21.32.154:8848

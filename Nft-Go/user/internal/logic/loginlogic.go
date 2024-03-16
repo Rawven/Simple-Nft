@@ -4,6 +4,7 @@ import (
 	global2 "Nft-Go/common/global"
 	"Nft-Go/user/internal/model"
 	"context"
+	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/spf13/viper"
 	"strconv"
 
@@ -30,7 +31,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	mysql := global2.GetMysql()
 	_user := model.User{}
-	tx := mysql.Where("username = ? and password = ?", in.GetUsername(), in.GetPassword()).First(&_user)
+	tx := mysql.Where("username = ? and password = ?", in.GetUsername(), cryptor.Sha256(in.GetPassword())).First(&_user)
 	if tx.Error != nil {
 		return &user.Response{Message: tx.Error.Error()}, nil
 	}

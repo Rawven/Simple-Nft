@@ -39,7 +39,19 @@ message GetMessageByHashRequest {
 }
 
 message GetMessageByHashDTO {
-  // Define the fields of GetMessageByHashDTO according to their types in the Java code.
+  int32 type = 1;
+  AccountMessageVO accountMessageVO = 2;
+  CollectionMessageOnChainVO collectionMessageOnChainVO=3;
+}
+message AccountMessageVO {
+  string hash = 1;
+  string registerTime = 2;
+  repeated DcOverviewVO ownedCollections=3;
+}
+message DcOverviewVO {
+  int32 id = 1;
+  string hash = 2;
+  string getTime = 3;
 }
 
 message CreateActivityRequest {
@@ -53,7 +65,7 @@ message CreateActivityBO {
   int32 amount = 4;
   string dcName = 5;
   string dcDescription = 6;
-  // MultipartFile is not directly supported in protobuf. You might need to handle file data separately.
+  string cid = 7;
 }
 
 message GetDcFromActivityRequest {
@@ -95,7 +107,17 @@ message ActivityPageVO {
 
 
 message ActivityDetailsVO {
-  // Define the fields of ActivityDetailsVO according to their types in the Java code.
+  int32 id = 1;
+  string activityName = 2;
+  string activityDescription = 3;
+  string dcName = 4;
+  string dcDescription = 5;
+  string url = 6;
+  string hostName = 7;
+  string hostAddress = 8;
+  int32 amount = 9;
+  int32 left = 10;
+  string contractAddress = 11;
 }
 message GiveDcRequest {
   GiveDcBO giveDcBo = 1;

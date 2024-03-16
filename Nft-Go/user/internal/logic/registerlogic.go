@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"github.com/dubbogo/gost/log/logger"
+	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/spf13/viper"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"strconv"
@@ -42,9 +43,10 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		return nil, err
 	}
 	//本地注册
+	sha256 := cryptor.Sha256(in.GetPassword())
 	mod := model.User{
 		Username:   in.GetUsername(),
-		Password:   in.GetPassword(),
+		Password:   sha256,
 		Email:      in.GetEmail(),
 		PrivateKey: result.GetPrivateKey(),
 		Address:    result.GetAddress(),
