@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/global"
+	global2 "Nft-Go/common/global"
 	"context"
 	"github.com/dubbogo/grpc-go/metadata"
 	"github.com/spf13/viper"
@@ -30,13 +30,13 @@ func (l *RefreshTokensLogic) RefreshTokens(in *user.Empty) (*user.Response, erro
 	incomingContext, _ := metadata.FromIncomingContext(l.ctx)
 	id := incomingContext.Get("userId")
 	// 从redis中删除token
-	redis := global.GetRedis()
+	redis := global2.GetRedis()
 	del := redis.Del(l.ctx, id[0])
 	if del.Val() == 0 {
 		return &user.Response{Message: "退出失败"}, nil
 	}
 	// 生成新的token
-	jwt, err := global.GetJwt(viper.Get("jwt").(string), id[0])
+	jwt, err := global2.GetJwt(viper.Get("jwt").(string), id[0])
 	if err != nil {
 		return nil, err
 	}

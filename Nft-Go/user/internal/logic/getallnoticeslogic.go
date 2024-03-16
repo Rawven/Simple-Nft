@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/global"
+	"Nft-Go/common/global"
 	"Nft-Go/user/internal/model"
 	"context"
 

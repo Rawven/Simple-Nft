@@ -1,8 +1,8 @@
 package logic
 
 import (
-	"Nft-Go/global"
-	"Nft-Go/user/api"
+	"Nft-Go/common/api"
+	global2 "Nft-Go/common/global"
 	"Nft-Go/user/internal/model"
 	"context"
 	"errors"
@@ -50,8 +50,8 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		Address:    result.GetAddress(),
 		Avatar:     in.GetAvatar(),
 	}
-	db := global.GetMysql()
-	rds := global.GetRedis()
+	db := global2.GetMysql()
+	rds := global2.GetRedis()
 	tx := db.Create(&mod)
 	if tx.Error != nil {
 		logger.Error("插入用户失败", tx.Error.Error())
@@ -69,7 +69,7 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		return &user.Response{Message: tx.Error.Error()}, nil
 	}
 	key := viper.Get("key")
-	token, err := global.GetJwt(key.(string), strconv.Itoa(mod.ID))
+	token, err := global2.GetJwt(key.(string), strconv.Itoa(mod.ID))
 	logger.Info("生成token", token)
 	if err != nil {
 		logger.Error("生成token失败", err.Error())

@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/global"
+	"Nft-Go/common/global"
 	"context"
 	"github.com/dubbogo/grpc-go/metadata"
 

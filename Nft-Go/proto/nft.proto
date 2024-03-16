@@ -1,0 +1,231 @@
+syntax = "proto3";
+
+package user;
+option go_package = "./nft";
+
+message Empty{
+
+}
+
+message CommonResult{
+  int32  code = 1;
+  string message = 2;
+}
+
+
+service Nft {
+  rpc GetMessageByHash (GetMessageByHashRequest) returns (GetMessageByHashDTO) {}
+  rpc CreateActivity (CreateActivityRequest) returns (Empty) {}
+  rpc GetDcFromActivity (GetDcFromActivityRequest) returns (Empty) {}
+  rpc GetAllActivity (Empty) returns (ActivityPageVOList) {}
+  rpc GetOneActivity (GetOneActivityRequest) returns (ActivityDetailsVO) {}
+  rpc SearchActivities (SearchActivitiesRequest) returns (ActivityPageVOList) {}
+  rpc GiveDc (GiveDcRequest) returns (Empty) {}
+  rpc GetAllDc (Empty) returns (DcPageVOList) {}
+  rpc SelectDc (SelectDcRequest) returns (DcPageVOList) {}
+  rpc GetDcById (GetDcByIdRequest) returns (DcDetailVO) {}
+  rpc GetMyDc (Empty) returns (DcPageVOList) {}
+  rpc GetDigitalCollectionHistory (GetDigitalCollectionHistoryRequest) returns (CollectionMessageOnChainVO) {}
+  rpc CreatePool (CreatePoolRequest) returns (Empty) {}
+  rpc BuyFromPool (BuyFromPoolRequest) returns (Empty) {}
+  rpc SelectPool (SelectPoolRequest) returns (PoolPageVOList) {}
+  rpc GetPoolById (GetPoolByIdRequest) returns (PoolDetailsVO) {}
+  rpc GetAllPool (Empty) returns (PoolPageVOList) {}
+  rpc GetMyPool (Empty) returns (PoolPageVOList) {}
+}
+
+message GetMessageByHashRequest {
+  string hash = 1;
+}
+
+message GetMessageByHashDTO {
+  // Define the fields of GetMessageByHashDTO according to their types in the Java code.
+}
+
+message CreateActivityRequest {
+  CreateActivityBO createActivityBo = 1;
+}
+
+message CreateActivityBO {
+  string name = 1;
+  string description = 2;
+  string password = 3;
+  int32 amount = 4;
+  string dcName = 5;
+  string dcDescription = 6;
+  // MultipartFile is not directly supported in protobuf. You might need to handle file data separately.
+}
+
+message GetDcFromActivityRequest {
+  GetDcFromActivityBO getDcFromActivityBo = 1;
+}
+message GetDcFromActivityBO {
+  int32 id = 1;
+  string password = 2;
+}
+
+
+message GetOneActivityRequest {
+  int32 id = 1;
+}
+
+message SearchActivitiesRequest {
+  SearchActivityBO searchActivityBO = 1;
+}
+message SearchActivityBO {
+  string hostName = 1;
+  string activityName = 2;
+}
+
+
+message ActivityPageVOList {
+  repeated ActivityPageVO activityPageVO = 1;
+}
+
+message ActivityPageVO {
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  string url = 4;
+  string hostName = 5;
+  string hostAddress = 6;
+  int32 amount = 7;
+  int32 left = 8;
+}
+
+
+message ActivityDetailsVO {
+  // Define the fields of ActivityDetailsVO according to their types in the Java code.
+}
+message GiveDcRequest {
+  GiveDcBO giveDcBo = 1;
+}
+message GiveDcBO {
+  string toName = 1;
+  string toAddress = 2;
+  int32 dcId = 3;
+}
+
+
+message SelectDcRequest {
+  string name = 1;
+}
+
+message GetDcByIdRequest {
+  int32 id = 1;
+}
+
+message GetDigitalCollectionHistoryRequest {
+  int32 id = 1;
+}
+
+message DcPageVOList {
+  repeated DcPageVO dcPageVO = 1;
+}
+message DcPageVO {
+  string url = 1;
+  string name = 2;
+  int32 dcId = 3;
+  string hash = 4;
+  string creatorName = 5;
+  int32 price = 6;
+}
+
+message DcDetailVO {
+  int32 dcId = 1;
+  string hash = 2;
+  string url = 3;
+  string name = 4;
+  string description = 5;
+  int32 price = 6;
+  string creatorName = 7;
+  string creatorAddress = 8;
+  string ownerName = 9;
+  string ownerAddress = 10;
+  string contractAddress = 11;
+}
+
+message CollectionMessageOnChainVO {
+  string name = 1;
+  string hash = 2;
+  string description = 3;
+  string creatorAddress = 4;
+  string ownerAddress = 5;
+  repeated TraceBackVO traceBackVOList = 6;
+}
+
+message TraceBackVO {
+  string fromAddress = 1;
+  string toAddress = 2;
+  string transferType = 3;
+  string transferTime = 4;
+}
+
+
+message CreatePoolRequest {
+  CreatePoolBO createPoolBo = 1;
+  // Define the fields of CreatePoolBO according to their types in the Java code.
+}
+message CreatePoolBO {
+  string name = 1;
+  string description = 2;
+  bool status = 3;
+  int32 price = 4;
+  int32 amount = 5;
+  int32 limitAmount = 6;
+  string filePath = 7;
+  string creator = 8;
+}
+
+message BuyFromPoolRequest {
+  BuyFromPoolBO buyFromPoolBo = 1;
+  // Define the fields of BuyFromPoolBO according to their types in the Java code.
+}
+message BuyFromPoolBO {
+  int32 poolId = 1;
+}
+
+message SelectPoolRequest {
+  SelectPoolBO selectPoolBo = 1;
+  // Define the fields of SelectPoolBO according to their types in the Java code.
+}
+message SelectPoolBO {
+  string name = 1;
+  string creatorName = 2;
+  int32 minPrice = 3;
+  int32 maxPrice = 4;
+}
+
+
+message GetPoolByIdRequest {
+  int32 id = 1;
+}
+
+message PoolPageVOList {
+  repeated PoolPageVO poolPageVO = 1;
+}
+message PoolPageVO {
+  int32 poolId = 1;
+  string name = 2;
+  string description = 3;
+  string url = 4;
+  string creatorName = 5;
+  bool status = 6;
+  bool soldOut = 7;
+  int32 price = 8;
+}
+
+message PoolDetailsVO {
+  int32 poolId = 1;
+  string name = 2;
+  string description = 3;
+  string url = 4;
+  int32 price = 5;
+  int32 amount = 6;
+  int32 left = 7;
+  string creatorName = 8;
+  string creatorAddress = 9;
+  string contractAddress = 10;
+}
+
+

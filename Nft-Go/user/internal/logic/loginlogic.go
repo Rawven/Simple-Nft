@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/global"
+	global2 "Nft-Go/common/global"
 	"Nft-Go/user/internal/model"
 	"context"
 	"github.com/spf13/viper"
@@ -28,7 +28,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
-	mysql := global.GetMysql()
+	mysql := global2.GetMysql()
 	_user := model.User{}
 	tx := mysql.Where("username = ? and password = ?", in.GetUsername(), in.GetPassword()).First(&_user)
 	if tx.Error != nil {
@@ -37,7 +37,7 @@ func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	if _user.ID == 0 {
 		return &user.Response{Message: "账号或密码错误"}, nil
 	}
-	jwt, err := global.GetJwt(viper.Get("key").(string), strconv.Itoa(_user.ID))
+	jwt, err := global2.GetJwt(viper.Get("key").(string), strconv.Itoa(_user.ID))
 	if err != nil {
 		return nil, err
 	}

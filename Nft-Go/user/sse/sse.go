@@ -1,7 +1,7 @@
 package sse
 
 import (
-	"Nft-Go/global"
+	"Nft-Go/common/global"
 	"github.com/nacos-group/nacos-sdk-go/common/logger"
 	"log"
 	"net/http"

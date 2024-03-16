@@ -18,7 +18,7 @@
 package mq
 
 import (
-	"Nft-Go/global"
+	"Nft-Go/common/global"
 	"Nft-Go/user/internal/logic"
 	"Nft-Go/user/internal/model"
 	"Nft-Go/user/sse"
