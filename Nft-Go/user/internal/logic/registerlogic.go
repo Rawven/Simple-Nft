@@ -2,18 +2,17 @@ package logic
 
 import (
 	"Nft-Go/common/api"
-	global2 "Nft-Go/common/global"
+	"Nft-Go/common/db"
+	global2 "Nft-Go/common/util"
 	"Nft-Go/user/internal/model"
+	"Nft-Go/user/internal/svc"
+	"Nft-Go/user/pb/user"
 	"context"
 	"errors"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/spf13/viper"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"strconv"
-
-	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -52,9 +51,9 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		Address:    result.GetAddress(),
 		Avatar:     in.GetAvatar(),
 	}
-	db := global2.GetMysql()
-	rds := global2.GetRedis()
-	tx := db.Create(&mod)
+	mysql := db.GetMysql()
+	rds := db.GetRedis()
+	tx := mysql.Create(&mod)
 	if tx.Error != nil {
 		logger.Error("插入用户失败", tx.Error.Error())
 		return &user.Response{Message: tx.Error.Error()}, nil
@@ -65,13 +64,21 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		RoleID: 2,
 	}
 
-	tx = db.Create(&role)
+	tx = mysql.Create(&role)
 	if tx.Error != nil {
 		logger.Error("插入role失败", tx.Error.Error())
 		return &user.Response{Message: tx.Error.Error()}, nil
 	}
 	key := viper.Get("key")
-	token, err := global2.GetJwt(key.(string), strconv.Itoa(mod.ID))
+	info := global2.UserInfo{
+		UserId:     int32(mod.ID),
+		UserName:   mod.Username,
+		Address:    mod.Address,
+		Balance:    0,
+		Avatar:     mod.Avatar,
+		PrivateKey: mod.PrivateKey,
+	}
+	token, err := global2.GetJwt(key.(string), info)
 	logger.Info("生成token", token)
 	if err != nil {
 		logger.Error("生成token失败", err.Error())

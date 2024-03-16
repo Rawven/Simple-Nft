@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/common/global"
+	"Nft-Go/common/db"
 	"Nft-Go/user/internal/model"
 	"context"
 
@@ -27,7 +27,7 @@ func NewGetAllNoticesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 
 func (l *GetAllNoticesLogic) GetAllNotices(in *user.Empty) (*user.NoticeList, error) {
 	// todo: add your logic here and delete this line
-	mysql := global.GetMysql()
+	mysql := db.GetMysql()
 	var notices []model.Notice
 	mysql.Find(&notices)
 	var res []*user.Notice

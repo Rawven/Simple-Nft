@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/common/global"
+	"Nft-Go/common/db"
 	"Nft-Go/user/internal/model"
 	"context"
 
@@ -27,7 +27,7 @@ func NewGetNoticeByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 
 func (l *GetNoticeByIdLogic) GetNoticeById(in *user.IdNoticeRequest) (*user.Notice, error) {
 	// todo: add your logic here and delete this line
-	mysql := global.GetMysql()
+	mysql := db.GetMysql()
 	var notice model.Notice
 	mysql.Where("id = ?", in.Id).First(&notice)
 	return &user.Notice{

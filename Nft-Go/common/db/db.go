@@ -1,4 +1,4 @@
-package global
+package db
 
 import (
 	"github.com/dubbogo/gost/log/logger"
@@ -10,16 +10,6 @@ import (
 
 var dbMysql *gorm.DB
 var dbRedis *redis.Client
-
-func InitConfig(path string) {
-	viper.AddConfigPath(path)
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	err := viper.ReadInConfig()
-	if err != nil {
-		logger.Info("viper read config failed, err:", err)
-	}
-}
 
 func InitMysql() {
 	dsn := viper.GetString("mysql.dsn")

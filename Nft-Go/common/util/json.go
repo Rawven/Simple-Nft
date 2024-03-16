@@ -1,4 +1,4 @@
-package global
+package util
 
 import "github.com/valyala/fastjson"
 

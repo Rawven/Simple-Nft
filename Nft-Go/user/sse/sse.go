@@ -1,7 +1,7 @@
 package sse
 
 import (
-	"Nft-Go/common/global"
+	"Nft-Go/common/util"
 	"github.com/nacos-group/nacos-sdk-go/common/logger"
 	"log"
 	"net/http"
@@ -24,7 +24,7 @@ func InitSse() {
 			http.Error(w, "Missing token", http.StatusBadRequest)
 			return
 		}
-		claim, err := global.ParseToken(token)
+		claim, err := util.ParseToken(token)
 		if err != nil {
 			return
 		}

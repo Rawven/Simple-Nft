@@ -2,7 +2,8 @@ package main
 
 import (
 	"Nft-Go/common/api"
-	global2 "Nft-Go/common/global"
+	"Nft-Go/common/db"
+	"Nft-Go/common/util"
 	"flag"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logc"
@@ -24,11 +25,11 @@ var configFile = flag.String("f", "etc/nft.yaml", "the config file")
 func main() {
 	flag.Parse()
 	//config
-	global2.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
+	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
 	//db
-	global2.InitMysql()
-	global2.InitRedis()
-	global2.InitIpfs("localhost:5001")
+	db.InitMysql()
+	db.InitRedis()
+	db.InitIpfs("localhost:5001")
 	//api
 	api.InitDubbo()
 	//other

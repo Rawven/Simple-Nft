@@ -18,7 +18,7 @@
 package mq
 
 import (
-	"Nft-Go/common/global"
+	"Nft-Go/common/util"
 	"Nft-Go/user/internal/logic"
 	"Nft-Go/user/internal/model"
 	"Nft-Go/user/sse"
@@ -47,7 +47,7 @@ func InitMq() {
 	err := c.Subscribe("Nft-Go", consumer.MessageSelector{}, func(ctx context.Context, ext ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
 		for i := range ext {
 			logger.Info("Rocketmq Received:%v \n", ext[i])
-			json := global.GetFastJson()
+			json := util.GetFastJson()
 			data, err := json.ParseBytes(ext[i].Body)
 			switch ext[i].GetTags() {
 			case "createPoolNotice":

@@ -1,15 +1,16 @@
 package logic
 
 import (
-	global2 "Nft-Go/common/global"
+	"Nft-Go/common/api"
+	"Nft-Go/common/db"
+	global2 "Nft-Go/common/util"
 	"Nft-Go/user/internal/model"
-	"context"
-	"github.com/duke-git/lancet/v2/cryptor"
-	"github.com/spf13/viper"
-	"strconv"
-
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/pb/user"
+	"context"
+	"github.com/duke-git/lancet/v2/convertor"
+	"github.com/duke-git/lancet/v2/cryptor"
+	"github.com/spf13/viper"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,7 +30,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
-	mysql := global2.GetMysql()
+	mysql := db.GetMysql()
 	_user := model.User{}
 	tx := mysql.Where("username = ? and password = ?", in.GetUsername(), cryptor.Sha256(in.GetPassword())).First(&_user)
 	if tx.Error != nil {
@@ -38,7 +39,28 @@ func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	if _user.ID == 0 {
 		return &user.Response{Message: "账号或密码错误"}, nil
 	}
-	jwt, err := global2.GetJwt(viper.Get("key").(string), strconv.Itoa(_user.ID))
+	dubbo, err := api.GetBlcDubbo()
+	if err != nil {
+		return nil, err
+	}
+	balance, err := dubbo.GetUserBalance(l.ctx, &api.UserBalanceRequest{
+		Address: _user.Address,
+	})
+	if err != nil {
+		return nil, err
+	}
+	bal, err := convertor.ToInt(balance.Balance)
+	if err != nil {
+		return nil, err
+	}
+	jwt, err := global2.GetJwt(viper.Get("key").(string), global2.UserInfo{
+		UserId:     int32(_user.ID),
+		UserName:   _user.Username,
+		Address:    _user.Address,
+		Balance:    int32(bal),
+		Avatar:     _user.Avatar,
+		PrivateKey: _user.PrivateKey,
+	})
 	if err != nil {
 		return nil, err
 	}

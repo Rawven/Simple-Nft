@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"Nft-Go/common/global"
+	"Nft-Go/common/db"
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/pb/user"
 	"context"
@@ -38,7 +38,7 @@ func (l *UploadLogic) Upload(stream user.User_UploadServer) error {
 	}
 
 	// 将文件数据写入本地文件
-	ipfs := global.GetIpfs()
+	ipfs := db.GetIpfs()
 	cid, err := ipfs.UploadIPFS(fileData)
 	if err != nil {
 		return err

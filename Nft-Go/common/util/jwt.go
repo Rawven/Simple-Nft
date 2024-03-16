@@ -1,4 +1,4 @@
-package global
+package util
 
 import (
 	"errors"
@@ -7,14 +7,23 @@ import (
 )
 
 type JwtBlc struct {
+	UserInfo
 	jwt.StandardClaims
 }
+type UserInfo struct {
+	UserId     int32
+	UserName   string
+	Address    string
+	Balance    int32
+	Avatar     string
+	PrivateKey string
+}
 
-func GetJwt(key string, userId string) (string, error) {
+func GetJwt(key string, userInfo UserInfo) (string, error) {
 	claims := JwtBlc{
+		userInfo,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 2).Unix(),
-			Id:        userId,
 			Issuer:    "Rawven",
 		},
 	}
