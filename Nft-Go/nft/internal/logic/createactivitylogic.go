@@ -30,10 +30,7 @@ func NewCreateActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 }
 
 func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nft.CommonResult, error) {
-	dubbo, err := api.GetBlcDubbo()
-	if err != nil {
-		return nil, err
-	}
+	dubbo := api.GetBlcDubbo()
 	amount, err := dubbo.GetActivityAmount(l.ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, err

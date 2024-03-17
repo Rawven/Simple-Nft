@@ -32,7 +32,7 @@ func NewGetDcFromActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequest) (*nft.CommonResult, error) {
 	info, err := util.GetUserInfo(l.ctx)
-	dubbo, err := api.GetBlcDubbo()
+	dubbo := api.GetBlcDubbo()
 	if err != nil {
 		return nil, err
 	}

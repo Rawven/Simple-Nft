@@ -33,10 +33,7 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 	if err != nil {
 		return nil, err
 	}
-	dubbo, err := api.GetBlcDubbo()
-	if err != nil {
-		return nil, err
-	}
+	dubbo := api.GetBlcDubbo()
 	mysql := db.GetMysql()
 	//让PoolInfo指定id的数据中的left减一
 	tx := mysql.Exec("UPDATE pool SET `left` = `left` - 1 WHERE pool_id = #{poolId}", in.BuyFromPoolBo.PoolId)
