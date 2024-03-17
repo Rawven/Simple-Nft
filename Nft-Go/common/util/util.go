@@ -8,7 +8,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-func GetUserInfo(ctx context.Context, incomingContext metadata.MD) (*UserInfo, error) {
+func GetUserInfo(ctx context.Context) (*UserInfo, error) {
+	incomingContext, _ := metadata.FromIncomingContext(ctx)
 	userId := incomingContext.Get("userId")
 	redis := db.GetRedis()
 	key := redis.Get(ctx, userId[0])

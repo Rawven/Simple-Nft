@@ -6,7 +6,6 @@ import (
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/model"
 	"context"
-	"github.com/dubbogo/grpc-go/metadata"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -39,13 +38,10 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 	if err != nil {
 		return nil, err
 	}
-
-	incomingContext, _ := metadata.FromIncomingContext(l.ctx)
-	info, err := util.GetUserInfo(l.ctx, incomingContext)
+	info, err := util.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, err
 	}
-	//TODO
 	activityInfo := model.ActivityInfo{
 		Id:            amount.GetAmount(),
 		Name:          info.UserName,
@@ -56,7 +52,7 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 		HostAddress:   info.Address,
 		Amount:        in.CreateActivityBo.GetAmount(),
 		Remainder:     in.CreateActivityBo.GetAmount(),
-		Status:        "true",
+		Status:        true,
 	}
 	tx := db.GetMysql().Create(&activityInfo)
 	if tx.Error != nil {

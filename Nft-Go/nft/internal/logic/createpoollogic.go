@@ -1,10 +1,9 @@
 package logic
 
 import (
-	"context"
-
 	"Nft-Go/nft/internal/svc"
 	"Nft-Go/nft/pb/nft"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +23,6 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResult, error) {
-	// todo: add your logic here and delete this line
 
 	return &nft.CommonResult{}, nil
 }
