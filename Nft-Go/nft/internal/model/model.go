@@ -11,7 +11,7 @@ type PoolInfo struct {
 	LimitAmount    int32  `json:"limit_amount"`    // 限制数量
 	CreatorName    string `json:"creator_name"`    // 创建者名字
 	CreatorAddress string `json:"creator_address"` // 创建者地址
-	Status         string `json:"status"`          // 状态（true=>新品，false=>非卖）
+	Status         bool   `json:"status"`          // 状态（true=>新品，false=>非卖）
 }
 
 type DcInfo struct {
@@ -37,5 +37,5 @@ type ActivityInfo struct {
 	HostAddress   string `json:"host_address"`   // 举办人地址
 	Amount        int32  `json:"amount"`         // 总数量
 	Remainder     int32  `json:"remainder"`      // 剩余数量
-	Status        string `json:"status"`         // 状态(0=>展示，1=>不展示)
+	Status        bool   `json:"status"`         // 状态(0=>展示，1=>不展示)
 }

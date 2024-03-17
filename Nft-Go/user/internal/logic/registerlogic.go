@@ -8,7 +8,6 @@ import (
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/pb/user"
 	"context"
-	"errors"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/spf13/viper"
@@ -33,10 +32,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, error) {
 	//链上注册
-	dubbo, err := api.GetBlcDubbo()
-	if err != nil {
-		return nil, errors.New("dubbo连接失败")
-	}
+	dubbo := api.GetBlcDubbo()
 	result, err := dubbo.SignUp(l.ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, err

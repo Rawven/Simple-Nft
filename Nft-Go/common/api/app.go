@@ -18,6 +18,6 @@ func InitDubbo() {
 	logger.Info("dubbo init success")
 }
 
-func GetBlcDubbo() (*BlcRpcServiceClientImpl, error) {
-	return grpcBlcImpl, nil
+func GetBlcDubbo() *BlcRpcServiceClientImpl {
+	return grpcBlcImpl
 }

@@ -4,7 +4,6 @@ import (
 	"Nft-Go/common/db"
 	global2 "Nft-Go/common/util"
 	"context"
-	"github.com/dubbogo/grpc-go/metadata"
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/spf13/viper"
 
@@ -29,8 +28,7 @@ func NewRefreshTokensLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ref
 }
 
 func (l *RefreshTokensLogic) RefreshTokens(in *user.Empty) (*user.Response, error) {
-	incomingContext, _ := metadata.FromIncomingContext(l.ctx)
-	info, err := global2.GetUserInfo(l.ctx, incomingContext)
+	info, err := global2.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, err
 	}

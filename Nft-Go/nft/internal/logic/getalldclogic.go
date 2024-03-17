@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"Nft-Go/common/db"
+	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
@@ -24,7 +26,12 @@ func NewGetAllDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAllDc
 }
 
 func (l *GetAllDcLogic) GetAllDc(in *nft.Empty) (*nft.DcPageVOList, error) {
-	// todo: add your logic here and delete this line
-
-	return &nft.DcPageVOList{}, nil
+	mysql := db.GetMysql()
+	//查找所有DcInfo 按照id排序
+	var dcInfos []model.DcInfo
+	mysql.Find(&model.DcInfo{}).Order("id").Find(&dcInfos)
+	dcPageVOList := GetAllDc(dcInfos)
+	return &nft.DcPageVOList{
+		DcPageVO: dcPageVOList,
+	}, nil
 }
