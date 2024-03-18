@@ -22,6 +22,8 @@ type (
 	Response           = user.Response
 	TitleNoticeRequest = user.TitleNoticeRequest
 	UploadRequest      = user.UploadRequest
+	UserInfo           = user.UserInfo
+	UserNameRequest    = user.UserNameRequest
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Response, error)
@@ -32,6 +34,7 @@ type (
 		GetAllNotices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NoticeList, error)
 		GetNoticeByTitle(ctx context.Context, in *TitleNoticeRequest, opts ...grpc.CallOption) (*NoticeList, error)
 		GetNoticeById(ctx context.Context, in *IdNoticeRequest, opts ...grpc.CallOption) (*Notice, error)
+		GetUserInfoByName(ctx context.Context, in *UserNameRequest, opts ...grpc.CallOption) (*UserInfo, error)
 	}
 
 	defaultUser struct {
@@ -83,4 +86,9 @@ func (m *defaultUser) GetNoticeByTitle(ctx context.Context, in *TitleNoticeReque
 func (m *defaultUser) GetNoticeById(ctx context.Context, in *IdNoticeRequest, opts ...grpc.CallOption) (*Notice, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.GetNoticeById(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUserInfoByName(ctx context.Context, in *UserNameRequest, opts ...grpc.CallOption) (*UserInfo, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetUserInfoByName(ctx, in, opts...)
 }

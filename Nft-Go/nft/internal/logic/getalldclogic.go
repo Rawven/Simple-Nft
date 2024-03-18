@@ -30,7 +30,7 @@ func (l *GetAllDcLogic) GetAllDc(in *nft.Empty) (*nft.DcPageVOList, error) {
 	//查找所有DcInfo 按照id排序
 	var dcInfos []model.DcInfo
 	mysql.Find(&model.DcInfo{}).Order("id").Find(&dcInfos)
-	dcPageVOList := GetAllDc(dcInfos)
+	dcPageVOList := GetDcPageVOList(dcInfos)
 	return &nft.DcPageVOList{
 		DcPageVO: dcPageVOList,
 	}, nil

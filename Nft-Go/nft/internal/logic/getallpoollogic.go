@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"Nft-Go/common/db"
+	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
@@ -24,7 +26,12 @@ func NewGetAllPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAll
 }
 
 func (l *GetAllPoolLogic) GetAllPool(in *nft.Empty) (*nft.PoolPageVOList, error) {
-	// todo: add your logic here and delete this line
-
-	return &nft.PoolPageVOList{}, nil
+	mysql := db.GetMysql()
+	//查找所有poolInfo 按照id排序
+	var poolInfos []model.PoolInfo
+	mysql.Find(&model.PoolInfo{}).Order("id").Find(&poolInfos)
+	poolPageVOList := GetPoolPageVOList(&poolInfos)
+	return &nft.PoolPageVOList{
+		PoolPageVO: poolPageVOList,
+	}, nil
 }

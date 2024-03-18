@@ -1,0 +1,2 @@
+# nacos://[user:passwd]@host/service?param=value'
+Target: nacos://10.21.32.154:8848/user.rpc

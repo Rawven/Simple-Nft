@@ -1,6 +1,8 @@
 package logic
 
 import (
+	"Nft-Go/common/db"
+	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
@@ -24,7 +26,13 @@ func NewGetAllActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetAllActivityLogic) GetAllActivity(in *nft.Empty) (*nft.ActivityPageVOList, error) {
-	// todo: add your logic here and delete this line
+	mysql := db.GetMysql()
+	var activities []model.ActivityInfo
+	tx := mysql.Model(&model.ActivityInfo{}).Find(&activities)
+	if tx.Error != nil { //查询出错
+		return nil, tx.Error
+	}
+	activityPageVOList := showForPage(activities)
 
-	return &nft.ActivityPageVOList{}, nil
+	return &nft.ActivityPageVOList{ActivityPageVO: activityPageVOList}, nil
 }

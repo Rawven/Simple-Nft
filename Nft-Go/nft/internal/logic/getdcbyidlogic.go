@@ -1,7 +1,10 @@
 package logic
 
 import (
+	"Nft-Go/common/db"
+	"Nft-Go/nft/internal/model"
 	"context"
+	"github.com/spf13/viper"
 
 	"Nft-Go/nft/internal/svc"
 	"Nft-Go/nft/pb/nft"
@@ -24,7 +27,24 @@ func NewGetDcByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDcBy
 }
 
 func (l *GetDcByIdLogic) GetDcById(in *nft.GetDcByIdRequest) (*nft.DcDetailVO, error) {
-	// todo: add your logic here and delete this line
-
-	return &nft.DcDetailVO{}, nil
+	mysql := db.GetMysql()
+	ipfs := db.GetIpfs()
+	var dcInfo model.DcInfo
+	tx := mysql.Model(&model.DcInfo{}).Where("id = ?", in.Id).Find(&dcInfo)
+	if tx.Error != nil { //查询出错
+		return nil, tx.Error
+	}
+	return &nft.DcDetailVO{
+		DcId:            in.GetId(),
+		Hash:            dcInfo.Hash,
+		Url:             ipfs.GetFileUrl(dcInfo.Hash),
+		Name:            dcInfo.Name,
+		Description:     dcInfo.Description,
+		Price:           dcInfo.Price,
+		CreatorName:     dcInfo.CreatorName,
+		CreatorAddress:  dcInfo.CreatorAddress,
+		OwnerName:       dcInfo.OwnerName,
+		OwnerAddress:    dcInfo.OwnerAddress,
+		ContractAddress: viper.GetString("fisco.contract.address.poolData"),
+	}, nil
 }

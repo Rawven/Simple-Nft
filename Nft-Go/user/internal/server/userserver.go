@@ -61,3 +61,8 @@ func (s *UserServer) GetNoticeById(ctx context.Context, in *user.IdNoticeRequest
 	l := logic.NewGetNoticeByIdLogic(ctx, s.svcCtx)
 	return l.GetNoticeById(in)
 }
+
+func (s *UserServer) GetUserInfoByName(ctx context.Context, in *user.UserNameRequest) (*user.UserInfo, error) {
+	l := logic.NewGetUserInfoByNameLogic(ctx, s.svcCtx)
+	return l.GetUserInfoByName(in)
+}

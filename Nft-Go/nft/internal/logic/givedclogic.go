@@ -1,6 +1,9 @@
 package logic
 
 import (
+	"Nft-Go/common/api"
+	"Nft-Go/common/db"
+	"Nft-Go/common/util"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
@@ -24,7 +27,14 @@ func NewGiveDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GiveDcLogi
 }
 
 func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.CommonResult, error) {
-	// todo: add your logic here and delete this line
+	mysql := db.GetMysql()
+	info, err := util.GetUserInfo(l.ctx)
+	user := api.GetUserClient()
+	if err != nil {
+		return nil, err
+	}
+
+	mysql.Model(&nft.DcInfo{}).Where("id = ?", in.GiveDcBo.DcId).Update("owner_name", info.UserName)
 
 	return &nft.CommonResult{}, nil
 }

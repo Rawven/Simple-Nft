@@ -1,7 +1,10 @@
 package logic
 
 import (
+	"Nft-Go/common/db"
+	"Nft-Go/nft/internal/model"
 	"context"
+	"github.com/spf13/viper"
 
 	"Nft-Go/nft/internal/svc"
 	"Nft-Go/nft/pb/nft"
@@ -24,7 +27,20 @@ func NewGetPoolByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPo
 }
 
 func (l *GetPoolByIdLogic) GetPoolById(in *nft.GetPoolByIdRequest) (*nft.PoolDetailsVO, error) {
-	// todo: add your logic here and delete this line
-
-	return &nft.PoolDetailsVO{}, nil
+	mysql := db.GetMysql()
+	ipfs := db.GetIpfs()
+	var poolInfo model.PoolInfo
+	mysql.Model(&model.PoolInfo{}).Where("id = ?", in.Id).Find(&poolInfo)
+	return &nft.PoolDetailsVO{
+		PoolId:          in.Id,
+		Name:            poolInfo.Name,
+		Description:     poolInfo.Description,
+		Url:             ipfs.GetFileUrl(poolInfo.Cid),
+		Price:           poolInfo.Price,
+		Amount:          poolInfo.Amount,
+		Left:            poolInfo.Left,
+		CreatorName:     poolInfo.CreatorName,
+		CreatorAddress:  poolInfo.CreatorAddress,
+		ContractAddress: viper.GetString("fisco.contract.address.poolData"),
+	}, nil
 }

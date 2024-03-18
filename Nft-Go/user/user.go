@@ -8,7 +8,9 @@ import (
 	"Nft-Go/user/sse"
 	"flag"
 	"github.com/dubbogo/gost/log/logger"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/zeromicro/go-zero/core/logc"
+	"github.com/zeromicro/zero-contrib/zrpc/registry/nacos"
 
 	"Nft-Go/user/internal/config"
 	"Nft-Go/user/internal/server"
@@ -57,5 +59,21 @@ func main() {
 	defer s.Stop()
 
 	logger.Info("Starting rpc server at %s...\n", c.ListenOn)
+	// register service to nacos
+	sc := []constant.ServerConfig{
+		*constant.NewServerConfig("10.21.32.154", 8848),
+	}
+
+	cc := &constant.ClientConfig{
+		NamespaceId:         "public",
+		TimeoutMs:           5000,
+		NotLoadCacheAtStart: true,
+		LogDir:              "/tmp/nacos/log",
+		CacheDir:            "/tmp/nacos/cache",
+		LogLevel:            "debug",
+	}
+
+	opts := nacos.NewNacosConfig("user.rpc", c.ListenOn, sc, cc)
+	_ = nacos.RegisterService(opts)
 	s.Start()
 }

@@ -6,7 +6,7 @@ import (
 	"Nft-Go/nft/pb/nft"
 )
 
-func GetAllDc(dcInfos []model.DcInfo) []*nft.DcPageVO {
+func GetDcPageVOList(dcInfos []model.DcInfo) []*nft.DcPageVO {
 	ipfs := db.GetIpfs()
 	var dcPageVOList []*nft.DcPageVO
 	for _, dcInfo := range dcInfos {

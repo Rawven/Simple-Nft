@@ -1,6 +1,9 @@
 package logic
 
 import (
+	"Nft-Go/common/db"
+	"Nft-Go/common/util"
+	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
@@ -24,7 +27,15 @@ func NewGetMyDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyDcLo
 }
 
 func (l *GetMyDcLogic) GetMyDc(in *nft.Empty) (*nft.DcPageVOList, error) {
-	// todo: add your logic here and delete this line
-
-	return &nft.DcPageVOList{}, nil
+	userInfo, err := util.GetUserInfo(l.ctx)
+	if err != nil {
+		return nil, err
+	}
+	mysql := db.GetMysql()
+	var dcInfos []model.DcInfo
+	mysql.Model(&model.DcInfo{}).Where("owner_name = ?", userInfo.UserName).Find(&dcInfos)
+	list := GetDcPageVOList(dcInfos)
+	return &nft.DcPageVOList{
+		DcPageVO: list,
+	}, nil
 }
