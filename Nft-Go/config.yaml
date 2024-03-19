@@ -7,3 +7,13 @@ key: rawven
 rocketmq:
   group: testGroup
   nameserver: 10.21.32.221:9876
+fisco:
+  group: group0
+  contract:
+    admin: "2dbbf6b8894ed9b002445d7286124eb03291a574a23d5b3a92af654726e1ad92"
+    address:
+      poolData: "0x02c387f81f33bd252d5b6ad5952fcffa54edf5d7"
+      poolLogic: "0xe117a3ad55a3c69adab5731fd21f0b1ee61a9667"
+      userLogic: "0x7d9f2565ac99b30f2e3f26dd09c13aecbe08962f"
+      userData: "0x92c9e53ccc9ff54413cac75a0952f8e2f907b977"
+

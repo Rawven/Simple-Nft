@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
+	"Nft-Go/common/api/user"
 	"Nft-Go/user/internal/logic"
 	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 )
 
 type UserServer struct {
@@ -60,4 +60,9 @@ func (s *UserServer) GetNoticeByTitle(ctx context.Context, in *user.TitleNoticeR
 func (s *UserServer) GetNoticeById(ctx context.Context, in *user.IdNoticeRequest) (*user.Notice, error) {
 	l := logic.NewGetNoticeByIdLogic(ctx, s.svcCtx)
 	return l.GetNoticeById(in)
+}
+
+func (s *UserServer) GetUserInfoByName(ctx context.Context, in *user.UserNameRequest) (*user.UserInfo, error) {
+	l := logic.NewGetUserInfoByNameLogic(ctx, s.svcCtx)
+	return l.GetUserInfoByName(in)
 }

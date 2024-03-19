@@ -1,12 +1,12 @@
 package logic
 
 import (
-	"Nft-Go/common/db"
-	"Nft-Go/user/internal/model"
+	"Nft-Go/user/internal/dao"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 
+	"Nft-Go/common/api/user"
 	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,10 +26,10 @@ func NewGetNoticeByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *GetNoticeByIdLogic) GetNoticeById(in *user.IdNoticeRequest) (*user.Notice, error) {
-	// todo: add your logic here and delete this line
-	mysql := db.GetMysql()
-	var notice model.Notice
-	mysql.Where("id = ?", in.Id).First(&notice)
+	notice, err := dao.Notice.WithContext(l.ctx).Where(dao.Notice.Id.Eq(in.GetId())).First()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
 	return &user.Notice{
 		Title:       notice.Title,
 		Description: notice.Description,

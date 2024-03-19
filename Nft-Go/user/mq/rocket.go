@@ -23,7 +23,6 @@ import (
 	"Nft-Go/user/internal/model"
 	"Nft-Go/user/sse"
 	"context"
-	"dubbo.apache.org/dubbo-go/v3/logger/zap"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
@@ -34,7 +33,7 @@ import (
 )
 
 func InitMq() {
-	rlog.SetLogger(&ZapLogger{})
+	rlog.SetLogger(&util.ZapLogger{})
 	// 设置推送消费者
 	c, _ := rocketmq.NewPushConsumer(
 		//消费组
@@ -67,6 +66,9 @@ func InitMq() {
 					return 0, err
 				}
 				break
+			case "rankAdd":
+				//TODO
+				break
 			default:
 				break
 			}
@@ -84,37 +86,4 @@ func InitMq() {
 	}
 	logger.Info("mq connect success")
 
-}
-
-type ZapLogger struct {
-	logger *zap.Logger
-}
-
-func (l *ZapLogger) Debug(msg string, fields map[string]interface{}) {
-	logger.Info(msg, fields)
-}
-
-func (l *ZapLogger) Info(msg string, fields map[string]interface{}) {
-	logger.Info(msg, fields)
-}
-
-func (l *ZapLogger) Warning(msg string, fields map[string]interface{}) {
-	logger.Warn(msg, fields)
-}
-
-func (l *ZapLogger) Error(msg string, fields map[string]interface{}) {
-	logger.Error(msg, fields)
-}
-
-func (l *ZapLogger) Fatal(msg string, fields map[string]interface{}) {
-	logger.Fatal(msg, fields)
-}
-
-func (l *ZapLogger) Level(level string) {
-	logger.SetLoggerLevel(level)
-}
-
-func (l *ZapLogger) OutputPath(path string) (err error) {
-	logger.Info("output path is not supported")
-	return nil
 }

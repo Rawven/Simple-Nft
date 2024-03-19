@@ -19,14 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	User_Register_FullMethodName         = "/user.User/register"
-	User_Login_FullMethodName            = "/user.User/login"
-	User_Logout_FullMethodName           = "/user.User/logout"
-	User_RefreshTokens_FullMethodName    = "/user.User/refreshTokens"
-	User_Upload_FullMethodName           = "/user.User/upload"
-	User_GetAllNotices_FullMethodName    = "/user.User/getAllNotices"
-	User_GetNoticeByTitle_FullMethodName = "/user.User/getNoticeByTitle"
-	User_GetNoticeById_FullMethodName    = "/user.User/getNoticeById"
+	User_Register_FullMethodName          = "/user.User/register"
+	User_Login_FullMethodName             = "/user.User/login"
+	User_Logout_FullMethodName            = "/user.User/logout"
+	User_RefreshTokens_FullMethodName     = "/user.User/refreshTokens"
+	User_Upload_FullMethodName            = "/user.User/upload"
+	User_GetAllNotices_FullMethodName     = "/user.User/getAllNotices"
+	User_GetNoticeByTitle_FullMethodName  = "/user.User/getNoticeByTitle"
+	User_GetNoticeById_FullMethodName     = "/user.User/getNoticeById"
+	User_GetUserInfoByName_FullMethodName = "/user.User/getUserInfoByName"
 )
 
 // UserClient is the client API for User service.
@@ -41,6 +42,7 @@ type UserClient interface {
 	GetAllNotices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NoticeList, error)
 	GetNoticeByTitle(ctx context.Context, in *TitleNoticeRequest, opts ...grpc.CallOption) (*NoticeList, error)
 	GetNoticeById(ctx context.Context, in *IdNoticeRequest, opts ...grpc.CallOption) (*Notice, error)
+	GetUserInfoByName(ctx context.Context, in *UserNameRequest, opts ...grpc.CallOption) (*UserInfo, error)
 }
 
 type userClient struct {
@@ -148,6 +150,15 @@ func (c *userClient) GetNoticeById(ctx context.Context, in *IdNoticeRequest, opt
 	return out, nil
 }
 
+func (c *userClient) GetUserInfoByName(ctx context.Context, in *UserNameRequest, opts ...grpc.CallOption) (*UserInfo, error) {
+	out := new(UserInfo)
+	err := c.cc.Invoke(ctx, User_GetUserInfoByName_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -160,6 +171,7 @@ type UserServer interface {
 	GetAllNotices(context.Context, *Empty) (*NoticeList, error)
 	GetNoticeByTitle(context.Context, *TitleNoticeRequest) (*NoticeList, error)
 	GetNoticeById(context.Context, *IdNoticeRequest) (*Notice, error)
+	GetUserInfoByName(context.Context, *UserNameRequest) (*UserInfo, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -190,6 +202,9 @@ func (UnimplementedUserServer) GetNoticeByTitle(context.Context, *TitleNoticeReq
 }
 func (UnimplementedUserServer) GetNoticeById(context.Context, *IdNoticeRequest) (*Notice, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNoticeById not implemented")
+}
+func (UnimplementedUserServer) GetUserInfoByName(context.Context, *UserNameRequest) (*UserInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfoByName not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -356,6 +371,24 @@ func _User_GetNoticeById_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_GetUserInfoByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetUserInfoByName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetUserInfoByName_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetUserInfoByName(ctx, req.(*UserNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -390,6 +423,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getNoticeById",
 			Handler:    _User_GetNoticeById_Handler,
+		},
+		{
+			MethodName: "getUserInfoByName",
+			Handler:    _User_GetUserInfoByName_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

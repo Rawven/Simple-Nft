@@ -2,27 +2,28 @@ package main
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
-	"flag"
-	"fmt"
-	"github.com/zeromicro/go-zero/core/logc"
-
 	"Nft-Go/nft/internal/config"
 	"Nft-Go/nft/internal/server"
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
+	"Nft-Go/nft/mq"
+	"flag"
+	"fmt"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
+	"github.com/zeromicro/zero-contrib/zrpc/registry/nacos"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 var configFile = flag.String("f", "etc/nft.yaml", "the config file")
 
-func main() {
+func main1() {
 	flag.Parse()
 	//config
 	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
@@ -51,5 +52,30 @@ func main() {
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
+
+	// register service to nacos
+	sc := []constant.ServerConfig{
+		*constant.NewServerConfig("10.21.32.154", 8848),
+	}
+
+	cc := &constant.ClientConfig{
+		NamespaceId:         "public",
+		TimeoutMs:           5000,
+		NotLoadCacheAtStart: true,
+		LogDir:              "/tmp/nacos/log",
+		CacheDir:            "/tmp/nacos/cache",
+		LogLevel:            "debug",
+	}
+
+	opts := nacos.NewNacosConfig("nft.rpc", c.ListenOn, sc, cc)
+	_ = nacos.RegisterService(opts)
+
 	s.Start()
+}
+
+func main() {
+
+	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
+	mq.InitMq()
+
 }

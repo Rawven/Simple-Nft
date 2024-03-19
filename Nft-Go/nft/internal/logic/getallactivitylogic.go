@@ -1,11 +1,12 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
+	"Nft-Go/nft/internal/dao"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,8 +24,12 @@ func NewGetAllActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 	}
 }
 
-func (l *GetAllActivityLogic) GetAllActivity(in *nft.Empty) (*nft.ActivityPageVOList, error) {
-	// todo: add your logic here and delete this line
-
-	return &nft.ActivityPageVOList{}, nil
+func (l *GetAllActivityLogic) GetAllActivity(in *nft.NftEmpty) (*nft.ActivityPageVOList, error) {
+	my := dao.ActivityInfo
+	activities, err := my.WithContext(l.ctx).Find()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
+	activityPageVOList := showForPage(activities)
+	return &nft.ActivityPageVOList{ActivityPageVO: activityPageVOList}, nil
 }

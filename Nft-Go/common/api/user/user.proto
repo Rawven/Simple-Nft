@@ -3,7 +3,6 @@ syntax = "proto3";
 package user;
 option go_package = "./user";
 
-
 service User {
   rpc register(RegisterRequest) returns (Response);
   rpc login(LoginRequest) returns (Response);
@@ -13,11 +12,20 @@ service User {
   rpc getAllNotices(Empty) returns (NoticeList);
   rpc getNoticeByTitle(TitleNoticeRequest) returns (NoticeList);
   rpc getNoticeById(IdNoticeRequest) returns (Notice);
+  rpc getUserInfoByName(UserNameRequest) returns (UserInfo);
 }
 
+message Empty {}
 
-message Empty{
 
+
+message UserNameRequest {
+  string username = 1;
+}
+
+message UserInfo {
+  string username = 1;
+  string address = 2;
 }
 
 message Notice {

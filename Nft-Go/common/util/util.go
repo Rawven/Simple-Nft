@@ -3,9 +3,13 @@ package util
 import (
 	"Nft-Go/common/db"
 	"context"
+	"encoding/hex"
+	"fmt"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/dubbogo/grpc-go/metadata"
 	"github.com/spf13/viper"
+	"math/big"
+	"time"
 )
 
 func GetUserInfo(ctx context.Context) (*UserInfo, error) {
@@ -34,4 +38,26 @@ func InitConfig(path string) {
 	if err != nil {
 		logger.Info("viper read config failed, err:", err)
 	}
+}
+
+func TurnTime(ti int64) string {
+	return time.Unix(ti, 0).Format("2006-01-02 15:04:05")
+}
+
+func HexString2ByteArray(hexString string) ([]byte, error) {
+	if hexString[:2] == "0x" {
+		hexString = hexString[2:]
+	}
+	result, err := hex.DecodeString(hexString)
+	if err != nil {
+		return nil, err
+	}
+	if len(result) > 32 {
+		result = result[len(result)-32:]
+	}
+	return result, nil
+}
+
+func ByteArray2HexString(byteArray []byte) string {
+	return "0x" + fmt.Sprintf("%064x", new(big.Int).SetBytes(byteArray))
 }

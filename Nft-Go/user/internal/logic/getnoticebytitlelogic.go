@@ -1,12 +1,12 @@
 package logic
 
 import (
-	"Nft-Go/common/db"
-	"Nft-Go/user/internal/model"
+	"Nft-Go/user/internal/dao"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 
+	"Nft-Go/common/api/user"
 	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,10 +26,10 @@ func NewGetNoticeByTitleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *GetNoticeByTitleLogic) GetNoticeByTitle(in *user.TitleNoticeRequest) (*user.NoticeList, error) {
-	// todo: add your logic here and delete this line
-	mysql := db.GetMysql()
-	var notices []model.Notice
-	mysql.Where("title like ?", "%"+in.Title+"%").Find(&notices)
+	notices, err := dao.Notice.WithContext(l.ctx).Where(dao.Notice.Title.Like(in.Title)).Find()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
 	var res []*user.Notice
 	for _, v := range notices {
 		res = append(res, &user.Notice{

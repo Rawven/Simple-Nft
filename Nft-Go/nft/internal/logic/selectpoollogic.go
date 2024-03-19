@@ -1,11 +1,12 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
+	"Nft-Go/nft/internal/dao"
+	"Nft-Go/nft/mq"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -24,7 +25,23 @@ func NewSelectPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Select
 }
 
 func (l *SelectPoolLogic) SelectPool(in *nft.SelectPoolRequest) (*nft.PoolPageVOList, error) {
-	// todo: add your logic here and delete this line
+	if in.SelectPoolBo.Name != "" {
+		mq.RankAdd(in.SelectPoolBo.Name)
+	}
+	if in.SelectPoolBo.CreatorName != "" {
+		mq.RankAdd(in.SelectPoolBo.CreatorName)
+	}
+	info := dao.PoolInfo
+	find, err := info.WithContext(l.ctx).
+		Where(info.CreatorName.Like("in.SelectPoolBo.CreatorName"),
+			info.Name.Like(in.SelectPoolBo.Name), info.Price.Between(in.SelectPoolBo.MinPrice,
+				in.SelectPoolBo.MaxPrice)).Find()
+	if err != nil {
+		return nil, err
+	}
+	list := GetPoolPageVOList(find)
 
-	return &nft.PoolPageVOList{}, nil
+	return &nft.PoolPageVOList{
+		PoolPageVO: list,
+	}, nil
 }

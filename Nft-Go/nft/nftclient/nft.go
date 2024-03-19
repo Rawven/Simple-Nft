@@ -4,9 +4,9 @@
 package nftclient
 
 import (
+	"Nft-Go/common/api/blc"
+	"Nft-Go/common/api/nft"
 	"context"
-
-	"Nft-Go/nft/pb/nft"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -22,17 +22,17 @@ type (
 	CollectionMessageOnChainVO         = nft.CollectionMessageOnChainVO
 	CommonResult                       = nft.CommonResult
 	CreateActivityBO                   = nft.CreateActivityBO
-	CreateActivityRequest              = nft.CreateActivityRequest
+	CreateActivityRequest              = blc.CreateActivityRequest
 	CreatePoolBO                       = nft.CreatePoolBO
-	CreatePoolRequest                  = nft.CreatePoolRequest
+	CreatePoolRequest                  = blc.CreatePoolRequest
 	DcDetailVO                         = nft.DcDetailVO
 	DcOverviewVO                       = nft.DcOverviewVO
 	DcPageVO                           = nft.DcPageVO
 	DcPageVOList                       = nft.DcPageVOList
-	Empty                              = nft.Empty
+	Empty                              = nft.NftEmpty
 	GetDcByIdRequest                   = nft.GetDcByIdRequest
 	GetDcFromActivityBO                = nft.GetDcFromActivityBO
-	GetDcFromActivityRequest           = nft.GetDcFromActivityRequest
+	GetDcFromActivityRequest           = blc.GetDcFromActivityRequest
 	GetDigitalCollectionHistoryRequest = nft.GetDigitalCollectionHistoryRequest
 	GetMessageByHashDTO                = nft.GetMessageByHashDTO
 	GetMessageByHashRequest            = nft.GetMessageByHashRequest

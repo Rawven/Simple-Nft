@@ -1,11 +1,11 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
+	"Nft-Go/nft/internal/dao"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,8 +23,13 @@ func NewGetMyPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyPo
 	}
 }
 
-func (l *GetMyPoolLogic) GetMyPool(in *nft.Empty) (*nft.PoolPageVOList, error) {
-	// todo: add your logic here and delete this line
-
-	return &nft.PoolPageVOList{}, nil
+func (l *GetMyPoolLogic) GetMyPool(in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
+	poolInfos, err := dao.PoolInfo.WithContext(l.ctx).Where(dao.PoolInfo.CreatorName.Eq("creatorName")).Order(dao.PoolInfo.PoolId.Desc()).Find()
+	if err != nil {
+		return nil, err
+	}
+	poolPageVOList := GetPoolPageVOList(poolInfos)
+	return &nft.PoolPageVOList{
+		PoolPageVO: poolPageVOList,
+	}, nil
 }

@@ -2,14 +2,16 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
+	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -28,25 +30,23 @@ func NewBuyFromPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BuyFr
 }
 
 func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonResult, error) {
-	// todo: add your logic here and delete this line
 	info, err := util.GetUserInfo(l.ctx)
 	if err != nil {
-		return nil, err
+		return nil, xerror.New("获取用户信息失败")
 	}
 	dubbo := api.GetBlcDubbo()
-	mysql := db.GetMysql()
+	my := dao.PoolInfo
 	//让PoolInfo指定id的数据中的left减一
-	tx := mysql.Exec("UPDATE pool SET `left` = `left` - 1 WHERE pool_id = #{poolId}", in.BuyFromPoolBo.PoolId)
-	if tx.Error != nil {
-		return nil, tx.Error
+	my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).Update(my.Left, my.Left.Sub(1))
+	pool, err := my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).First()
+	if err != nil {
+		return nil, xerror.New("查询失败")
 	}
-	var pool model.PoolInfo
-	mysql.Model(&model.PoolInfo{}).Where("pool_id = ?", in.BuyFromPoolBo.PoolId).First(&pool)
-	mint, err := dubbo.BeforeMint(l.ctx, &api.BeforeMintRequest{
+	mint, err := dubbo.BeforeMint(l.ctx, &blc.BeforeMintRequest{
 		Id: pool.PoolId,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerror.New("调用dubbo失败")
 	}
 	dcInfo := model.DcInfo{
 		Id:             int32(mint.DcId),
@@ -60,16 +60,13 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 		CreatorName:    pool.CreatorName,
 		CreatorAddress: pool.CreatorAddress,
 	}
-	tx = mysql.Create(&dcInfo)
-	if tx.Error != nil {
-		return nil, tx.Error
-	}
-	_, err = dubbo.Mint(l.ctx, &api.MintRequest{
-		UserKey: &api.UserKey{UserKey: info.PrivateKey},
+	dao.DcInfo.WithContext(l.ctx).Create(&dcInfo)
+	_, err = dubbo.Mint(l.ctx, &blc.MintRequest{
+		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
 		PoolId:  pool.PoolId,
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerror.New("调用dubbo失败")
 	}
 	redis := db.GetRedis()
 	info.Balance = info.Balance - pool.Price
