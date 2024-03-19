@@ -2,10 +2,10 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
 	"Nft-Go/common/util"
-	"Nft-Go/nft/internal/model"
+	"Nft-Go/nft/internal/dao"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 
 	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -28,11 +28,12 @@ func NewGetMyDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyDcLo
 func (l *GetMyDcLogic) GetMyDc(in *nft.NftEmpty) (*nft.DcPageVOList, error) {
 	userInfo, err := util.GetUserInfo(l.ctx)
 	if err != nil {
-		return nil, err
+		return nil, xerror.New("获取用户信息失败")
 	}
-	mysql := db.GetMysql()
-	var dcInfos []model.DcInfo
-	mysql.Model(&model.DcInfo{}).Where("owner_name = ?", userInfo.UserName).Find(&dcInfos)
+	dcInfos, err := dao.DcInfo.WithContext(l.ctx).Where(dao.DcInfo.OwnerName.Eq(userInfo.UserName)).Find()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
 	list := GetDcPageVOList(dcInfos)
 	return &nft.DcPageVOList{
 		DcPageVO: list,

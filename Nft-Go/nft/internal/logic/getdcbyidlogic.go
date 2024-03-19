@@ -3,8 +3,9 @@ package logic
 import (
 	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
-	"Nft-Go/nft/internal/model"
+	"Nft-Go/nft/internal/dao"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/spf13/viper"
 
 	"Nft-Go/nft/internal/svc"
@@ -26,12 +27,11 @@ func NewGetDcByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDcBy
 }
 
 func (l *GetDcByIdLogic) GetDcById(in *nft.GetDcByIdRequest) (*nft.DcDetailVO, error) {
-	mysql := db.GetMysql()
+	mysql := dao.DcInfo
 	ipfs := db.GetIpfs()
-	var dcInfo model.DcInfo
-	tx := mysql.Model(&model.DcInfo{}).Where("id = ?", in.Id).Find(&dcInfo)
-	if tx.Error != nil { //查询出错
-		return nil, tx.Error
+	dcInfo, err := mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.GetId())).First()
+	if err != nil {
+		return nil, xerror.New("查询失败")
 	}
 	return &nft.DcDetailVO{
 		DcId:            in.GetId(),

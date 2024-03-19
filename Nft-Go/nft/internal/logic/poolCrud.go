@@ -6,10 +6,10 @@ import (
 	"Nft-Go/nft/internal/model"
 )
 
-func GetPoolPageVOList(pools *[]model.PoolInfo) []*nft.PoolPageVO {
+func GetPoolPageVOList(pools []*model.PoolInfo) []*nft.PoolPageVO {
 	ipfs := db.GetIpfs()
 	var poolPageVOList []*nft.PoolPageVO
-	for _, pool := range *pools {
+	for _, pool := range pools {
 		poolPageVOList = append(poolPageVOList, &nft.PoolPageVO{
 			PoolId:      pool.PoolId,
 			Name:        pool.Name,

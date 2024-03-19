@@ -4,10 +4,10 @@ import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/blc"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
 	"Nft-Go/common/util"
-	"Nft-Go/nft/internal/model"
+	"Nft-Go/nft/internal/dao"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 	"os"
 
 	"Nft-Go/nft/internal/svc"
@@ -33,18 +33,19 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 		return nil, os.ErrInvalid
 	}
 	dubbo := api.GetBlcDubbo()
-	mysql := db.GetMysql()
+	mysql := dao.DcInfo
 	var dto nft.GetMessageByHashDTO
 	if len(in.Hash) == 42 {
 		var checkDto blc.CheckDcAndReturnTimeDTO
 		status, err := dubbo.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
 		if err != nil {
-			return nil, err
+			return nil, xerror.New("获取用户状态失败")
 		}
 		//为什么名字是hash？？？
-		var collectionList []model.DcInfo
-		mysql.Model(&model.DcInfo{}).Where("owner_name = ?",
-			in.GetHash()).First(&collectionList)
+		collectionList, err := mysql.WithContext(l.ctx).Where(mysql.OwnerName.Eq(in.Hash)).Find()
+		if err != nil {
+			return nil, xerror.New("查询失败")
+		}
 		var checkArgs [][]byte
 		for _, v := range collectionList {
 			checkArgs = append(checkArgs, []byte(v.Hash))

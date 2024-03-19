@@ -2,7 +2,9 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
+	"Nft-Go/nft/internal/dao"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 
 	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -23,7 +25,15 @@ func NewSearchActivitiesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *SearchActivitiesLogic) SearchActivities(in *nft.SearchActivitiesRequest) (*nft.ActivityPageVOList, error) {
-	// todo: add your logic here and delete this line
+	//TODO Mq
 
-	return &nft.ActivityPageVOList{}, nil
+	ad := dao.ActivityInfo
+	find, err := ad.WithContext(l.ctx).Where(ad.HostName.Like(in.SearchActivityBO.HostName), ad.Name.Like(in.GetSearchActivityBO().GetActivityName())).Find()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
+	page := showForPage(find)
+	return &nft.ActivityPageVOList{
+		ActivityPageVO: page,
+	}, nil
 }

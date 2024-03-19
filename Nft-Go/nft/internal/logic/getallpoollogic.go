@@ -2,9 +2,9 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
-	"Nft-Go/nft/internal/model"
+	"Nft-Go/nft/internal/dao"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 
 	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -25,11 +25,13 @@ func NewGetAllPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAll
 }
 
 func (l *GetAllPoolLogic) GetAllPool(in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
-	mysql := db.GetMysql()
+	mysql := dao.PoolInfo
 	//查找所有poolInfo 按照id排序
-	var poolInfos []model.PoolInfo
-	mysql.Find(&model.PoolInfo{}).Order("id").Find(&poolInfos)
-	poolPageVOList := GetPoolPageVOList(&poolInfos)
+	poolInfos, err := mysql.WithContext(l.ctx).Order(mysql.PoolId).Find()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
+	poolPageVOList := GetPoolPageVOList(poolInfos)
 	return &nft.PoolPageVOList{
 		PoolPageVO: poolPageVOList,
 	}, nil

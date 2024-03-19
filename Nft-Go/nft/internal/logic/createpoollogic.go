@@ -9,6 +9,7 @@ import (
 	"Nft-Go/nft/internal/model"
 	"Nft-Go/nft/internal/svc"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -32,17 +33,17 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResu
 	dubbo := api.GetBlcDubbo()
 	info, err := util.GetUserInfo(l.ctx)
 	if err != nil {
-		return nil, err
+		return nil, xerror.New("获取用户信息失败")
 	}
 	ipfs := db.GetIpfs()
 	cid, err := ipfs.UploadIPFSByPath(in.CreatePoolBo.FilePath)
 	if err != nil {
-		return nil, err
+		return nil, xerror.New("上传文件失败")
 	}
 	db.GetIpfs()
 	amount, err := dubbo.GetPoolAmount(l.ctx, &emptypb.Empty{})
 	if err != nil {
-		return nil, err
+		return nil, xerror.New("获取池子数量失败")
 	}
 	poolId := amount.Amount
 	//判断商品状态
@@ -67,7 +68,7 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResu
 	}
 	tx := db.GetMysql().Create(&poolInfo)
 	if tx.Error != nil {
-		return nil, tx.Error
+		return nil, xerror.New("插入池子失败")
 	}
 	_, err = dubbo.CreatePool(l.ctx, &blc.CreatePoolRequest{
 		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
@@ -80,7 +81,7 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResu
 		},
 	})
 	if err != nil {
-		return nil, err
+		return nil, xerror.New("调用dubbo失败")
 	}
 
 	return &nft.CommonResult{

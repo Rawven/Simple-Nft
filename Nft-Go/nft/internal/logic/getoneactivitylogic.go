@@ -5,7 +5,7 @@ import (
 	"Nft-Go/common/api/blc"
 	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
-	"Nft-Go/nft/internal/model"
+	"Nft-Go/nft/internal/dao"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/spf13/viper"
@@ -30,17 +30,17 @@ func NewGetOneActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 func (l *GetOneActivityLogic) GetOneActivity(in *nft.GetOneActivityRequest) (*nft.ActivityDetailsVO, error) {
 	dubbo := api.GetBlcDubbo()
-	mysql := db.GetMysql()
 	ipfs := db.GetIpfs()
 	activityAndPool, err := dubbo.GetIdToActivity(l.ctx, &blc.GetIdToActivityRequest{Id: in.Id})
 	if err != nil {
-		return nil, xerror.New("dubbo.GetIdToActivity error: %v", err)
+		return nil, xerror.New("“获取活动失败”")
 	}
 	activity := activityAndPool.Activity
 	pool := activityAndPool.Pool
-	var activityInfo model.ActivityInfo
-	mysql.Model(&model.ActivityInfo{}).
-		Where("id = ?", in.Id).First(&activityInfo)
+	activityInfo, err := dao.ActivityInfo.WithContext(l.ctx).Where(dao.ActivityInfo.Id.Eq(in.Id)).First()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
 	return &nft.ActivityDetailsVO{
 		Id:                  in.GetId(),
 		ActivityName:        activity.GetName(),

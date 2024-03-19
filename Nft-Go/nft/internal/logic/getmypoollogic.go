@@ -2,8 +2,7 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
-	"Nft-Go/nft/internal/model"
+	"Nft-Go/nft/internal/dao"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
@@ -25,11 +24,11 @@ func NewGetMyPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyPo
 }
 
 func (l *GetMyPoolLogic) GetMyPool(in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
-	//"SELECT * FROM pool WHERE creator_name = #{creatorName} ORDER BY pool_id DESC"
-	mysql := db.GetMysql()
-	var poolInfos []model.PoolInfo
-	mysql.Model(&model.PoolInfo{}).Where("creator_name = ?", "creatorName").Order("pool_id DESC").Find(&poolInfos)
-	poolPageVOList := GetPoolPageVOList(&poolInfos)
+	poolInfos, err := dao.PoolInfo.WithContext(l.ctx).Where(dao.PoolInfo.CreatorName.Eq("creatorName")).Order(dao.PoolInfo.PoolId.Desc()).Find()
+	if err != nil {
+		return nil, err
+	}
+	poolPageVOList := GetPoolPageVOList(poolInfos)
 	return &nft.PoolPageVOList{
 		PoolPageVO: poolPageVOList,
 	}, nil
