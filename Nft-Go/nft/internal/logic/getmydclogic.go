@@ -1,14 +1,13 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -26,7 +25,7 @@ func NewGetMyDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyDcLo
 	}
 }
 
-func (l *GetMyDcLogic) GetMyDc(in *nft.Empty) (*nft.DcPageVOList, error) {
+func (l *GetMyDcLogic) GetMyDc(in *nft.NftEmpty) (*nft.DcPageVOList, error) {
 	userInfo, err := util.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, err

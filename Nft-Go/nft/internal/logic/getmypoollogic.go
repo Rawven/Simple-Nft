@@ -1,13 +1,12 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,7 +24,7 @@ func NewGetMyPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyPo
 	}
 }
 
-func (l *GetMyPoolLogic) GetMyPool(in *nft.Empty) (*nft.PoolPageVOList, error) {
+func (l *GetMyPoolLogic) GetMyPool(in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
 	//"SELECT * FROM pool WHERE creator_name = #{creatorName} ORDER BY pool_id DESC"
 	mysql := db.GetMysql()
 	var poolInfos []model.PoolInfo

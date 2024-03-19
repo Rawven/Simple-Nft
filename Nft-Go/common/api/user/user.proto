@@ -3,7 +3,6 @@ syntax = "proto3";
 package user;
 option go_package = "./user";
 
-
 service User {
   rpc register(RegisterRequest) returns (Response);
   rpc login(LoginRequest) returns (Response);
@@ -16,10 +15,9 @@ service User {
   rpc getUserInfoByName(UserNameRequest) returns (UserInfo);
 }
 
+message Empty {}
 
-message Empty{
 
-}
 
 message UserNameRequest {
   string username = 1;

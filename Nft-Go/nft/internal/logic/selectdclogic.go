@@ -1,11 +1,10 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

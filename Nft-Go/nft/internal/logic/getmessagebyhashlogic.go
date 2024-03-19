@@ -2,6 +2,8 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/model"
@@ -9,8 +11,6 @@ import (
 	"os"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -36,8 +36,8 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 	mysql := db.GetMysql()
 	var dto nft.GetMessageByHashDTO
 	if len(in.Hash) == 42 {
-		var checkDto api.CheckDcAndReturnTimeDTO
-		status, err := dubbo.GetUserStatus(l.ctx, &api.GetUserStatusRequest{Hash: in.GetHash()})
+		var checkDto blc.CheckDcAndReturnTimeDTO
+		status, err := dubbo.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
 		if err != nil {
 			return nil, err
 		}
@@ -51,7 +51,7 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 		}
 		checkDto.Owner = in.Hash
 		checkDto.CollectionHash = checkArgs
-		time, err := dubbo.CheckDcAndReturnTime(l.ctx, &api.CheckDcAndReturnTimeRequest{
+		time, err := dubbo.CheckDcAndReturnTime(l.ctx, &blc.CheckDcAndReturnTimeRequest{
 			Dto: &checkDto,
 		})
 		if err != nil || !time.GetCheckResult() {
@@ -75,7 +75,7 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 		dto.Type = 0
 	} else {
 		hashBytes, _ := util.HexString2ByteArray(in.Hash)
-		id, err := dubbo.GetHashToDcId(l.ctx, &api.GetHashToDcIdRequest{
+		id, err := dubbo.GetHashToDcId(l.ctx, &blc.GetHashToDcIdRequest{
 			Hash: hashBytes,
 		})
 		if err != nil {

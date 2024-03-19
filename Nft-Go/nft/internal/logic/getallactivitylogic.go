@@ -1,13 +1,12 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,7 +24,7 @@ func NewGetAllActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 	}
 }
 
-func (l *GetAllActivityLogic) GetAllActivity(in *nft.Empty) (*nft.ActivityPageVOList, error) {
+func (l *GetAllActivityLogic) GetAllActivity(in *nft.NftEmpty) (*nft.ActivityPageVOList, error) {
 	mysql := db.GetMysql()
 	var activities []model.ActivityInfo
 	tx := mysql.Model(&model.ActivityInfo{}).Find(&activities)

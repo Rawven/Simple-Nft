@@ -2,11 +2,12 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/model"
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
 	"context"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -68,9 +69,9 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResu
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	_, err = dubbo.CreatePool(l.ctx, &api.CreatePoolRequest{
-		UserKey: &api.UserKey{UserKey: info.PrivateKey},
-		Dto: &api.CreatePoolDTO{
+	_, err = dubbo.CreatePool(l.ctx, &blc.CreatePoolRequest{
+		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
+		Dto: &blc.CreatePoolDTO{
 			LimitAmount: int64(in.CreatePoolBo.LimitAmount),
 			Price:       int64(in.CreatePoolBo.Price),
 			Amount:      int64(in.CreatePoolBo.Amount),

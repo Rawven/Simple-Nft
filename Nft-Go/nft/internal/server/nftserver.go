@@ -4,11 +4,11 @@
 package server
 
 import (
+	"Nft-Go/common/api/nft"
 	"context"
 
 	"Nft-Go/nft/internal/logic"
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
 )
 
 type NftServer struct {
@@ -37,7 +37,7 @@ func (s *NftServer) GetDcFromActivity(ctx context.Context, in *nft.GetDcFromActi
 	return l.GetDcFromActivity(in)
 }
 
-func (s *NftServer) GetAllActivity(ctx context.Context, in *nft.Empty) (*nft.ActivityPageVOList, error) {
+func (s *NftServer) GetAllActivity(ctx context.Context, in *nft.NftEmpty) (*nft.ActivityPageVOList, error) {
 	l := logic.NewGetAllActivityLogic(ctx, s.svcCtx)
 	return l.GetAllActivity(in)
 }
@@ -57,7 +57,7 @@ func (s *NftServer) GiveDc(ctx context.Context, in *nft.GiveDcRequest) (*nft.Com
 	return l.GiveDc(in)
 }
 
-func (s *NftServer) GetAllDc(ctx context.Context, in *nft.Empty) (*nft.DcPageVOList, error) {
+func (s *NftServer) GetAllDc(ctx context.Context, in *nft.NftEmpty) (*nft.DcPageVOList, error) {
 	l := logic.NewGetAllDcLogic(ctx, s.svcCtx)
 	return l.GetAllDc(in)
 }
@@ -72,7 +72,7 @@ func (s *NftServer) GetDcById(ctx context.Context, in *nft.GetDcByIdRequest) (*n
 	return l.GetDcById(in)
 }
 
-func (s *NftServer) GetMyDc(ctx context.Context, in *nft.Empty) (*nft.DcPageVOList, error) {
+func (s *NftServer) GetMyDc(ctx context.Context, in *nft.NftEmpty) (*nft.DcPageVOList, error) {
 	l := logic.NewGetMyDcLogic(ctx, s.svcCtx)
 	return l.GetMyDc(in)
 }
@@ -102,12 +102,12 @@ func (s *NftServer) GetPoolById(ctx context.Context, in *nft.GetPoolByIdRequest)
 	return l.GetPoolById(in)
 }
 
-func (s *NftServer) GetAllPool(ctx context.Context, in *nft.Empty) (*nft.PoolPageVOList, error) {
+func (s *NftServer) GetAllPool(ctx context.Context, in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
 	l := logic.NewGetAllPoolLogic(ctx, s.svcCtx)
 	return l.GetAllPool(in)
 }
 
-func (s *NftServer) GetMyPool(ctx context.Context, in *nft.Empty) (*nft.PoolPageVOList, error) {
+func (s *NftServer) GetMyPool(ctx context.Context, in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
 	l := logic.NewGetMyPoolLogic(ctx, s.svcCtx)
 	return l.GetMyPool(in)
 }

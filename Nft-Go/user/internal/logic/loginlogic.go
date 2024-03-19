@@ -2,6 +2,7 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
 	"Nft-Go/common/db"
 	global2 "Nft-Go/common/util"
 	"Nft-Go/user/internal/model"
@@ -39,11 +40,8 @@ func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	if _user.ID == 0 {
 		return &user.Response{Message: "账号或密码错误"}, nil
 	}
-	dubbo, err := api.GetBlcDubbo()
-	if err != nil {
-		return nil, err
-	}
-	balance, err := dubbo.GetUserBalance(l.ctx, &api.UserBalanceRequest{
+	dubbo := api.GetBlcDubbo()
+	balance, err := dubbo.GetUserBalance(l.ctx, &blc.UserBalanceRequest{
 		Address: _user.Address,
 	})
 	if err != nil {

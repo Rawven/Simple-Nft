@@ -2,6 +2,8 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/model"
@@ -11,8 +13,6 @@ import (
 	"github.com/duke-git/lancet/v2/cryptor"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -36,7 +36,7 @@ func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequ
 	if err != nil {
 		return nil, err
 	}
-	activityAndPool, err := dubbo.GetIdToActivity(l.ctx, &api.GetIdToActivityRequest{Id: in.GetDcFromActivityBo.GetId()})
+	activityAndPool, err := dubbo.GetIdToActivity(l.ctx, &blc.GetIdToActivityRequest{Id: in.GetDcFromActivityBo.GetId()})
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequ
 		Updates(model.ActivityInfo{Remainder: int32(pool.Left), Status: compare.Equal(pool.Left, 1)})
 	var activityInfo model.ActivityInfo
 	mysql.Find(&model.ActivityInfo{}).Where("id = ?", in.GetDcFromActivityBo.GetId()).First(&activityInfo)
-	mint, err := dubbo.BeforeMint(l.ctx, &api.BeforeMintRequest{
+	mint, err := dubbo.BeforeMint(l.ctx, &blc.BeforeMintRequest{
 		Id: int32(activity.PoolId),
 	})
 	if err != nil {
@@ -65,9 +65,9 @@ func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequ
 		CreatorAddress: activityInfo.HostAddress,
 	})
 	in.GetGetDcFromActivityBo().Password = cryptor.Sha256(in.GetDcFromActivityBo.Password)
-	_, err = dubbo.GetDcFromActivity(l.ctx, &api.GetDcFromActivityRequest{
-		Key: &api.UserKey{UserKey: info.PrivateKey},
-		Args: &api.GetDcFromActivityDTO{
+	_, err = dubbo.GetDcFromActivity(l.ctx, &blc.GetDcFromActivityRequest{
+		Key: &blc.UserKey{UserKey: info.PrivateKey},
+		Args: &blc.GetDcFromActivityDTO{
 			ActivityId: int64(activityInfo.Id),
 			Password:   []byte(in.GetDcFromActivityBo.GetPassword()),
 		},

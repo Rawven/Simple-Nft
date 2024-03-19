@@ -2,14 +2,14 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -30,7 +30,7 @@ func NewGetDigitalCollectionHistoryLogic(ctx context.Context, svcCtx *svc.Servic
 func (l *GetDigitalCollectionHistoryLogic) GetDigitalCollectionHistory(in *nft.GetDigitalCollectionHistoryRequest) (*nft.CollectionMessageOnChainVO, error) {
 	dubbo := api.GetBlcDubbo()
 	mysql := db.GetMysql()
-	message, err := dubbo.GetDcHistoryAndMessage(l.ctx, &api.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
+	message, err := dubbo.GetDcHistoryAndMessage(l.ctx, &blc.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (l *GetDigitalCollectionHistoryLogic) GetDigitalCollectionHistory(in *nft.G
 func GetDigitalCollectionHistory(in *nft.GetDigitalCollectionHistoryRequest, ctx context.Context) (*nft.CollectionMessageOnChainVO, error) {
 	dubbo := api.GetBlcDubbo()
 	mysql := db.GetMysql()
-	message, err := dubbo.GetDcHistoryAndMessage(ctx, &api.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
+	message, err := dubbo.GetDcHistoryAndMessage(ctx, &blc.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
 	if err != nil {
 		return nil, err
 	}

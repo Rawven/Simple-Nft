@@ -1,13 +1,12 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,7 +24,7 @@ func NewGetAllPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAll
 	}
 }
 
-func (l *GetAllPoolLogic) GetAllPool(in *nft.Empty) (*nft.PoolPageVOList, error) {
+func (l *GetAllPoolLogic) GetAllPool(in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
 	mysql := db.GetMysql()
 	//查找所有poolInfo 按照id排序
 	var poolInfos []model.PoolInfo

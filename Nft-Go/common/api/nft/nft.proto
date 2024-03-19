@@ -3,9 +3,7 @@ syntax = "proto3";
 package user;
 option go_package = "./nft";
 
-message Empty{
 
-}
 
 message CommonResult{
   int32  code = 1;
@@ -17,23 +15,25 @@ service Nft {
   rpc GetMessageByHash (GetMessageByHashRequest) returns (GetMessageByHashDTO) {}
   rpc CreateActivity (CreateActivityRequest) returns (CommonResult) {}
   rpc GetDcFromActivity (GetDcFromActivityRequest) returns (CommonResult) {}
-  rpc GetAllActivity (Empty) returns (ActivityPageVOList) {}
+  rpc GetAllActivity (NftEmpty) returns (ActivityPageVOList) {}
   rpc GetOneActivity (GetOneActivityRequest) returns (ActivityDetailsVO) {}
   rpc SearchActivities (SearchActivitiesRequest) returns (ActivityPageVOList) {}
   rpc GiveDc (GiveDcRequest) returns (CommonResult) {}
-  rpc GetAllDc (Empty) returns (DcPageVOList) {}
+  rpc GetAllDc (NftEmpty) returns (DcPageVOList) {}
   rpc SelectDc (SelectDcRequest) returns (DcPageVOList) {}
   rpc GetDcById (GetDcByIdRequest) returns (DcDetailVO) {}
-  rpc GetMyDc (Empty) returns (DcPageVOList) {}
+  rpc GetMyDc (NftEmpty) returns (DcPageVOList) {}
   rpc GetDigitalCollectionHistory (GetDigitalCollectionHistoryRequest) returns (CollectionMessageOnChainVO) {}
   rpc CreatePool (CreatePoolRequest) returns (CommonResult) {}
   rpc BuyFromPool (BuyFromPoolRequest) returns (CommonResult) {}
   rpc SelectPool (SelectPoolRequest) returns (PoolPageVOList) {}
   rpc GetPoolById (GetPoolByIdRequest) returns (PoolDetailsVO) {}
-  rpc GetAllPool (Empty) returns (PoolPageVOList) {}
-  rpc GetMyPool (Empty) returns (PoolPageVOList) {}
+  rpc GetAllPool (NftEmpty) returns (PoolPageVOList) {}
+  rpc GetMyPool (NftEmpty) returns (PoolPageVOList) {}
 }
 
+message NftEmpty {
+}
 message GetMessageByHashRequest {
   string hash = 1;
 }

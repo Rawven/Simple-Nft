@@ -2,6 +2,8 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/model"
 	"context"
@@ -9,8 +11,6 @@ import (
 	"github.com/spf13/viper"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -32,7 +32,7 @@ func (l *GetOneActivityLogic) GetOneActivity(in *nft.GetOneActivityRequest) (*nf
 	dubbo := api.GetBlcDubbo()
 	mysql := db.GetMysql()
 	ipfs := db.GetIpfs()
-	activityAndPool, err := dubbo.GetIdToActivity(l.ctx, &api.GetIdToActivityRequest{Id: in.Id})
+	activityAndPool, err := dubbo.GetIdToActivity(l.ctx, &blc.GetIdToActivityRequest{Id: in.Id})
 	if err != nil {
 		return nil, xerror.New("dubbo.GetIdToActivity error: %v", err)
 	}

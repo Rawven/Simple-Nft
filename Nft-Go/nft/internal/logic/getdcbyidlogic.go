@@ -1,14 +1,13 @@
 package logic
 
 import (
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/model"
 	"context"
 	"github.com/spf13/viper"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

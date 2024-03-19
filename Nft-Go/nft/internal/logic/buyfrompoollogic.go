@@ -2,14 +2,14 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
+	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/model"
 	"context"
 
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -42,7 +42,7 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 	}
 	var pool model.PoolInfo
 	mysql.Model(&model.PoolInfo{}).Where("pool_id = ?", in.BuyFromPoolBo.PoolId).First(&pool)
-	mint, err := dubbo.BeforeMint(l.ctx, &api.BeforeMintRequest{
+	mint, err := dubbo.BeforeMint(l.ctx, &blc.BeforeMintRequest{
 		Id: pool.PoolId,
 	})
 	if err != nil {
@@ -64,8 +64,8 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	_, err = dubbo.Mint(l.ctx, &api.MintRequest{
-		UserKey: &api.UserKey{UserKey: info.PrivateKey},
+	_, err = dubbo.Mint(l.ctx, &blc.MintRequest{
+		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
 		PoolId:  pool.PoolId,
 	})
 	if err != nil {

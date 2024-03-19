@@ -6,7 +6,7 @@
 // 	protoc        v4.25.3
 // source: blc.proto
 
-package api
+package blc
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
