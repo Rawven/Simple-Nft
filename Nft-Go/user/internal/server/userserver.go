@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
+	"Nft-Go/common/api/user"
 	"Nft-Go/user/internal/logic"
 	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 )
 
 type UserServer struct {

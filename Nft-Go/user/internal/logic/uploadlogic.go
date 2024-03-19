@@ -2,8 +2,9 @@ package logic
 
 import (
 	"Nft-Go/common/db"
+
+	"Nft-Go/common/api/user"
 	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 	"context"
 	"io"
 

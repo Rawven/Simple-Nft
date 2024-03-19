@@ -66,6 +66,9 @@ func InitMq() {
 					return 0, err
 				}
 				break
+			case "rankAdd":
+				//TODO
+				break
 			default:
 				break
 			}

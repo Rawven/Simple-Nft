@@ -6,8 +6,8 @@ import (
 	"context"
 	"github.com/duke-git/lancet/v2/convertor"
 
+	"Nft-Go/common/api/user"
 	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

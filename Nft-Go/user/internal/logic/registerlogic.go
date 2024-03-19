@@ -2,11 +2,12 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+
+	"Nft-Go/common/api/user"
 	"Nft-Go/common/db"
 	global2 "Nft-Go/common/util"
 	"Nft-Go/user/internal/model"
 	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 	"context"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/cryptor"

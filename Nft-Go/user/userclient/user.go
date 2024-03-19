@@ -6,7 +6,7 @@ package userclient
 import (
 	"context"
 
-	"Nft-Go/user/pb/user"
+	"Nft-Go/common/api/user"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

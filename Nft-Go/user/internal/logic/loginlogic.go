@@ -2,15 +2,15 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/user/internal/dao"
+	"github.com/duke-git/lancet/v2/xerror"
+
 	"Nft-Go/common/api/blc"
-	"Nft-Go/common/db"
+	"Nft-Go/common/api/user"
 	global2 "Nft-Go/common/util"
-	"Nft-Go/user/internal/model"
 	"Nft-Go/user/internal/svc"
-	"Nft-Go/user/pb/user"
 	"context"
 	"github.com/duke-git/lancet/v2/convertor"
-	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/spf13/viper"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -31,11 +31,9 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
-	mysql := db.GetMysql()
-	_user := model.User{}
-	tx := mysql.Where("username = ? and password = ?", in.GetUsername(), cryptor.Sha256(in.GetPassword())).First(&_user)
-	if tx.Error != nil {
-		return &user.Response{Message: tx.Error.Error()}, nil
+	_user, err := dao.User.WithContext(l.ctx).Where(dao.User.Username.Eq(in.GetUsername())).First()
+	if err != nil {
+		return nil, xerror.New("查询失败")
 	}
 	if _user.ID == 0 {
 		return &user.Response{Message: "账号或密码错误"}, nil
