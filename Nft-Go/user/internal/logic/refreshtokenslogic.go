@@ -1,10 +1,8 @@
 package logic
 
 import (
-	"Nft-Go/common/db"
 	global2 "Nft-Go/common/util"
 	"context"
-	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/spf13/viper"
 
 	"Nft-Go/common/api/user"
@@ -32,22 +30,15 @@ func (l *RefreshTokensLogic) RefreshTokens(in *user.Empty) (*user.Response, erro
 	if err != nil {
 		return nil, err
 	}
-	// 从redis中删除token
-	redis := db.GetRedis()
-	del := redis.Del(l.ctx, convertor.ToString(info.UserId))
-	if del.Val() == 0 {
-		return &user.Response{Message: "退出 失败"}, nil
-	}
 	// 生成新的token
-	jwt, err := global2.GetJwt(viper.Get("jwt").(string), *info)
+	jwt, err := global2.GetJwt(viper.Get("jwt").(string), info.UserId)
 	if err != nil {
 		return nil, err
 	}
-	// 将新的token存入redis
-	set := redis.Set(l.ctx, jwt, convertor.ToString(info.UserId), 0)
-	if set.Val() == "" {
-		return &user.Response{Message: "存入失败"}, nil
-	}
 	// 返回新的token
-	return &user.Response{}, nil
+	return &user.Response{
+		Message: "success",
+		Code:    200,
+		Data:    jwt,
+	}, nil
 }

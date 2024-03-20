@@ -21,9 +21,9 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/nft.yaml", "the config file")
+var configFile = flag.String("f", "D:\\CodeProjects\\Nft-Project\\Nft-Go\\nft\\etc\\nft.yaml", "the config file")
 
-func main1() {
+func main() {
 	flag.Parse()
 	//config
 	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
@@ -31,6 +31,8 @@ func main1() {
 	db.InitMysql()
 	db.InitRedis()
 	db.InitIpfs("localhost:5001")
+	//mq
+	mq.InitMq()
 	//api
 	api.InitDubbo()
 	//other
@@ -71,11 +73,4 @@ func main1() {
 	_ = nacos.RegisterService(opts)
 
 	s.Start()
-}
-
-func main() {
-
-	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
-	mq.InitMq()
-
 }

@@ -2,7 +2,6 @@ package logic
 
 import (
 	"Nft-Go/common/api"
-
 	"Nft-Go/common/api/user"
 	"Nft-Go/common/db"
 	global2 "Nft-Go/common/util"
@@ -11,10 +10,11 @@ import (
 	"context"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/cryptor"
+	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/spf13/viper"
-	"google.golang.org/protobuf/types/known/emptypb"
-
+	"github.com/zeromicro/go-zero/core/jsonx"
 	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type RegisterLogic struct {
@@ -75,19 +75,15 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		Avatar:     mod.Avatar,
 		PrivateKey: mod.PrivateKey,
 	}
-	token, err := global2.GetJwt(key.(string), info)
-	logger.Info("生成token", token)
+	token, err := global2.GetJwt(key.(string), info.UserId)
+	json, err := jsonx.MarshalToString(info)
 	if err != nil {
-		logger.Error("生成token失败", err.Error())
-		return &user.Response{Message: err.Error()}, nil
+		return nil, xerror.New("marshal failed: %w", err)
 	}
-	logger.Info("token生成成功", token)
-	set := rds.Set(l.ctx, token, mod.ID, 0)
-	if set.Err() != nil {
-		//This 问题
-		return &user.Response{Message: set.Err().Error()}, nil
+	cache := rds.Set(l.ctx, string(info.UserId), json, 0)
+	if cache.Err() != nil {
+		return &user.Response{Message: cache.Err().Error()}, nil
 	}
-	logger.Info("token存储成功", token)
 	return &user.Response{
 		Message: "注册成功",
 		Code:    200,

@@ -61,3 +61,8 @@ func HexString2ByteArray(hexString string) ([]byte, error) {
 func ByteArray2HexString(byteArray []byte) string {
 	return "0x" + fmt.Sprintf("%064x", new(big.Int).SetBytes(byteArray))
 }
+
+func GetMetadataContext(ctx context.Context) context.Context {
+	md := metadata.Pairs("userId", ctx.Value("userId").(string))
+	return metadata.NewOutgoingContext(context.Background(), md)
+}

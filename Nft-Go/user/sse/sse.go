@@ -11,12 +11,12 @@ import (
 )
 
 var (
-	sessions map[string]eventsource.EventSource
+	sessions map[int32]eventsource.EventSource
 	mu       sync.Mutex
 )
 
 func InitSse() {
-	sessions = make(map[string]eventsource.EventSource)
+	sessions = make(map[int32]eventsource.EventSource)
 	http.HandleFunc("/sse", func(w http.ResponseWriter, r *http.Request) {
 		// 获取用户ID，这里假设用户ID在URL参数中
 		token := r.URL.Query().Get("token")
@@ -24,15 +24,14 @@ func InitSse() {
 			http.Error(w, "Missing token", http.StatusBadRequest)
 			return
 		}
-		claim, err := util.ParseToken(token)
+		userId, err := util.ParseToken(token)
 		if err != nil {
 			return
 		}
-		userID := claim.Id
 		// 创建一个新的EventSource实例并保存到sessions中
 		userEs := eventsource.New(nil, nil)
 		mu.Lock()
-		sessions[userID] = userEs
+		sessions[*userId] = userEs
 		mu.Unlock()
 
 		// 处理连接
@@ -49,7 +48,7 @@ func InitSse() {
 	logger.Info("Open URL http://localhost:8080/events?userID=<your-user-id> in your browser.")
 }
 
-func SendNotificationToSingleUser(userID, message string) {
+func SendNotificationToSingleUser(userID int32, message string) {
 	mu.Lock()
 	userEs, ok := sessions[userID]
 	mu.Unlock()
