@@ -11,8 +11,6 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
-	"github.com/zeromicro/go-zero/core/conf"
-	"github.com/zeromicro/go-zero/zrpc"
 	_ "github.com/zeromicro/zero-contrib/zrpc/registry/nacos"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -37,16 +35,7 @@ func GetBlcDubbo() *blc.BlcRpcServiceClientImpl {
 	return grpcBlcImpl
 }
 
-func InitUser() {
-	var clientConf zrpc.RpcClientConf
-	conf.MustLoad("D:\\CodeProjects\\Nft-Project\\Nft-Go\\common\\api\\etc\\user.yaml", &clientConf)
-	conn := zrpc.MustNewClient(clientConf)
-	userRpc = user.NewUserClient(conn.Conn())
-	logger.Info("user rpc load success")
-}
-func InitNft() {
-	// 创建serverConfig
-	// 支持多个;至少一个ServerConfig
+func InitGatewayService() {
 	serverConfig := []constant.ServerConfig{
 		{
 			IpAddr: "10.21.32.154",
@@ -67,10 +56,8 @@ func InitNft() {
 		},
 	)
 	if err != nil {
-		log.Fatalf("初始化nacos失败: %s", err.Error())
+		logger.Error("初始化nacos失败: %s", err.Error())
 	}
-	// SelectOneHealthyInstance将会按加权随机轮询的负载均衡策略返回一个健康的实例
-	// 实例必须满足的条件：health=true,enable=true and weight>0
 	instance, err := namingClient.SelectOneHealthyInstance(vo.SelectOneHealthInstanceParam{
 		ServiceName: "nft.rpc",
 		GroupName:   "DEFAULT_GROUP",     // 默认值DEFAULT_GROUP
@@ -82,7 +69,21 @@ func InitNft() {
 		log.Fatalf("监听%s:%d失败:%s", instance.Ip, instance.Port, err.Error())
 	}
 	nftRpc = nft.NewNftClient(conn)
+	logger.Info("nft rpc init success")
+	instance1, err := namingClient.SelectOneHealthyInstance(vo.SelectOneHealthInstanceParam{
+		ServiceName: "user.rpc",
+		GroupName:   "DEFAULT_GROUP",     // 默认值DEFAULT_GROUP
+		Clusters:    []string{"DEFAULT"}, // 默认值DEFAULT
+	})
+	logger.Info("获取到的实例IP:%s;端口:%d", instance1.Ip, instance1.Port)
+	conn1, err := grpc.Dial(fmt.Sprintf("%s:%d", instance1.Ip, instance1.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("监听%s:%d失败:%s", instance1.Ip, instance1.Port, err.Error())
+	}
+	userRpc = user.NewUserClient(conn1)
+	logger.Info("user rpc init success")
 }
+
 func SetNftClient(client nft.NftClient) {
 	nftRpc = client
 }

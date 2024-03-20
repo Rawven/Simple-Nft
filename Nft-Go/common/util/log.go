@@ -10,7 +10,7 @@ type ZapLogger struct {
 }
 
 func (l *ZapLogger) Debug(msg string, fields map[string]interface{}) {
-	logger.Info(msg, fields)
+	logger.Debug(msg, fields)
 }
 
 func (l *ZapLogger) Info(msg string, fields map[string]interface{}) {

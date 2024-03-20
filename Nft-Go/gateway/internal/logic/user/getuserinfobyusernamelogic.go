@@ -1,4 +1,4 @@
-package logic
+package user
 
 import (
 	"context"
@@ -9,21 +9,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GatewayLogic struct {
+type GetUserInfoByUserNameLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGatewayLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GatewayLogic {
-	return &GatewayLogic{
+func NewGetUserInfoByUserNameLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserInfoByUserNameLogic {
+	return &GetUserInfoByUserNameLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GatewayLogic) Gateway(req *types.Request) (resp *types.Response, err error) {
+func (l *GetUserInfoByUserNameLogic) GetUserInfoByUserName(req *types.UserNameRequest) (resp *types.CommonResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return

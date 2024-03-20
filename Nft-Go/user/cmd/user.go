@@ -10,15 +10,15 @@ import (
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/mq"
 	"Nft-Go/user/sse"
+	"context"
 	"flag"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
-	"github.com/zeromicro/go-zero/core/logc"
-	"github.com/zeromicro/zero-contrib/zrpc/registry/nacos"
-
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
+	"github.com/zeromicro/zero-contrib/zrpc/registry/nacos"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -50,13 +50,12 @@ func main() {
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		user.RegisterUserServer(grpcServer, server.NewUserServer(ctx))
-
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
 		}
 	})
 	defer s.Stop()
-
+	s.AddUnaryInterceptors(logInterceptor)
 	logger.Info("Starting rpc server at %s...\n", c.ListenOn)
 	// register service to nacos
 	sc := []constant.ServerConfig{
@@ -75,4 +74,10 @@ func main() {
 	opts := nacos.NewNacosConfig("user.rpc", c.ListenOn, sc, cc)
 	_ = nacos.RegisterService(opts)
 	s.Start()
+}
+
+func logInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	resp, err := handler(ctx, req)
+	logger.Info("该请求返回", resp, err)
+	return resp, err
 }

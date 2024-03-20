@@ -1,15 +1,76 @@
 syntax = "v1"
 
-type Request {
-    Name string `path:"name,options=you|me"`
-}
-
-type Response {
+type CommonResponse {
+    Code int `json:"code"`
+    Data string `json:"data"`
     Message string `json:"message"`
 }
 
-service gateway-api {
-    @handler GatewayHandler
-    get /from/:name (Request) returns (Response)
+type LoginRequest {
+    Username string `json:"username"`
+    Password string `json:"password"`
+}
+
+type RegisterRequest {
+    Username string `json:"username"`
+    Password string `json:"password"`
+    Email string `json:"email"`
+    Avatar string `json:"avatar"`
+}
+
+type UploadRequest {
+    File string `json:"file"`
+}
+
+type TitleNoticeRequest {
+    Title string `json:"title"`
+}
+
+type IdNoticeRequest {
+    Id string `json:"id"`
+}
+
+type UserNameRequest {
+    Username string `json:"username"`
+}
+
+@server(
+    middleware: JwtMiddleware
+    group: user
+    prefix:     /v1
+)
+service gateway {
+    @handler getAllNotice
+    get /notice/all returns (CommonResponse)
+
+    @handler getNoticeByTitle
+    post /notice/title (TitleNoticeRequest) returns (CommonResponse)
+
+    @handler getNoticeById
+    post /notice/id (IdNoticeRequest) returns (CommonResponse)
+
+    @handler getUserInfoByUserName
+    post /notice/username (UserNameRequest) returns (CommonResponse)
+
+    @handler logout
+    get /user/logout returns (CommonResponse)
+
+    @handler refreshToken
+    get /user/refreshToken returns (CommonResponse)
+}
+
+@server(
+    group: auth
+    prefix: /v1
+)
+service gateway {
+    @handler login
+    post /user/login (LoginRequest) returns (CommonResponse)
+
+    @handler register
+    post /user/register (RegisterRequest) returns (CommonResponse)
+
+    @handler upload
+    post /upload (UploadRequest) returns (CommonResponse)
 }
 

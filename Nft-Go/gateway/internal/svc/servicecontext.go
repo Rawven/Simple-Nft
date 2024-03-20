@@ -2,14 +2,18 @@ package svc
 
 import (
 	"Nft-Go/gateway/internal/config"
+	"Nft-Go/gateway/internal/middleware"
+	"github.com/zeromicro/go-zero/rest"
 )
 
 type ServiceContext struct {
-	Config config.Config
+	Config        config.Config
+	JwtMiddleware rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config: c,
+		Config:        c,
+		JwtMiddleware: middleware.NewJwtMiddleware().Handle,
 	}
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type JwtBlc struct {
-	UserInfo
+	userId int32
 	jwt.StandardClaims
 }
 type UserInfo struct {
@@ -19,9 +19,9 @@ type UserInfo struct {
 	PrivateKey string
 }
 
-func GetJwt(key string, userInfo UserInfo) (string, error) {
+func GetJwt(key string, userId int32) (string, error) {
 	claims := JwtBlc{
-		userInfo,
+		userId,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 2).Unix(),
 			Issuer:    "Rawven",
@@ -31,7 +31,7 @@ func GetJwt(key string, userInfo UserInfo) (string, error) {
 	return token.SignedString([]byte(key))
 }
 
-func ParseToken(token string) (*JwtBlc, error) {
+func ParseToken(token string) (*int32, error) {
 	tk, err := jwt.ParseWithClaims(token, &JwtBlc{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte("Rawven"), nil
 	})
@@ -40,7 +40,7 @@ func ParseToken(token string) (*JwtBlc, error) {
 	}
 	claims, ok := tk.Claims.(*JwtBlc)
 	if ok && tk.Valid {
-		return claims, nil
+		return &claims.userId, nil
 	}
 	return nil, errors.New("token无效")
 }
