@@ -33,9 +33,6 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.CommonResponse,
 	if err != nil {
 		return nil, xerror.New("login failed: %w", err)
 	}
-	if err != nil {
-		return nil, xerror.New("marshal failed: %w", err)
-	}
 	return &types.CommonResponse{
 		Code:    200,
 		Data:    login.Data,

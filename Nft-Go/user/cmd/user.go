@@ -6,6 +6,7 @@ import (
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/user/internal/config"
+	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/server"
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/mq"
@@ -31,6 +32,7 @@ func main() {
 	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
 	//db
 	db.InitMysql()
+	dao.SetDefault(db.GetMysql())
 	db.InitRedis()
 	db.InitIpfs("localhost:5001")
 	//sse
@@ -47,7 +49,7 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
-
+	c.RpcServerConf.Middlewares.Trace = false
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		user.RegisterUserServer(grpcServer, server.NewUserServer(ctx))
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
