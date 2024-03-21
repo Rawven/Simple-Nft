@@ -88,7 +88,3 @@ func (i *Ipfs) CatIPFS(hash string) (string, error) {
 
 	return string(body), nil
 }
-
-func (i *Ipfs) GetFileUrl(hash string) string {
-	return gateWay + "/ipfs/" + hash
-}

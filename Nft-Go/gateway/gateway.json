@@ -708,7 +708,7 @@
         "dcDescription": {
           "type": "string"
         },
-        "url": {
+        "cid": {
           "type": "string"
         },
         "hostName": {
@@ -736,7 +736,7 @@
         "activityDescription",
         "dcName",
         "dcDescription",
-        "url",
+        "cid",
         "hostName",
         "hostAddress",
         "amount",
@@ -757,7 +757,7 @@
         "description": {
           "type": "string"
         },
-        "url": {
+        "cid": {
           "type": "string"
         },
         "hostName": {
@@ -780,7 +780,7 @@
         "id",
         "name",
         "description",
-        "url",
+        "cid",
         "hostName",
         "hostAddress",
         "amount",
@@ -933,7 +933,7 @@
           "type": "integer",
           "format": "int32"
         },
-        "filePath": {
+        "cid": {
           "type": "string"
         },
         "creator": {
@@ -948,7 +948,7 @@
         "price",
         "amount",
         "limitAmount",
-        "filePath",
+        "cid",
         "creator"
       ]
     },
@@ -962,7 +962,7 @@
         "hash": {
           "type": "string"
         },
-        "url": {
+        "Cid": {
           "type": "string"
         },
         "name": {
@@ -995,7 +995,7 @@
       "required": [
         "dcId",
         "hash",
-        "url",
+        "Cid",
         "name",
         "description",
         "price",
@@ -1030,7 +1030,7 @@
     "DcPageVO": {
       "type": "object",
       "properties": {
-        "url": {
+        "Cid": {
           "type": "string"
         },
         "name": {
@@ -1053,7 +1053,7 @@
       },
       "title": "DcPageVO",
       "required": [
-        "url",
+        "Cid",
         "name",
         "dcId",
         "hash",
@@ -1240,7 +1240,7 @@
         "description": {
           "type": "string"
         },
-        "url": {
+        "Cid": {
           "type": "string"
         },
         "price": {
@@ -1270,7 +1270,7 @@
         "poolId",
         "name",
         "description",
-        "url",
+        "Cid",
         "price",
         "amount",
         "left",
@@ -1292,7 +1292,7 @@
         "description": {
           "type": "string"
         },
-        "url": {
+        "Cid": {
           "type": "string"
         },
         "creatorName": {
@@ -1316,7 +1316,7 @@
         "poolId",
         "name",
         "description",
-        "url",
+        "Cid",
         "creatorName",
         "status",
         "soldOut",

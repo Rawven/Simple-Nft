@@ -4,7 +4,6 @@ import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/blc"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/dao"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
@@ -30,7 +29,6 @@ func NewGetOneActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 func (l *GetOneActivityLogic) GetOneActivity(in *nft.GetOneActivityRequest) (*nft.ActivityDetailsVO, error) {
 	dubbo := api.GetBlcDubbo()
-	ipfs := db.GetIpfs()
 	activityAndPool, err := dubbo.GetIdToActivity(l.ctx, &blc.GetIdToActivityRequest{Id: in.Id})
 	if err != nil {
 		return nil, xerror.New("“获取活动失败”")
@@ -47,7 +45,7 @@ func (l *GetOneActivityLogic) GetOneActivity(in *nft.GetOneActivityRequest) (*nf
 		ActivityDescription: activityInfo.Description,
 		DcName:              pool.GetName(),
 		DcDescription:       activityInfo.Description,
-		Url:                 ipfs.GetFileUrl(pool.Cid),
+		Url:                 pool.Cid,
 		HostName:            activityInfo.HostName,
 		HostAddress:         activityInfo.HostAddress,
 		Amount:              int32(pool.Amount),

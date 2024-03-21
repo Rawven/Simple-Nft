@@ -49,7 +49,10 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.CommonResult, error) {
 	if dc.OwnerName != info.UserName {
 		return nil, xerror.New("you are not the owner of this dc")
 	}
-	mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.GiveDcBo.DcId)).Updates(model.DcInfo{OwnerName: in.GiveDcBo.ToName, OwnerAddress: in.GiveDcBo.ToAddress})
+	_, err = mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.GiveDcBo.DcId)).Updates(model.DcInfo{OwnerName: in.GiveDcBo.ToName, OwnerAddress: in.GiveDcBo.ToAddress})
+	if err != nil {
+		return nil, xerror.New("更新失败")
+	}
 	return &nft.CommonResult{
 		Code:    200,
 		Message: "success",

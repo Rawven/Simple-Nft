@@ -195,7 +195,7 @@ message CreatePoolBO {
   int32 price = 4;
   int32 amount = 5;
   int32 limitAmount = 6;
-  string filePath = 7;
+  string cid = 7;
   string creator = 8;
 }
 

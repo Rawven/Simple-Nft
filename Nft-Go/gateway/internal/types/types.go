@@ -13,7 +13,7 @@ type ActivityDetailsVO struct {
 	ActivityDescription string `json:"activityDescription"`
 	DcName              string `json:"dcName"`
 	DcDescription       string `json:"dcDescription"`
-	Url                 string `json:"url"`
+	Cid                 string `json:"cid"`
 	HostName            string `json:"hostName"`
 	HostAddress         string `json:"hostAddress"`
 	Amount              int32  `json:"amount"`
@@ -25,7 +25,7 @@ type ActivityPageVO struct {
 	Id          int32  `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Url         string `json:"url"`
+	Cid         string `json:"cid"`
 	HostName    string `json:"hostName"`
 	HostAddress string `json:"hostAddress"`
 	Amount      int32  `json:"amount"`
@@ -72,14 +72,14 @@ type CreatePoolRequest struct {
 	Price       int32  `json:"price"`
 	Amount      int32  `json:"amount"`
 	LimitAmount int32  `json:"limitAmount"`
-	FilePath    string `json:"filePath"`
+	Cid         string `json:"cid"`
 	Creator     string `json:"creator"`
 }
 
 type DcDetailVO struct {
 	DcId            int32  `json:"dcId"`
 	Hash            string `json:"hash"`
-	Url             string `json:"url"`
+	Cid             string `json:"Cid"`
 	Name            string `json:"name"`
 	Description     string `json:"description"`
 	Price           int32  `json:"price"`
@@ -97,7 +97,7 @@ type DcOverviewVO struct {
 }
 
 type DcPageVO struct {
-	Url         string `json:"url"`
+	Cid         string `json:"Cid"`
 	Name        string `json:"name"`
 	DcId        int32  `json:"dcId"`
 	Hash        string `json:"hash"`
@@ -159,7 +159,7 @@ type PoolDetailsVO struct {
 	PoolId          int32  `json:"poolId"`
 	Name            string `json:"name"`
 	Description     string `json:"description"`
-	Url             string `json:"url"`
+	Cid             string `json:"Cid"`
 	Price           int32  `json:"price"`
 	Amount          int32  `json:"amount"`
 	Left            int32  `json:"left"`
@@ -172,7 +172,7 @@ type PoolPageVO struct {
 	PoolId      int32  `json:"poolId"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Url         string `json:"url"`
+	Cid         string `json:"Cid"`
 	CreatorName string `json:"creatorName"`
 	Status      bool   `json:"status"`
 	SoldOut     bool   `json:"soldOut"`
