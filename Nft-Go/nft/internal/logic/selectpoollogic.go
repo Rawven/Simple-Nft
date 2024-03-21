@@ -25,15 +25,18 @@ func NewSelectPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Select
 }
 
 func (l *SelectPoolLogic) SelectPool(in *nft.SelectPoolRequest) (*nft.PoolPageVOList, error) {
+	//对热度榜进行操作
 	if in.SelectPoolBo.Name != "" {
 		mq.RankAdd(in.SelectPoolBo.Name)
 	}
 	if in.SelectPoolBo.CreatorName != "" {
 		mq.RankAdd(in.SelectPoolBo.CreatorName)
 	}
+
 	info := dao.PoolInfo
+	//查询
 	find, err := info.WithContext(l.ctx).
-		Where(info.CreatorName.Like("in.SelectPoolBo.CreatorName"),
+		Where(info.CreatorName.Like(in.SelectPoolBo.CreatorName),
 			info.Name.Like(in.SelectPoolBo.Name), info.Price.Between(in.SelectPoolBo.MinPrice,
 				in.SelectPoolBo.MaxPrice)).Find()
 	if err != nil {

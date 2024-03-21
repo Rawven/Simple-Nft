@@ -1,6 +1,9 @@
 package nft
 
 import (
+	"Nft-Go/common/api"
+	"Nft-Go/common/api/nft"
+	"Nft-Go/common/util"
 	"context"
 
 	"Nft-Go/gateway/internal/svc"
@@ -24,7 +27,16 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreatePoolLogic) CreatePool(req *types.CreatePoolRequest) (resp *types.CommonResponse, err error) {
-	// todo: add your logic here and delete this line
-
+	metadataContext := util.GetMetadataContext(l.ctx)
+	api.GetNftClient().CreatePool(metadataContext, &nft.CreatePoolRequest{CreatePoolBo: &nft.CreatePoolBO{
+		Name:        "",
+		Description: "",
+		Status:      false,
+		Price:       0,
+		Amount:      0,
+		LimitAmount: 0,
+		FilePath:    "",
+		Creator:     "",
+	}})
 	return
 }

@@ -37,6 +37,7 @@ func main() {
 	mq.InitMq()
 	//api
 	api.InitDubbo()
+	api.InitUserClient()
 	//other
 	log := logc.LogConf{
 		Encoding: "plain",

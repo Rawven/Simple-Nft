@@ -84,6 +84,44 @@ func InitGatewayService() {
 	logger.Info("user rpc init success")
 }
 
+func InitUserClient() {
+	serverConfig := []constant.ServerConfig{
+		{
+			IpAddr: "10.21.32.154",
+			Port:   8848,
+		},
+	}
+	// 创建clientConfig
+	clientConfig := constant.ClientConfig{
+		NamespaceId:         "public", // 如果需要支持多namespace，我们可以场景多个client,它们有不同的NamespaceId。当namespace是public时，此处填空字符串。
+		TimeoutMs:           5000,
+		NotLoadCacheAtStart: true,
+		LogLevel:            "debug",
+	}
+	namingClient, err := clients.NewNamingClient(
+		vo.NacosClientParam{
+			ClientConfig:  &clientConfig,
+			ServerConfigs: serverConfig,
+		},
+	)
+	if err != nil {
+		logger.Error("初始化nacos失败: %s", err.Error())
+	}
+	instance1, err := namingClient.SelectOneHealthyInstance(vo.SelectOneHealthInstanceParam{
+		ServiceName: "user.rpc",
+		GroupName:   "DEFAULT_GROUP",     // 默认值DEFAULT_GROUP
+		Clusters:    []string{"DEFAULT"}, // 默认值DEFAULT
+	})
+	logger.Info("获取到的实例IP:%s;端口:%d", instance1.Ip, instance1.Port)
+	conn1, err := grpc.Dial(fmt.Sprintf("%s:%d", instance1.Ip, instance1.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("监听%s:%d失败:%s", instance1.Ip, instance1.Port, err.Error())
+	}
+	userRpc = user.NewUserClient(conn1)
+	logger.Info("user rpc init success")
+
+}
+
 func SetNftClient(client nft.NftClient) {
 	nftRpc = client
 }

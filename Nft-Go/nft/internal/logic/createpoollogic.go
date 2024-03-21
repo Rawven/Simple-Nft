@@ -35,12 +35,10 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResu
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败")
 	}
-	ipfs := db.GetIpfs()
-	cid, err := ipfs.UploadIPFSByPath(in.CreatePoolBo.FilePath)
+	cid := in.CreatePoolBo.FilePath
 	if err != nil {
 		return nil, xerror.New("上传文件失败")
 	}
-	db.GetIpfs()
 	amount, err := dubbo.GetPoolAmount(l.ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, xerror.New("获取池子数量失败")
@@ -52,7 +50,7 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResu
 		in.CreatePoolBo.Price = 0
 		in.CreatePoolBo.Amount = 1
 	}
-	//insert pool
+	//创建藏品池子
 	poolInfo := model.PoolInfo{
 		PoolId:         poolId,
 		Cid:            cid,
