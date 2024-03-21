@@ -56,6 +56,7 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 	if tx.Error != nil {
 		return nil, xerror.New("插入活动失败")
 	}
+	//创建活动
 	_, err = dubbo.CreateActivity(l.ctx, &blc.CreateActivityRequest{
 		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
 		Args: &blc.CreateActivityDTO{

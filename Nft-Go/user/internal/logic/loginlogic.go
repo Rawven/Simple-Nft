@@ -5,6 +5,7 @@ import (
 	"Nft-Go/common/db"
 	"Nft-Go/user/internal/dao"
 	"github.com/duke-git/lancet/v2/xerror"
+	"github.com/zeromicro/go-zero/core/jsonx"
 
 	"Nft-Go/common/api/blc"
 	"Nft-Go/common/api/user"
@@ -34,7 +35,8 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	dubbo := api.GetBlcDubbo()
 	red := db.GetRedis()
-	_user, err := dao.User.WithContext(l.ctx).Where(dao.User.Username.Eq(in.GetUsername())).First()
+	u := dao.User
+	_user, err := u.WithContext(l.ctx).Where(u.Username.Eq(in.GetUsername())).First()
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
@@ -60,7 +62,11 @@ func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 		Avatar:     _user.Avatar,
 		PrivateKey: _user.PrivateKey,
 	}
-	set := red.Set(l.ctx, string(info.UserId), info, 0)
+	json, err := jsonx.MarshalToString(info)
+	if err != nil {
+		return nil, xerror.New("json序列化失败")
+	}
+	set := red.Set(l.ctx, string(info.UserId), json, 0)
 	if set.Err() != nil {
 		return nil, set.Err()
 	}

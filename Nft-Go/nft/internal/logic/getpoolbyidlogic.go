@@ -2,7 +2,6 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/dao"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
@@ -27,7 +26,6 @@ func NewGetPoolByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPo
 }
 
 func (l *GetPoolByIdLogic) GetPoolById(in *nft.GetPoolByIdRequest) (*nft.PoolDetailsVO, error) {
-	ipfs := db.GetIpfs()
 	poolInfo, err := dao.PoolInfo.WithContext(l.ctx).Where(dao.PoolInfo.PoolId.Eq(in.Id)).First()
 	if err != nil {
 		return nil, xerror.New("查询失败")
@@ -36,7 +34,7 @@ func (l *GetPoolByIdLogic) GetPoolById(in *nft.GetPoolByIdRequest) (*nft.PoolDet
 		PoolId:          in.Id,
 		Name:            poolInfo.Name,
 		Description:     poolInfo.Description,
-		Url:             ipfs.GetFileUrl(poolInfo.Cid),
+		Url:             poolInfo.Cid,
 		Price:           poolInfo.Price,
 		Amount:          poolInfo.Amount,
 		Left:            poolInfo.Left,

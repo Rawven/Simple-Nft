@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	auth "Nft-Go/gateway/internal/handler/auth"
+	nft "Nft-Go/gateway/internal/handler/nft"
 	user "Nft-Go/gateway/internal/handler/user"
 	"Nft-Go/gateway/internal/svc"
 
@@ -28,6 +29,102 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/user/register",
 				Handler: auth.RegisterHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/BuyFromPool",
+				Handler: nft.BuyFromPoolHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/CreateActivity",
+				Handler: nft.CreateActivityHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/CreatePool",
+				Handler: nft.CreatePoolHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/nft/GetAllActivity",
+				Handler: nft.GetAllActivityHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/nft/GetAllDc",
+				Handler: nft.GetAllDcHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/nft/GetAllPool",
+				Handler: nft.GetAllPoolHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/GetDcById",
+				Handler: nft.GetDcByIdHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/GetDcFromActivity",
+				Handler: nft.GetDcFromActivityHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/GetDigitalCollectionHistory",
+				Handler: nft.GetDigitalCollectionHistoryHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/GetMessageByHash",
+				Handler: nft.GetMessageByHashHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/nft/GetMyDc",
+				Handler: nft.GetMyDcHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/nft/GetMyPool",
+				Handler: nft.GetMyPoolHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/GetOneActivity",
+				Handler: nft.GetOneActivityHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/GetPoolById",
+				Handler: nft.GetPoolByIdHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/GiveDc",
+				Handler: nft.GiveDcHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/SearchActivities",
+				Handler: nft.SearchActivitiesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/SelectDc",
+				Handler: nft.SelectDcHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/nft/SelectPool",
+				Handler: nft.SelectPoolHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/v1"),

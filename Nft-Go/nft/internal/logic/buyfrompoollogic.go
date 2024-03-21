@@ -60,7 +60,10 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 		CreatorName:    pool.CreatorName,
 		CreatorAddress: pool.CreatorAddress,
 	}
-	dao.DcInfo.WithContext(l.ctx).Create(&dcInfo)
+	err = dao.DcInfo.WithContext(l.ctx).Create(&dcInfo)
+	if err != nil {
+		return nil, xerror.New("插入失败")
+	}
 	_, err = dubbo.Mint(l.ctx, &blc.MintRequest{
 		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
 		PoolId:  pool.PoolId,

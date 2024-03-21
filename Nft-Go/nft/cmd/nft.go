@@ -6,6 +6,7 @@ import (
 	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/config"
+	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/server"
 	"Nft-Go/nft/internal/svc"
 	"Nft-Go/nft/mq"
@@ -29,12 +30,14 @@ func main() {
 	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
 	//db
 	db.InitMysql()
+	dao.SetDefault(db.GetMysql())
 	db.InitRedis()
 	db.InitIpfs("localhost:5001")
 	//mq
 	mq.InitMq()
 	//api
 	api.InitDubbo()
+	api.InitUserClient()
 	//other
 	log := logc.LogConf{
 		Encoding: "plain",

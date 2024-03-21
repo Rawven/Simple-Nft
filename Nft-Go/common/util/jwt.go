@@ -24,7 +24,7 @@ func GetJwt(key string, userId int32) (string, error) {
 		userId,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 2).Unix(),
-			Issuer:    "Rawven",
+			Issuer:    "rawven",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -33,7 +33,7 @@ func GetJwt(key string, userId int32) (string, error) {
 
 func ParseToken(token string) (*int32, error) {
 	tk, err := jwt.ParseWithClaims(token, &JwtBlc{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("Rawven"), nil
+		return []byte("rawven"), nil
 	})
 	if err != nil {
 		return nil, err
