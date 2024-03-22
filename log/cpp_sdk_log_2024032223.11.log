@@ -60,3 +60,28 @@ info|2024-03-22 23:11:05.160144|[RPCWS][SERVICE][waitForConnectionEstablish]wait
 info|2024-03-22 23:11:05.173146|[EVENT][PARAMS][fromJsonString],jsonString={"fromBlock":-1,"toBlock":-1,"addresses":[],"topics":[["LogCreateActivity(uint256,address, DataStructs.Activity,uint256)"],null,null,null]},params={fromBlock: -1toBlock: -1addresses: topics: index: 0LogCreateActivity(uint256,address, DataStructs.Activity,uint256) 0,}
 info|2024-03-22 23:11:05.174148|[EVENT][SUB][subscribeEvent]subscribe event,id=31c326e9c8984c339e1baad3f9583a0d,group=group0,request={"group":"group0","id":"31c326e9c8984c339e1baad3f9583a0d","params":{"addresses":[],"fromBlock":-1,"toBlock":-1,"topics":[["LogCreateActivity(uint256,address, DataStructs.Activity,uint256)"]]}}
 info|2024-03-22 23:11:05.199143|[EVENT][SUB][subscribeEvent]callback response success,id=31c326e9c8984c339e1baad3f9583a0d,response={"id":"31c326e9c8984c339e1baad3f9583a0d","status":0}
+info|2024-03-22 23:11:24.286222|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:11:43.956358|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:11:44.294540|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:12:03.960348|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:12:04.299235|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:12:23.966132|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:12:24.308344|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:12:43.967772|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:12:44.323413|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:13:03.969812|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:13:04.325533|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:13:23.971391|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:13:24.326435|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:13:43.976387|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:13:44.334075|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:14:03.978377|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:14:04.348930|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:14:23.980778|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:14:24.352122|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:14:43.989519|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:14:44.362230|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:15:03.997424|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:15:04.373006|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-22 23:15:24.010010|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-22 23:15:24.381934|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0

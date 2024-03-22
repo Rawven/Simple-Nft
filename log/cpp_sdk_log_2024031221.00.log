@@ -1,0 +1,64 @@
+info|2024-03-12 21:00:00.909289|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:00:01.232775|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:00:20.912218|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:00:21.243614|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:00:40.920196|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:00:41.247906|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:01:00.934096|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:01:01.258402|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:01:20.936508|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:01:21.262425|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:01:40.939437|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:01:41.265424|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:02:00.953350|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:02:01.280507|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:02:20.963294|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:02:21.287531|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:02:40.974736|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:02:41.290113|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:03:00.985791|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:03:01.296255|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:03:20.986166|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:03:21.305591|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:03:40.995370|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:03:41.306248|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:04:00.998139|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:04:01.313304|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:04:21.003225|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:04:21.313598|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:04:41.012542|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:04:41.323158|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:05:01.018640|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:05:01.328641|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:05:21.031057|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:05:21.340009|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:05:41.039077|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:05:41.340502|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:06:01.039404|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:06:01.355608|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:06:21.044325|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:06:21.358688|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:06:41.051402|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:06:41.361505|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:07:01.053176|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:07:01.363345|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:07:21.058314|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:07:21.369247|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:07:41.070398|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:07:41.369867|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:08:01.081742|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:08:01.379421|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:08:21.085611|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:08:21.393239|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:08:41.088579|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:08:41.398826|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:09:01.095544|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:09:01.413500|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:09:21.099156|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:09:21.428166|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:09:41.099572|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:09:41.430539|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:10:01.105485|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:10:01.435178|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
+info|2024-03-12 21:10:21.119520|[SDK][WS][STAT]connected nodes,count=1
+info|2024-03-12 21:10:21.444342|[EVENT][SUB][doLoop]event sub tasks report,working event sub count=1,suspend event sub count=0
