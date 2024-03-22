@@ -3,12 +3,9 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
-	"context"
-
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
-
+	"context"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -27,16 +24,22 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreatePoolLogic) CreatePool(req *types.CreatePoolRequest) (resp *types.CommonResponse, err error) {
-	metadataContext := util.GetMetadataContext(l.ctx)
-	api.GetNftClient().CreatePool(metadataContext, &nft.CreatePoolRequest{CreatePoolBo: &nft.CreatePoolBO{
-		Name:        "",
-		Description: "",
-		Status:      false,
-		Price:       0,
-		Amount:      0,
-		LimitAmount: 0,
-		FilePath:    "",
-		Creator:     "",
+	pool, err := api.GetNftClient().CreatePool(l.ctx, &nft.CreatePoolRequest{CreatePoolBo: &nft.CreatePoolBO{
+		Name:        req.Name,
+		Description: req.Description,
+		Status:      req.Status,
+		Price:       req.Price,
+		Amount:      req.Amount,
+		LimitAmount: req.LimitAmount,
+		FilePath:    req.Cid,
+		Creator:     req.Creator,
 	}})
-	return
+	if err != nil {
+		return nil, err
+	}
+	return &types.CommonResponse{
+		Code:    200,
+		Data:    pool.Message,
+		Message: "success",
+	}, nil
 }

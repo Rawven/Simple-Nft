@@ -8,10 +8,6 @@ import com.topview.blc.UserData;
 import com.topview.blc.UserLogic;
 import com.topview.client.ChainClient;
 import com.topview.entity.struct.DataStruct;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicArray;
@@ -23,6 +19,11 @@ import org.fisco.bcos.sdk.v3.transaction.model.exception.ContractException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 /**
  * blc rpc service impl
  *
@@ -30,7 +31,7 @@ import org.springframework.util.Assert;
  * @date 2024/03/08
  */
 @Slf4j
-@DubboService(interfaceClass = com.topview.api.BlcRpcService.class, version = "1.0.0", register = true, group = "dubbo", timeout = 15000)
+@DubboService(interfaceClass = com.topview.api.BlcRpcService.class, version = "1.0.0", group = "dubbo", timeout = 15000)
 public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     @Autowired
     private ChainClient client;

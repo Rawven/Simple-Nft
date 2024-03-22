@@ -3,157 +3,158 @@ syntax = "v1"
 type CommonResponse {
     Code int `json:"code"`
     Data string `json:"data"`
-    Message string `json:"message"`
+	Message string `json:"message"`
 }
 
 type LoginRequest {
-    Username string `json:"username"`
-    Password string `json:"password"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type RegisterRequest {
-    Username string `json:"username"`
-    Password string `json:"password"`
+	Username string `json:"username"`
+	Password string `json:"password"`
     Email string `json:"email"`
     Avatar string `json:"avatar"`
 }
 
 type UploadRequest {
-    File string `json:"file"`
+	File string `json:"file"`
 }
 
 type TitleNoticeRequest {
-    Title string `json:"title"`
+	Title string `json:"title"`
 }
 
 type IdNoticeRequest {
-    Id string `json:"id"`
+	Id string `json:"id"`
 }
 
 type UserNameRequest {
-    Username string `json:"username"`
+	Username string `json:"username"`
 }
 
 @server(
     group: auth
-    prefix: /v1
+	prefix: /v1
 )
 service gateway {
-    @handler login
-    post /user/login (LoginRequest) returns (CommonResponse)
+	@handler login
+	post /user/login (LoginRequest) returns (CommonResponse)
 
-    @handler register
-    post /user/register (RegisterRequest) returns (CommonResponse)
+	@handler register
+	post /user/register (RegisterRequest) returns (CommonResponse)
 
-    @handler upload
-    post /upload (UploadRequest) returns (CommonResponse)
+	@handler upload
+	post /upload (UploadRequest) returns (CommonResponse)
+}
+
+@server(
+	middleware: JwtMiddleware
+    group: user
+	prefix:     /v1
+)
+service gateway {
+	@handler getAllNotice
+	get /notice/all returns (CommonResponse)
+
+	@handler getNoticeByTitle
+	post /notice/title (TitleNoticeRequest) returns (CommonResponse)
+
+	@handler getNoticeById
+	post /notice/id (IdNoticeRequest) returns (CommonResponse)
+
+	@handler getUserInfoByUserName
+	post /notice/username (UserNameRequest) returns (CommonResponse)
+
+	@handler logout
+	get /user/logout returns (CommonResponse)
+
+	@handler refreshToken
+	get /user/refreshToken returns (CommonResponse)
 }
 
 @server(
     middleware: JwtMiddleware
-    group: user
+    group: nft
     prefix:     /v1
 )
 service gateway {
-    @handler getAllNotice
-    get /notice/all returns (CommonResponse)
+	@handler GetMessageByHash
+	post /nft/GetMessageByHash (GetMessageByHashRequest) returns (CommonResponse)
 
-    @handler getNoticeByTitle
-    post /notice/title (TitleNoticeRequest) returns (CommonResponse)
+	@handler CreateActivity
+	post /nft/CreateActivity (CreateActivityRequest) returns (CommonResponse)
 
-    @handler getNoticeById
-    post /notice/id (IdNoticeRequest) returns (CommonResponse)
+	@handler GetDcFromActivity
+	post /nft/GetDcFromActivity (GetDcFromActivityRequest) returns (CommonResponse)
 
-    @handler getUserInfoByUserName
-    post /notice/username (UserNameRequest) returns (CommonResponse)
+	@handler GetAllActivity
+	get /nft/GetAllActivity returns (CommonResponse)
 
-    @handler logout
-    get /user/logout returns (CommonResponse)
+	@handler GetOneActivity
+	post /nft/GetOneActivity (GetOneActivityRequest) returns (CommonResponse)
 
-    @handler refreshToken
-    get /user/refreshToken returns (CommonResponse)
-}
+	@handler SearchActivities
+	post /nft/SearchActivities (SearchActivitiesRequest) returns (CommonResponse)
 
-@server(
-    group: nft
-    prefix: /v1
-)
-service gateway {
-    @handler GetMessageByHash
-    post /nft/GetMessageByHash (GetMessageByHashRequest) returns (CommonResponse)
+	@handler GiveDc
+	post /nft/GiveDc (GiveDcRequest) returns (CommonResponse)
 
-    @handler CreateActivity
-    post /nft/CreateActivity (CreateActivityRequest) returns (CommonResponse)
+	@handler GetAllDc
+	get /nft/GetAllDc returns (CommonResponse)
 
-    @handler GetDcFromActivity
-    post /nft/GetDcFromActivity (GetDcFromActivityRequest) returns (CommonResponse)
+	@handler SelectDc
+	post /nft/SelectDc (SelectDcRequest) returns (CommonResponse)
 
-    @handler GetAllActivity
-    get /nft/GetAllActivity returns (CommonResponse)
+	@handler GetDcById
+	post /nft/GetDcById (GetDcByIdRequest) returns (CommonResponse)
 
-    @handler GetOneActivity
-    post /nft/GetOneActivity (GetOneActivityRequest) returns (CommonResponse)
+	@handler GetMyDc
+	get /nft/GetMyDc returns (CommonResponse)
 
-    @handler SearchActivities
-    post /nft/SearchActivities (SearchActivitiesRequest) returns (CommonResponse)
+	@handler GetDigitalCollectionHistory
+	post /nft/GetDigitalCollectionHistory (GetDigitalCollectionHistoryRequest) returns (CommonResponse)
 
-    @handler GiveDc
-    post /nft/GiveDc (GiveDcRequest) returns (CommonResponse)
+	@handler CreatePool
+	post /nft/CreatePool (CreatePoolRequest) returns (CommonResponse)
 
-    @handler GetAllDc
-    get /nft/GetAllDc returns (CommonResponse)
+	@handler BuyFromPool
+	post /nft/BuyFromPool (BuyFromPoolRequest) returns (CommonResponse)
 
-    @handler SelectDc
-    post /nft/SelectDc (SelectDcRequest) returns (CommonResponse)
+	@handler SelectPool
+	post /nft/SelectPool (SelectPoolRequest) returns (CommonResponse)
 
-    @handler GetDcById
-    post /nft/GetDcById (GetDcByIdRequest) returns (CommonResponse)
+	@handler GetPoolById
+	post /nft/GetPoolById (GetPoolByIdRequest) returns (CommonResponse)
 
-    @handler GetMyDc
-    get /nft/GetMyDc returns (DcPageVOList)
+	@handler GetAllPool
+	get /nft/GetAllPool returns (CommonResponse)
 
-    @handler GetDigitalCollectionHistory
-    post /nft/GetDigitalCollectionHistory (GetDigitalCollectionHistoryRequest) returns (CommonResponse)
-
-    @handler CreatePool
-    post /nft/CreatePool (CreatePoolRequest) returns (CommonResponse)
-
-    @handler BuyFromPool
-    post /nft/BuyFromPool (BuyFromPoolRequest) returns (CommonResponse)
-
-    @handler SelectPool
-    post /nft/SelectPool (SelectPoolRequest) returns (CommonResponse)
-
-    @handler GetPoolById
-    post /nft/GetPoolById (GetPoolByIdRequest) returns (CommonResponse)
-
-    @handler GetAllPool
-    get /nft/GetAllPool returns (CommonResponse)
-
-    @handler GetMyPool
-    get /nft/GetMyPool returns (CommonResponse)
+	@handler GetMyPool
+	get /nft/GetMyPool returns (CommonResponse)
 }
 
 type GetMessageByHashRequest {
-    Hash string `json:"hash"`
+	Hash string `json:"hash"`
 }
 
 type GetMessageByHashDTO {
     Type int32 `json:"type"`
     AccountMessageVO AccountMessageVO `json:"accountMessageVO"`
-    CollectionMessageOnChainVO CollectionMessageOnChainVO `json:"collectionMessageOnChainVO"`
+	CollectionMessageOnChainVO CollectionMessageOnChainVO `json:"collectionMessageOnChainVO"`
 }
 
 type AccountMessageVO {
     Hash string `json:"hash"`
     RegisterTime string `json:"registerTime"`
-    OwnedCollections []DcOverviewVO `json:"ownedCollections"`
+	OwnedCollections []DcOverviewVO `json:"ownedCollections"`
 }
 
 type DcOverviewVO {
     Id int32 `json:"id"`
     Hash string `json:"hash"`
-    GetTime string `json:"getTime"`
+	GetTime string `json:"getTime"`
 }
 
 type CreateActivityRequest {
@@ -162,35 +163,35 @@ type CreateActivityRequest {
     Password string `json:"password"`
     Amount int32 `json:"amount"`
     DcName string `json:"dcName"`
-    DcDescription string `json:"dcDescription"`
+	DcDescription string `json:"dcDescription"`
     Cid string `json:"cid"`
 }
 
 type GetDcFromActivityRequest {
     Id int32 `json:"id"`
-    Password string `json:"password"`
+	Password string `json:"password"`
 }
 
 type GetOneActivityRequest {
-    Id int32 `json:"id"`
+	Id int32 `json:"id"`
 }
 
 type SearchActivitiesRequest {
     HostName string `json:"hostName"`
-    ActivityName string `json:"activityName"`
+	ActivityName string `json:"activityName"`
 }
 
 type ActivityPageVOList {
-    ActivityPageVO []ActivityPageVO `json:"activityPageVO"`
+	ActivityPageVO []ActivityPageVO `json:"activityPageVO"`
 }
 
 type ActivityPageVO {
     Id int32 `json:"id"`
     Name string `json:"name"`
-    Description string `json:"description"`
+	Description string `json:"description"`
     Cid string `json:"cid"`
     HostName string `json:"hostName"`
-    HostAddress string `json:"hostAddress"`
+	HostAddress string `json:"hostAddress"`
     Amount int32 `json:"amount"`
     Left int32 `json:"left"`
 }
@@ -198,7 +199,7 @@ type ActivityPageVO {
 type ActivityDetailsVO {
     Id int32 `json:"id"`
     ActivityName string `json:"activityName"`
-    ActivityDescription string `json:"activityDescription"`
+	ActivityDescription string `json:"activityDescription"`
     DcName string `json:"dcName"`
     DcDescription string `json:"dcDescription"`
     Cid string `json:"cid"`
@@ -211,24 +212,24 @@ type ActivityDetailsVO {
 
 type GiveDcRequest {
     ToName string `json:"toName"`
-    ToAddress string `json:"toAddress"`
+	ToAddress string `json:"toAddress"`
     DcId int32 `json:"dcId"`
 }
 
 type SelectDcRequest {
-    Name string `json:"name"`
+	Name string `json:"name"`
 }
 
 type GetDcByIdRequest {
-    Id int32 `json:"id"`
+	Id int32 `json:"id"`
 }
 
 type GetDigitalCollectionHistoryRequest {
-    Id int32 `json:"id"`
+	Id int32 `json:"id"`
 }
 
 type DcPageVOList {
-    DcPageVO []DcPageVO `json:"dcPageVO"`
+	DcPageVO []DcPageVO `json:"dcPageVO"`
 }
 
 type DcPageVO {
@@ -236,7 +237,7 @@ type DcPageVO {
     Name string `json:"name"`
     DcId int32 `json:"dcId"`
     Hash string `json:"hash"`
-    CreatorName string `json:"creatorName"`
+	CreatorName string `json:"creatorName"`
     Price int32 `json:"price"`
 }
 
@@ -251,7 +252,7 @@ type DcDetailVO {
     CreatorAddress string `json:"creatorAddress"`
     OwnerName string `json:"ownerName"`
     OwnerAddress string `json:"ownerAddress"`
-    ContractAddress string `json:"contractAddress"`
+	ContractAddress string `json:"contractAddress"`
 }
 
 type CollectionMessageOnChainVO {
@@ -260,19 +261,19 @@ type CollectionMessageOnChainVO {
     Description string `json:"description"`
     CreatorAddress string `json:"creatorAddress"`
     OwnerAddress string `json:"ownerAddress"`
-    TraceBackVOList []TraceBackVO `json:"traceBackVOList"`
+	TraceBackVOList []TraceBackVO `json:"traceBackVOList"`
 }
 
 type TraceBackVO {
     FromAddress string `json:"fromAddress"`
     ToAddress string `json:"toAddress"`
-    TransferType string `json:"transferType"`
-    TransferTime string `json:"transferTime"`
+	TransferType string `json:"transferType"`
+	TransferTime string `json:"transferTime"`
 }
 
 type CreatePoolRequest {
     Name string `json:"name"`
-    Description string `json:"description"`
+	Description string `json:"description"`
     Status bool `json:"status"`
     Price int32 `json:"price"`
     Amount int32 `json:"amount"`
@@ -282,30 +283,30 @@ type CreatePoolRequest {
 }
 
 type BuyFromPoolRequest {
-    PoolId int32 `json:"poolId"`
+	PoolId int32 `json:"poolId"`
 }
 
 type SelectPoolRequest {
     Name string `json:"name"`
-    CreatorName string `json:"creatorName"`
+	CreatorName string `json:"creatorName"`
     MinPrice int32 `json:"minPrice"`
     MaxPrice int32 `json:"maxPrice"`
 }
 
 type GetPoolByIdRequest {
-    Id int32 `json:"id"`
+	Id int32 `json:"id"`
 }
 
 type PoolPageVOList {
-    PoolPageVO []PoolPageVO `json:"poolPageVO"`
+	PoolPageVO []PoolPageVO `json:"poolPageVO"`
 }
 
 type PoolPageVO {
     PoolId int32 `json:"poolId"`
     Name string `json:"name"`
-    Description string `json:"description"`
+	Description string `json:"description"`
     Cid string `json:"Cid"`
-    CreatorName string `json:"creatorName"`
+	CreatorName string `json:"creatorName"`
     Status bool `json:"status"`
     SoldOut bool `json:"soldOut"`
     Price int32 `json:"price"`
@@ -321,6 +322,6 @@ type PoolDetailsVO {
     Left int32 `json:"left"`
     CreatorName string `json:"creatorName"`
     CreatorAddress string `json:"creatorAddress"`
-    ContractAddress string `json:"contractAddress"`
+	ContractAddress string `json:"contractAddress"`
 }
 
