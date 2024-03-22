@@ -1,0 +1,45 @@
+dubbo:
+  application:
+    protocol: tri
+  protocol:
+    name: tri
+    port: 20000
+  registry:
+    address: nacos://10.21.32.154:8848
+spring:
+  application:
+    name: blc-provider
+  cloud:
+    stream:
+      binder:
+        name-server: 10.21.32.221:9876
+      bindings:
+        producer-out-0:
+          destination: eventBlcToIm
+        producer-out-1:
+          destination: eventBlcToIm
+      rocketmq:
+        bindings:
+          producer-out-1:
+            producer:
+              sync: false
+              group: userModule
+          producer-out-0:
+            producer:
+              sync: false
+              group: userModule
+server:
+  port: 8881
+fisco:
+  group: group0
+  file-path: /fisco-config-dev.yml
+  contract:
+    admin: "2dbbf6b8894ed9b002445d7286124eb03291a574a23d5b3a92af654726e1ad92"
+    address:
+      poolData: "0x02c387f81f33bd252d5b6ad5952fcffa54edf5d7"
+      poolLogic: "0xe117a3ad55a3c69adab5731fd21f0b1ee61a9667"
+      userLogic: "0x7d9f2565ac99b30f2e3f26dd09c13aecbe08962f"
+      userData: "0x92c9e53ccc9ff54413cac75a0952f8e2f907b977"
+logging:
+  level:
+    com.topview.api.*: DEBUG
