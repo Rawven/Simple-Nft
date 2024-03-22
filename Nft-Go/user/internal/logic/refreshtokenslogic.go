@@ -1,12 +1,10 @@
 package logic
 
 import (
-	global2 "Nft-Go/common/util"
-	"context"
-	"github.com/spf13/viper"
-
 	"Nft-Go/common/api/user"
+	global2 "Nft-Go/common/util"
 	"Nft-Go/user/internal/svc"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -31,7 +29,7 @@ func (l *RefreshTokensLogic) RefreshTokens(in *user.Empty) (*user.Response, erro
 		return nil, err
 	}
 	// 生成新的token
-	jwt, err := global2.GetJwt(viper.Get("jwt").(string), info.UserId)
+	jwt, err := global2.GetJwt(int(info.UserId))
 	if err != nil {
 		return nil, err
 	}

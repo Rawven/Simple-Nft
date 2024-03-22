@@ -31,14 +31,12 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 
 func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResult, error) {
 	dubbo := api.GetBlcDubbo()
+
 	info, err := util.GetUserInfo(l.ctx)
 	if err != nil {
-		return nil, xerror.New("获取用户信息失败")
+		return nil, xerror.New("获取用户信息失败", err)
 	}
 	cid := in.CreatePoolBo.FilePath
-	if err != nil {
-		return nil, xerror.New("上传文件失败")
-	}
 	amount, err := dubbo.GetPoolAmount(l.ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, xerror.New("获取池子数量失败")

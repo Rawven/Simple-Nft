@@ -2,6 +2,7 @@ package main
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/util"
 	"flag"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/zeromicro/go-zero/core/logc"
@@ -18,6 +19,7 @@ var configFile = flag.String("f", "D:\\CodeProjects\\Nft-Project\\Nft-Go\\gatewa
 
 func main() {
 	flag.Parse()
+	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
 	api.InitGatewayService()
 	var c config.Config
 	conf.MustLoad(*configFile, &c)

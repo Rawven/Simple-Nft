@@ -10,6 +10,7 @@ require (
 	github.com/dubbogo/grpc-go v1.42.10
 	github.com/dubbogo/triple v1.2.2-rc3
 	github.com/duke-git/lancet/v2 v2.3.0
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/ipfs/go-ipfs-api v0.7.0
 	github.com/nacos-group/nacos-sdk-go v1.1.4
 	github.com/nacos-group/nacos-sdk-go/v2 v2.2.5

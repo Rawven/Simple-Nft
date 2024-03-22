@@ -1,8 +1,8 @@
 syntax = "v1"
 
 type CommonResponse {
-	Code int `json:"code"`
-	Data string `json:"data"`
+    Code int `json:"code"`
+    Data string `json:"data"`
 	Message string `json:"message"`
 }
 
@@ -14,8 +14,8 @@ type LoginRequest {
 type RegisterRequest {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Email string `json:"email"`
-	Avatar string `json:"avatar"`
+    Email string `json:"email"`
+    Avatar string `json:"avatar"`
 }
 
 type UploadRequest {
@@ -35,7 +35,7 @@ type UserNameRequest {
 }
 
 @server(
-	group: auth
+    group: auth
 	prefix: /v1
 )
 service gateway {
@@ -51,7 +51,7 @@ service gateway {
 
 @server(
 	middleware: JwtMiddleware
-	group: user
+    group: user
 	prefix:     /v1
 )
 service gateway {
@@ -75,8 +75,9 @@ service gateway {
 }
 
 @server(
-	group: nft
-	prefix: /v1
+    middleware: JwtMiddleware
+    group: nft
+    prefix:     /v1
 )
 service gateway {
 	@handler GetMessageByHash
@@ -139,35 +140,35 @@ type GetMessageByHashRequest {
 }
 
 type GetMessageByHashDTO {
-	Type int32 `json:"type"`
-	AccountMessageVO AccountMessageVO `json:"accountMessageVO"`
+    Type int32 `json:"type"`
+    AccountMessageVO AccountMessageVO `json:"accountMessageVO"`
 	CollectionMessageOnChainVO CollectionMessageOnChainVO `json:"collectionMessageOnChainVO"`
 }
 
 type AccountMessageVO {
-	Hash string `json:"hash"`
-	RegisterTime string `json:"registerTime"`
+    Hash string `json:"hash"`
+    RegisterTime string `json:"registerTime"`
 	OwnedCollections []DcOverviewVO `json:"ownedCollections"`
 }
 
 type DcOverviewVO {
-	Id int32 `json:"id"`
-	Hash string `json:"hash"`
+    Id int32 `json:"id"`
+    Hash string `json:"hash"`
 	GetTime string `json:"getTime"`
 }
 
 type CreateActivityRequest {
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Password string `json:"password"`
-	Amount int32 `json:"amount"`
-	DcName string `json:"dcName"`
+    Name string `json:"name"`
+    Description string `json:"description"`
+    Password string `json:"password"`
+    Amount int32 `json:"amount"`
+    DcName string `json:"dcName"`
 	DcDescription string `json:"dcDescription"`
-	Cid string `json:"cid"`
+    Cid string `json:"cid"`
 }
 
 type GetDcFromActivityRequest {
-	Id int32 `json:"id"`
+    Id int32 `json:"id"`
 	Password string `json:"password"`
 }
 
@@ -176,7 +177,7 @@ type GetOneActivityRequest {
 }
 
 type SearchActivitiesRequest {
-	HostName string `json:"hostName"`
+    HostName string `json:"hostName"`
 	ActivityName string `json:"activityName"`
 }
 
@@ -185,34 +186,34 @@ type ActivityPageVOList {
 }
 
 type ActivityPageVO {
-	Id int32 `json:"id"`
-	Name string `json:"name"`
+    Id int32 `json:"id"`
+    Name string `json:"name"`
 	Description string `json:"description"`
-	Cid string `json:"cid"`
-	HostName string `json:"hostName"`
+    Cid string `json:"cid"`
+    HostName string `json:"hostName"`
 	HostAddress string `json:"hostAddress"`
-	Amount int32 `json:"amount"`
-	Left int32 `json:"left"`
+    Amount int32 `json:"amount"`
+    Left int32 `json:"left"`
 }
 
 type ActivityDetailsVO {
-	Id int32 `json:"id"`
-	ActivityName string `json:"activityName"`
+    Id int32 `json:"id"`
+    ActivityName string `json:"activityName"`
 	ActivityDescription string `json:"activityDescription"`
-	DcName string `json:"dcName"`
-	DcDescription string `json:"dcDescription"`
-	Cid string `json:"cid"`
-	HostName string `json:"hostName"`
-	HostAddress string `json:"hostAddress"`
-	Amount int32 `json:"amount"`
-	Left int32 `json:"left"`
-	ContractAddress string `json:"contractAddress"`
+    DcName string `json:"dcName"`
+    DcDescription string `json:"dcDescription"`
+    Cid string `json:"cid"`
+    HostName string `json:"hostName"`
+    HostAddress string `json:"hostAddress"`
+    Amount int32 `json:"amount"`
+    Left int32 `json:"left"`
+    ContractAddress string `json:"contractAddress"`
 }
 
 type GiveDcRequest {
-	ToName string `json:"toName"`
+    ToName string `json:"toName"`
 	ToAddress string `json:"toAddress"`
-	DcId int32 `json:"dcId"`
+    DcId int32 `json:"dcId"`
 }
 
 type SelectDcRequest {
@@ -232,53 +233,53 @@ type DcPageVOList {
 }
 
 type DcPageVO {
-	Cid string `json:"Cid"`
-	Name string `json:"name"`
-	DcId int32 `json:"dcId"`
-	Hash string `json:"hash"`
+    Cid string `json:"Cid"`
+    Name string `json:"name"`
+    DcId int32 `json:"dcId"`
+    Hash string `json:"hash"`
 	CreatorName string `json:"creatorName"`
-	Price int32 `json:"price"`
+    Price int32 `json:"price"`
 }
 
 type DcDetailVO {
-	DcId int32 `json:"dcId"`
-	Hash string `json:"hash"`
-	Cid string `json:"Cid"`
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Price int32 `json:"price"`
-	CreatorName string `json:"creatorName"`
-	CreatorAddress string `json:"creatorAddress"`
-	OwnerName string `json:"ownerName"`
-	OwnerAddress string `json:"ownerAddress"`
+    DcId int32 `json:"dcId"`
+    Hash string `json:"hash"`
+    Cid string `json:"Cid"`
+    Name string `json:"name"`
+    Description string `json:"description"`
+    Price int32 `json:"price"`
+    CreatorName string `json:"creatorName"`
+    CreatorAddress string `json:"creatorAddress"`
+    OwnerName string `json:"ownerName"`
+    OwnerAddress string `json:"ownerAddress"`
 	ContractAddress string `json:"contractAddress"`
 }
 
 type CollectionMessageOnChainVO {
-	Name string `json:"name"`
-	Hash string `json:"hash"`
-	Description string `json:"description"`
-	CreatorAddress string `json:"creatorAddress"`
-	OwnerAddress string `json:"ownerAddress"`
+    Name string `json:"name"`
+    Hash string `json:"hash"`
+    Description string `json:"description"`
+    CreatorAddress string `json:"creatorAddress"`
+    OwnerAddress string `json:"ownerAddress"`
 	TraceBackVOList []TraceBackVO `json:"traceBackVOList"`
 }
 
 type TraceBackVO {
-	FromAddress string `json:"fromAddress"`
-	ToAddress string `json:"toAddress"`
+    FromAddress string `json:"fromAddress"`
+    ToAddress string `json:"toAddress"`
 	TransferType string `json:"transferType"`
 	TransferTime string `json:"transferTime"`
 }
 
 type CreatePoolRequest {
-	Name string `json:"name"`
+    Name string `json:"name"`
 	Description string `json:"description"`
-	Status bool `json:"status"`
-	Price int32 `json:"price"`
-	Amount int32 `json:"amount"`
-	LimitAmount int32 `json:"limitAmount"`
-	cid string `json:"cid"`
-	Creator string `json:"creator"`
+    Status bool `json:"status"`
+    Price int32 `json:"price"`
+    Amount int32 `json:"amount"`
+    LimitAmount int32 `json:"limitAmount"`
+    cid string `json:"cid"`
+    Creator string `json:"creator"`
 }
 
 type BuyFromPoolRequest {
@@ -286,10 +287,10 @@ type BuyFromPoolRequest {
 }
 
 type SelectPoolRequest {
-	Name string `json:"name"`
+    Name string `json:"name"`
 	CreatorName string `json:"creatorName"`
-	MinPrice int32 `json:"minPrice"`
-	MaxPrice int32 `json:"maxPrice"`
+    MinPrice int32 `json:"minPrice"`
+    MaxPrice int32 `json:"maxPrice"`
 }
 
 type GetPoolByIdRequest {
@@ -301,26 +302,26 @@ type PoolPageVOList {
 }
 
 type PoolPageVO {
-	PoolId int32 `json:"poolId"`
-	Name string `json:"name"`
+    PoolId int32 `json:"poolId"`
+    Name string `json:"name"`
 	Description string `json:"description"`
-	Cid string `json:"Cid"`
+    Cid string `json:"Cid"`
 	CreatorName string `json:"creatorName"`
-	Status bool `json:"status"`
-	SoldOut bool `json:"soldOut"`
-	Price int32 `json:"price"`
+    Status bool `json:"status"`
+    SoldOut bool `json:"soldOut"`
+    Price int32 `json:"price"`
 }
 
 type PoolDetailsVO {
-	PoolId int32 `json:"poolId"`
-	Name string `json:"name"`
-	Description string `json:"description"`
-	Cid string `json:"Cid"`
-	Price int32 `json:"price"`
-	Amount int32 `json:"amount"`
-	Left int32 `json:"left"`
-	CreatorName string `json:"creatorName"`
-	CreatorAddress string `json:"creatorAddress"`
+    PoolId int32 `json:"poolId"`
+    Name string `json:"name"`
+    Description string `json:"description"`
+    Cid string `json:"Cid"`
+    Price int32 `json:"price"`
+    Amount int32 `json:"amount"`
+    Left int32 `json:"left"`
+    CreatorName string `json:"creatorName"`
+    CreatorAddress string `json:"creatorAddress"`
 	ContractAddress string `json:"contractAddress"`
 }
 

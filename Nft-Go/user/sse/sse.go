@@ -31,7 +31,7 @@ func InitSse() {
 		// 创建一个新的EventSource实例并保存到sessions中
 		userEs := eventsource.New(nil, nil)
 		mu.Lock()
-		sessions[*userId] = userEs
+		sessions[int32(*userId)] = userEs
 		mu.Unlock()
 
 		// 处理连接

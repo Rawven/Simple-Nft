@@ -3,7 +3,6 @@ package user
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
-	"Nft-Go/common/util"
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
 	"context"
@@ -26,9 +25,7 @@ func NewGetAllNoticeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetA
 }
 
 func (l *GetAllNoticeLogic) GetAllNotice() (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	notices, err := api.GetUserClient().GetAllNotices(ctx, &user.Empty{})
+	notices, err := api.GetUserClient().GetAllNotices(l.ctx, &user.Empty{})
 	if err != nil {
 		return nil, err
 	}

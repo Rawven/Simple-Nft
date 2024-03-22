@@ -11,7 +11,6 @@ import (
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/duke-git/lancet/v2/xerror"
-	"github.com/spf13/viper"
 	"github.com/zeromicro/go-zero/core/jsonx"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -66,7 +65,6 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		logger.Error("插入role失败", tx.Error.Error())
 		return &user.Response{Message: tx.Error.Error()}, nil
 	}
-	key := viper.Get("key")
 	info := global2.UserInfo{
 		UserId:     int32(mod.ID),
 		UserName:   mod.Username,
@@ -75,7 +73,7 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		Avatar:     mod.Avatar,
 		PrivateKey: mod.PrivateKey,
 	}
-	token, err := global2.GetJwt(key.(string), info.UserId)
+	token, err := global2.GetJwt(int(info.UserId))
 	json, err := jsonx.MarshalToString(info)
 	if err != nil {
 		return nil, xerror.New("marshal failed: %w", err)

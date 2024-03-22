@@ -21,6 +21,7 @@ import (
 	"github.com/zeromicro/go-zero/zrpc"
 	"github.com/zeromicro/zero-contrib/zrpc/registry/nacos"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -79,6 +80,11 @@ func main() {
 }
 
 func logInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	// 获取ctx中客户端传过来的metadata
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		logger.Info(md)
+	}
 	resp, err := handler(ctx, req)
 	logger.Info("该请求返回", resp, err)
 	return resp, err

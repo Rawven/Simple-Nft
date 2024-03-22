@@ -4,6 +4,7 @@ import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/db"
 	"Nft-Go/user/internal/dao"
+	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -13,8 +14,6 @@ import (
 	"Nft-Go/user/internal/svc"
 	"context"
 	"github.com/duke-git/lancet/v2/convertor"
-	"github.com/spf13/viper"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -53,7 +52,10 @@ func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	jwt, err := global2.GetJwt(viper.Get("key").(string), int32(_user.ID))
+	jwt, err := global2.GetJwt(_user.ID)
+	if err != nil {
+		return nil, err
+	}
 	info := global2.UserInfo{
 		UserId:     int32(_user.ID),
 		UserName:   _user.Username,
@@ -66,10 +68,17 @@ func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	if err != nil {
 		return nil, xerror.New("json序列化失败")
 	}
-	set := red.Set(l.ctx, string(info.UserId), json, 0)
-	if set.Err() != nil {
-		return nil, set.Err()
+	toString := convertor.ToString(_user.ID)
+	logger.Info(json)
+	result, err := red.Set(l.ctx, toString, json, 0).Result()
+	if err != nil || result == "" {
+		return nil, xerror.New("redis存储失败", err)
 	}
+	id, err := red.Get(l.ctx, "24").Result()
+	if err != nil {
+		return nil, err
+	}
+	logger.Info("id", id)
 	return &user.Response{
 		Message: "登录成功",
 		Code:    200,
