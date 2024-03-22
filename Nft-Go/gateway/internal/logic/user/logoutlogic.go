@@ -1,6 +1,9 @@
 package user
 
 import (
+	"Nft-Go/common/api"
+	"Nft-Go/common/api/user"
+	"Nft-Go/common/util"
 	"context"
 
 	"Nft-Go/gateway/internal/svc"
@@ -24,7 +27,12 @@ func NewLogoutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogoutLogi
 }
 
 func (l *LogoutLogic) Logout() (resp *types.CommonResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	// 生成 metadata 数据
+	ctx := util.GetMetadataContext(l.ctx)
+	_, err = api.GetUserClient().Logout(ctx, &user.Empty{})
+	return &types.CommonResponse{
+		Code:    200,
+		Data:    "success",
+		Message: "success",
+	}, nil
 }

@@ -1,7 +1,11 @@
 package nft
 
 import (
+	"Nft-Go/common/api"
+	"Nft-Go/common/api/nft"
+	"Nft-Go/common/util"
 	"context"
+	"github.com/zeromicro/go-zero/core/jsonx"
 
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
@@ -23,8 +27,20 @@ func NewGetMyDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyDcLo
 	}
 }
 
-func (l *GetMyDcLogic) GetMyDc() (resp *types.DcPageVOList, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+func (l *GetMyDcLogic) GetMyDc() (resp *types.CommonResponse, err error) {
+	// 生成 metadata 数据
+	ctx := util.GetMetadataContext(l.ctx)
+	dc, err := api.GetNftClient().GetMyDc(ctx, &nft.NftEmpty{})
+	if err != nil {
+		return nil, err
+	}
+	toString, err := jsonx.MarshalToString(dc.DcPageVO)
+	if err != nil {
+		return nil, err
+	}
+	return &types.CommonResponse{
+		Code:    200,
+		Data:    toString,
+		Message: "success",
+	}, nil
 }

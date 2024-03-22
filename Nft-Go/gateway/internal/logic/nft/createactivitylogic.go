@@ -1,6 +1,9 @@
 package nft
 
 import (
+	"Nft-Go/common/api"
+	"Nft-Go/common/api/nft"
+	"Nft-Go/common/util"
 	"context"
 
 	"Nft-Go/gateway/internal/svc"
@@ -24,7 +27,25 @@ func NewCreateActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 }
 
 func (l *CreateActivityLogic) CreateActivity(req *types.CreateActivityRequest) (resp *types.CommonResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	// 生成 metadata 数据
+	ctx := util.GetMetadataContext(l.ctx)
+	activity, err := api.GetNftClient().CreateActivity(ctx, &nft.CreateActivityRequest{
+		CreateActivityBo: &nft.CreateActivityBO{
+			Name:          req.Name,
+			Description:   req.Description,
+			Password:      req.Password,
+			Amount:        req.Amount,
+			DcName:        req.DcName,
+			DcDescription: req.DcDescription,
+			Cid:           req.Cid,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &types.CommonResponse{
+		Code:    200,
+		Data:    activity.Message,
+		Message: "success",
+	}, nil
 }

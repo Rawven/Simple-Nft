@@ -1,7 +1,11 @@
 package nft
 
 import (
+	"Nft-Go/common/api"
+	"Nft-Go/common/api/nft"
+	"Nft-Go/common/util"
 	"context"
+	"github.com/zeromicro/go-zero/core/jsonx"
 
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
@@ -24,7 +28,20 @@ func NewGetAllPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAll
 }
 
 func (l *GetAllPoolLogic) GetAllPool() (resp *types.CommonResponse, err error) {
-	// todo: add your logic here and delete this line
+	// 生成 metadata 数据
+	ctx := util.GetMetadataContext(l.ctx)
+	pool, err := api.GetNftClient().GetAllPool(ctx, &nft.NftEmpty{})
+	if err != nil {
+		return nil, err
+	}
+	toString, err := jsonx.MarshalToString(pool.PoolPageVO)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	return &types.CommonResponse{
+		Code:    200,
+		Data:    toString,
+		Message: "success",
+	}, nil
 }

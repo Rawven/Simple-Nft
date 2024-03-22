@@ -1,10 +1,13 @@
 package nft
 
 import (
-	"context"
-
+	"Nft-Go/common/api"
+	"Nft-Go/common/api/nft"
+	"Nft-Go/common/util"
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
+	"context"
+	"github.com/zeromicro/go-zero/core/jsonx"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +27,19 @@ func NewGetAllActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetAllActivityLogic) GetAllActivity() (resp *types.CommonResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	// 生成 metadata 数据
+	ctx := util.GetMetadataContext(l.ctx)
+	activity, err := api.GetNftClient().GetAllActivity(ctx, &nft.NftEmpty{})
+	if err != nil {
+		return nil, err
+	}
+	marshal, err := jsonx.MarshalToString(activity.ActivityPageVO)
+	if err != nil {
+		return nil, err
+	}
+	return &types.CommonResponse{
+		Code:    200,
+		Data:    marshal,
+		Message: "success",
+	}, nil
 }

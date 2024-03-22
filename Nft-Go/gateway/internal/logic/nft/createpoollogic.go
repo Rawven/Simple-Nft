@@ -28,7 +28,7 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 
 func (l *CreatePoolLogic) CreatePool(req *types.CreatePoolRequest) (resp *types.CommonResponse, err error) {
 	metadataContext := util.GetMetadataContext(l.ctx)
-	api.GetNftClient().CreatePool(metadataContext, &nft.CreatePoolRequest{CreatePoolBo: &nft.CreatePoolBO{
+	pool, err := api.GetNftClient().CreatePool(metadataContext, &nft.CreatePoolRequest{CreatePoolBo: &nft.CreatePoolBO{
 		Name:        "",
 		Description: "",
 		Status:      false,
@@ -38,5 +38,12 @@ func (l *CreatePoolLogic) CreatePool(req *types.CreatePoolRequest) (resp *types.
 		FilePath:    "",
 		Creator:     "",
 	}})
-	return
+	if err != nil {
+		return nil, err
+	}
+	return &types.CommonResponse{
+		Code:    200,
+		Data:    pool.Message,
+		Message: "success",
+	}, nil
 }
