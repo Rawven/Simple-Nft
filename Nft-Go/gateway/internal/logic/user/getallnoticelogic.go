@@ -3,6 +3,7 @@ package user
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
+	"Nft-Go/gateway/internal/result"
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
 	"context"
@@ -35,9 +36,5 @@ func (l *GetAllNoticeLogic) GetAllNotice() (resp *types.CommonResponse, err erro
 		return nil, err
 	}
 
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    data,
-		Message: "",
-	}, nil
+	return result.OperateSuccess(data, "GetAllNotice success")
 }

@@ -3,6 +3,7 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
+	"Nft-Go/gateway/internal/result"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -35,9 +36,5 @@ func (l *GetMyPoolLogic) GetMyPool() (resp *types.CommonResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    toString,
-		Message: "success",
-	}, nil
+	return result.OperateSuccess(toString, "GetMyPool success")
 }

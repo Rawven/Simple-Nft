@@ -3,6 +3,7 @@ package user
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
+	"Nft-Go/gateway/internal/result"
 	"context"
 
 	"Nft-Go/gateway/internal/svc"
@@ -26,10 +27,9 @@ func NewLogoutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogoutLogi
 }
 
 func (l *LogoutLogic) Logout() (resp *types.CommonResponse, err error) {
-	_, err = api.GetUserClient().Logout(l.ctx, &user.Empty{})
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    "success",
-		Message: "success",
-	}, nil
+	logout, err := api.GetUserClient().Logout(l.ctx, &user.Empty{})
+	if err != nil {
+		return nil, err
+	}
+	return result.OperateSuccess(logout.Message, "Logout success")
 }

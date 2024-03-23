@@ -3,6 +3,7 @@ package auth
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
+	"Nft-Go/gateway/internal/result"
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
 	"context"
@@ -33,9 +34,5 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.CommonResponse,
 	if err != nil {
 		return nil, xerror.New("login failed: %w", err)
 	}
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    login.Data,
-		Message: "success",
-	}, nil
+	return result.OperateSuccess(login.Data, "login success")
 }

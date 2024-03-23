@@ -3,6 +3,7 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
+	"Nft-Go/gateway/internal/result"
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
 	"context"
@@ -37,9 +38,5 @@ func (l *CreatePoolLogic) CreatePool(req *types.CreatePoolRequest) (resp *types.
 	if err != nil {
 		return nil, err
 	}
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    pool.Message,
-		Message: "success",
-	}, nil
+	return result.OperateSuccess(pool.Message, "CreatePool success")
 }
