@@ -3,17 +3,9 @@ package com.topview.blc;
 import com.topview.entity.struct.DataStruct.Activity;
 import com.topview.entity.struct.DataStruct.Dc;
 import com.topview.entity.struct.DataStruct.Pool;
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import lombok.Getter;
 import org.fisco.bcos.sdk.v3.client.Client;
-import org.fisco.bcos.sdk.v3.codec.datatypes.Address;
-import org.fisco.bcos.sdk.v3.codec.datatypes.Bool;
-import org.fisco.bcos.sdk.v3.codec.datatypes.Function;
-import org.fisco.bcos.sdk.v3.codec.datatypes.Type;
-import org.fisco.bcos.sdk.v3.codec.datatypes.TypeReference;
-import org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String;
+import org.fisco.bcos.sdk.v3.codec.datatypes.*;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.tuples.generated.Tuple1;
@@ -28,6 +20,11 @@ import org.fisco.bcos.sdk.v3.model.callback.CallCallback;
 import org.fisco.bcos.sdk.v3.model.callback.TransactionCallback;
 import org.fisco.bcos.sdk.v3.transaction.model.exception.ContractException;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @SuppressWarnings("unchecked")
 public class PoolData extends Contract {
     public static final String[] BINARY_ARRAY = {
@@ -41,6 +38,7 @@ public class PoolData extends Contract {
 
     public static final String[] ABI_ARRAY = {"[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"getActivityAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_poolId\",\"type\":\"uint256\"}],\"name\":\"getAmountOwnedInPool\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_cid\",\"type\":\"string\"}],\"name\":\"getCidStatus\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDcAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_dcId\",\"type\":\"uint256\"}],\"name\":\"getDcOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_uniqueHash\",\"type\":\"bytes32\"}],\"name\":\"getHashToDcId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_activityId\",\"type\":\"uint256\"}],\"name\":\"getIdToActivity\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"encodedKey\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"poolId\",\"type\":\"uint256\"}],\"internalType\":\"struct DataStructs.Activity\",\"name\":\"activity\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"cid\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"left\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"limitAmount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"createTime\",\"type\":\"uint256\"}],\"internalType\":\"struct DataStructs.Pool\",\"name\":\"pool\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_dcId\",\"type\":\"uint256\"}],\"name\":\"getIdToDc\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"uniqueHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"mintTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"poolId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"indexInPool\",\"type\":\"uint256\"}],\"internalType\":\"struct DataStructs.Dc\",\"name\":\"dc\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"cid\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"left\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"limitAmount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"createTime\",\"type\":\"uint256\"}],\"internalType\":\"struct DataStructs.Pool\",\"name\":\"pool\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_poolId\",\"type\":\"uint256\"}],\"name\":\"getIdToPool\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"cid\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"left\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"limitAmount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"createTime\",\"type\":\"uint256\"}],\"internalType\":\"struct DataStructs.Pool\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTraceContract\",\"outputs\":[{\"internalType\":\"contract Trace\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_activityAmount\",\"type\":\"uint256\"}],\"name\":\"setActivityAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_poolId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"setAmountOwnedInPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_cid\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"status\",\"type\":\"bool\"}],\"name\":\"setCidStatus\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_dcAmount\",\"type\":\"uint256\"}],\"name\":\"setDcAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_dcId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"setDcOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_uniqueHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_dcId\",\"type\":\"uint256\"}],\"name\":\"setHashToDcId\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_activityId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"encodedKey\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"poolId\",\"type\":\"uint256\"}],\"internalType\":\"struct DataStructs.Activity\",\"name\":\"_activity\",\"type\":\"tuple\"}],\"name\":\"setIdToActivity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_dcId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"uniqueHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"mintTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"poolId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"indexInPool\",\"type\":\"uint256\"}],\"internalType\":\"struct DataStructs.Dc\",\"name\":\"_dc\",\"type\":\"tuple\"}],\"name\":\"setIdToDc\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_poolId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"cid\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"left\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"limitAmount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"createTime\",\"type\":\"uint256\"}],\"internalType\":\"struct DataStructs.Pool\",\"name\":\"_pool\",\"type\":\"tuple\"}],\"name\":\"setIdToPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_poolAmount\",\"type\":\"uint256\"}],\"name\":\"setPoolAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"};
 
+    @Getter
     public static final String ABI = org.fisco.bcos.sdk.v3.utils.StringUtils.joinAll("", ABI_ARRAY);
 
     public static final String FUNC_GETACTIVITYAMOUNT = "getActivityAmount";
@@ -93,10 +91,6 @@ public class PoolData extends Contract {
         return (cryptoSuite.getCryptoTypeConfig() == CryptoType.ECDSA_TYPE ? BINARY : SM_BINARY);
     }
 
-    public static String getABI() {
-        return ABI;
-    }
-
     public static PoolData load(String contractAddress, Client client, CryptoKeyPair credential) {
         return new PoolData(contractAddress, client, credential);
     }
@@ -108,121 +102,119 @@ public class PoolData extends Contract {
 
     public BigInteger getActivityAmount() throws ContractException {
         final Function function = new Function(FUNC_GETACTIVITYAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         return executeCallWithSingleValueReturn(function, BigInteger.class);
     }
 
-    public void getActivityAmount(CallCallback callback) throws ContractException {
+    public void getActivityAmount(CallCallback callback) {
         final Function function = new Function(FUNC_GETACTIVITYAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public BigInteger getAmountOwnedInPool(String _user, BigInteger _poolId) throws
         ContractException {
         final Function function = new Function(FUNC_GETAMOUNTOWNEDINPOOL,
-            Arrays.<Type>asList(new Address(_user),
+                Arrays.asList(new Address(_user),
                 new Uint256(_poolId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(new TypeReference<Uint256>() {
+                }));
         return executeCallWithSingleValueReturn(function, BigInteger.class);
     }
 
-    public void getAmountOwnedInPool(String _user, BigInteger _poolId, CallCallback callback) throws
-        ContractException {
+    public void getAmountOwnedInPool(String _user, BigInteger _poolId, CallCallback callback) {
         final Function function = new Function(FUNC_GETAMOUNTOWNEDINPOOL,
-            Arrays.<Type>asList(new Address(_user),
+                Arrays.asList(new Address(_user),
                 new Uint256(_poolId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(new TypeReference<Uint256>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public Boolean getCidStatus(String _cid) throws ContractException {
         final Function function = new Function(FUNC_GETCIDSTATUS,
-            Arrays.<Type>asList(new Utf8String(_cid)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
-            }));
+                List.of(new Utf8String(_cid)),
+                List.of(new TypeReference<Bool>() {
+                }));
         return executeCallWithSingleValueReturn(function, Boolean.class);
     }
 
-    public void getCidStatus(String _cid, CallCallback callback) throws ContractException {
+    public void getCidStatus(String _cid, CallCallback callback) {
         final Function function = new Function(FUNC_GETCIDSTATUS,
-            Arrays.<Type>asList(new Utf8String(_cid)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
-            }));
+                List.of(new Utf8String(_cid)),
+                List.of(new TypeReference<Bool>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public BigInteger getDcAmount() throws ContractException {
         final Function function = new Function(FUNC_GETDCAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         return executeCallWithSingleValueReturn(function, BigInteger.class);
     }
 
-    public void getDcAmount(CallCallback callback) throws ContractException {
+    public void getDcAmount(CallCallback callback) {
         final Function function = new Function(FUNC_GETDCAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public String getDcOwner(BigInteger _dcId) throws ContractException {
         final Function function = new Function(FUNC_GETDCOWNER,
-            Arrays.<Type>asList(new Uint256(_dcId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
-            }));
+                List.of(new Uint256(_dcId)),
+                List.of(new TypeReference<Address>() {
+                }));
         return executeCallWithSingleValueReturn(function, String.class);
     }
 
-    public void getDcOwner(BigInteger _dcId, CallCallback callback) throws ContractException {
+    public void getDcOwner(BigInteger _dcId, CallCallback callback) {
         final Function function = new Function(FUNC_GETDCOWNER,
-            Arrays.<Type>asList(new Uint256(_dcId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
-            }));
+                List.of(new Uint256(_dcId)),
+                List.of(new TypeReference<Address>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public BigInteger getHashToDcId(byte[] _uniqueHash) throws ContractException {
         final Function function = new Function(FUNC_GETHASHTODCID,
-            Arrays.<Type>asList(new Bytes32(_uniqueHash)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(new Bytes32(_uniqueHash)),
+                List.of(new TypeReference<Uint256>() {
+                }));
         return executeCallWithSingleValueReturn(function, BigInteger.class);
     }
 
-    public void getHashToDcId(byte[] _uniqueHash, CallCallback callback) throws ContractException {
+    public void getHashToDcId(byte[] _uniqueHash, CallCallback callback) {
         final Function function = new Function(FUNC_GETHASHTODCID,
-            Arrays.<Type>asList(new Bytes32(_uniqueHash)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(new Bytes32(_uniqueHash)),
+                List.of(new TypeReference<Uint256>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public Tuple2<Activity, Pool> getIdToActivity(BigInteger _activityId) throws ContractException {
         final Function function = new Function(FUNC_GETIDTOACTIVITY,
-            Arrays.<Type>asList(new Uint256(_activityId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Activity>() {
+                List.of(new Uint256(_activityId)),
+                Arrays.asList(new TypeReference<Activity>() {
             }, new TypeReference<Pool>() {
             }));
         List<Type> results = executeCallWithMultipleValueReturn(function);
-        return new Tuple2<Activity, Pool>(
-            (Activity) results.get(0).getValue(),
-            (Pool) results.get(1).getValue());
+        return new Tuple2<>(
+                (Activity) results.get(0).getValue(),
+                (Pool) results.get(1).getValue());
     }
 
-    public void getIdToActivity(BigInteger _activityId, CallCallback callback) throws
-        ContractException {
+    public void getIdToActivity(BigInteger _activityId, CallCallback callback) {
         final Function function = new Function(FUNC_GETIDTOACTIVITY,
-            Arrays.<Type>asList(new Uint256(_activityId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Activity>() {
+                List.of(new Uint256(_activityId)),
+                Arrays.asList(new TypeReference<Activity>() {
             }, new TypeReference<Pool>() {
             }));
         asyncExecuteCall(function, callback);
@@ -230,20 +222,20 @@ public class PoolData extends Contract {
 
     public Tuple2<Dc, Pool> getIdToDc(BigInteger _dcId) throws ContractException {
         final Function function = new Function(FUNC_GETIDTODC,
-            Arrays.<Type>asList(new Uint256(_dcId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Dc>() {
+                List.of(new Uint256(_dcId)),
+                Arrays.asList(new TypeReference<Dc>() {
             }, new TypeReference<Pool>() {
             }));
         List<Type> results = executeCallWithMultipleValueReturn(function);
-        return new Tuple2<Dc, Pool>(
-            (Dc) results.get(0).getValue(),
-            (Pool) results.get(1).getValue());
+        return new Tuple2<>(
+                (Dc) results.get(0).getValue(),
+                (Pool) results.get(1).getValue());
     }
 
-    public void getIdToDc(BigInteger _dcId, CallCallback callback) throws ContractException {
+    public void getIdToDc(BigInteger _dcId, CallCallback callback) {
         final Function function = new Function(FUNC_GETIDTODC,
-            Arrays.<Type>asList(new Uint256(_dcId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Dc>() {
+                List.of(new Uint256(_dcId)),
+                Arrays.asList(new TypeReference<Dc>() {
             }, new TypeReference<Pool>() {
             }));
         asyncExecuteCall(function, callback);
@@ -251,86 +243,86 @@ public class PoolData extends Contract {
 
     public Pool getIdToPool(BigInteger _poolId) throws ContractException {
         final Function function = new Function(FUNC_GETIDTOPOOL,
-            Arrays.<Type>asList(new Uint256(_poolId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Pool>() {
-            }));
+                List.of(new Uint256(_poolId)),
+                List.of(new TypeReference<Pool>() {
+                }));
         return executeCallWithSingleValueReturn(function, Pool.class);
     }
 
-    public void getIdToPool(BigInteger _poolId, CallCallback callback) throws ContractException {
+    public void getIdToPool(BigInteger _poolId, CallCallback callback) {
         final Function function = new Function(FUNC_GETIDTOPOOL,
-            Arrays.<Type>asList(new Uint256(_poolId)),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Pool>() {
-            }));
+                List.of(new Uint256(_poolId)),
+                List.of(new TypeReference<Pool>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public BigInteger getPoolAmount() throws ContractException {
         final Function function = new Function(FUNC_GETPOOLAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         return executeCallWithSingleValueReturn(function, BigInteger.class);
     }
 
-    public void getPoolAmount(CallCallback callback) throws ContractException {
+    public void getPoolAmount(CallCallback callback) {
         final Function function = new Function(FUNC_GETPOOLAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public String getTraceContract() throws ContractException {
         final Function function = new Function(FUNC_GETTRACECONTRACT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Address>() {
+                }));
         return executeCallWithSingleValueReturn(function, String.class);
     }
 
-    public void getTraceContract(CallCallback callback) throws ContractException {
+    public void getTraceContract(CallCallback callback) {
         final Function function = new Function(FUNC_GETTRACECONTRACT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Address>() {
+                }));
         asyncExecuteCall(function, callback);
     }
 
     public TransactionReceipt setActivityAmount(BigInteger _activityAmount) {
         final Function function = new Function(
             FUNC_SETACTIVITYAMOUNT,
-            Arrays.<Type>asList(new Uint256(_activityAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_activityAmount)),
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
     public String getSignedTransactionForSetActivityAmount(BigInteger _activityAmount) {
         final Function function = new Function(
             FUNC_SETACTIVITYAMOUNT,
-            Arrays.<Type>asList(new Uint256(_activityAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_activityAmount)),
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
     public String setActivityAmount(BigInteger _activityAmount, TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETACTIVITYAMOUNT,
-            Arrays.<Type>asList(new Uint256(_activityAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_activityAmount)),
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
     public Tuple1<BigInteger> getSetActivityAmountInput(TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETACTIVITYAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple1<BigInteger>(
+        return new Tuple1<>(
 
-            (BigInteger) results.get(0).getValue()
+                (BigInteger) results.get(0).getValue()
         );
     }
 
@@ -338,10 +330,10 @@ public class PoolData extends Contract {
         BigInteger _amount) {
         final Function function = new Function(
             FUNC_SETAMOUNTOWNEDINPOOL,
-            Arrays.<Type>asList(new Address(_user),
+                Arrays.asList(new Address(_user),
                 new Uint256(_poolId),
                 new Uint256(_amount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
@@ -349,10 +341,10 @@ public class PoolData extends Contract {
         BigInteger _amount) {
         final Function function = new Function(
             FUNC_SETAMOUNTOWNEDINPOOL,
-            Arrays.<Type>asList(new Address(_user),
+                Arrays.asList(new Address(_user),
                 new Uint256(_poolId),
                 new Uint256(_amount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
@@ -360,10 +352,10 @@ public class PoolData extends Contract {
         TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETAMOUNTOWNEDINPOOL,
-            Arrays.<Type>asList(new Address(_user),
+                Arrays.asList(new Address(_user),
                 new Uint256(_poolId),
                 new Uint256(_amount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
@@ -371,156 +363,156 @@ public class PoolData extends Contract {
         TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETAMOUNTOWNEDINPOOL,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+                List.of(),
+                Arrays.asList(new TypeReference<Address>() {
             }, new TypeReference<Uint256>() {
             }, new TypeReference<Uint256>() {
             }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple3<String, BigInteger, BigInteger>(
+        return new Tuple3<>(
 
-            (String) results.get(0).getValue(),
-            (BigInteger) results.get(1).getValue(),
-            (BigInteger) results.get(2).getValue()
+                (String) results.get(0).getValue(),
+                (BigInteger) results.get(1).getValue(),
+                (BigInteger) results.get(2).getValue()
         );
     }
 
     public TransactionReceipt setCidStatus(String _cid, Boolean status) {
         final Function function = new Function(
             FUNC_SETCIDSTATUS,
-            Arrays.<Type>asList(new Utf8String(_cid),
+                Arrays.asList(new Utf8String(_cid),
                 new Bool(status)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
     public String getSignedTransactionForSetCidStatus(String _cid, Boolean status) {
         final Function function = new Function(
             FUNC_SETCIDSTATUS,
-            Arrays.<Type>asList(new Utf8String(_cid),
+                Arrays.asList(new Utf8String(_cid),
                 new Bool(status)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
     public String setCidStatus(String _cid, Boolean status, TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETCIDSTATUS,
-            Arrays.<Type>asList(new Utf8String(_cid),
+                Arrays.asList(new Utf8String(_cid),
                 new Bool(status)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
     public Tuple2<String, Boolean> getSetCidStatusInput(TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETCIDSTATUS,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
+                List.of(),
+                Arrays.asList(new TypeReference<Utf8String>() {
             }, new TypeReference<Bool>() {
             }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple2<String, Boolean>(
+        return new Tuple2<>(
 
-            (String) results.get(0).getValue(),
-            (Boolean) results.get(1).getValue()
+                (String) results.get(0).getValue(),
+                (Boolean) results.get(1).getValue()
         );
     }
 
     public TransactionReceipt setDcAmount(BigInteger _dcAmount) {
         final Function function = new Function(
             FUNC_SETDCAMOUNT,
-            Arrays.<Type>asList(new Uint256(_dcAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_dcAmount)),
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
     public String getSignedTransactionForSetDcAmount(BigInteger _dcAmount) {
         final Function function = new Function(
             FUNC_SETDCAMOUNT,
-            Arrays.<Type>asList(new Uint256(_dcAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_dcAmount)),
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
     public String setDcAmount(BigInteger _dcAmount, TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETDCAMOUNT,
-            Arrays.<Type>asList(new Uint256(_dcAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_dcAmount)),
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
     public Tuple1<BigInteger> getSetDcAmountInput(TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETDCAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple1<BigInteger>(
+        return new Tuple1<>(
 
-            (BigInteger) results.get(0).getValue()
+                (BigInteger) results.get(0).getValue()
         );
     }
 
     public TransactionReceipt setDcOwner(BigInteger _dcId, String _newOwner) {
         final Function function = new Function(
             FUNC_SETDCOWNER,
-            Arrays.<Type>asList(new Uint256(_dcId),
+                Arrays.asList(new Uint256(_dcId),
                 new Address(_newOwner)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
     public String getSignedTransactionForSetDcOwner(BigInteger _dcId, String _newOwner) {
         final Function function = new Function(
             FUNC_SETDCOWNER,
-            Arrays.<Type>asList(new Uint256(_dcId),
+                Arrays.asList(new Uint256(_dcId),
                 new Address(_newOwner)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
     public String setDcOwner(BigInteger _dcId, String _newOwner, TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETDCOWNER,
-            Arrays.<Type>asList(new Uint256(_dcId),
+                Arrays.asList(new Uint256(_dcId),
                 new Address(_newOwner)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
     public Tuple2<BigInteger, String> getSetDcOwnerInput(TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETDCOWNER,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                List.of(),
+                Arrays.asList(new TypeReference<Uint256>() {
             }, new TypeReference<Address>() {
             }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple2<BigInteger, String>(
+        return new Tuple2<>(
 
-            (BigInteger) results.get(0).getValue(),
-            (String) results.get(1).getValue()
+                (BigInteger) results.get(0).getValue(),
+                (String) results.get(1).getValue()
         );
     }
 
     public TransactionReceipt setHashToDcId(byte[] _uniqueHash, BigInteger _dcId) {
         final Function function = new Function(
             FUNC_SETHASHTODCID,
-            Arrays.<Type>asList(new Bytes32(_uniqueHash),
+                Arrays.asList(new Bytes32(_uniqueHash),
                 new Uint256(_dcId)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
     public String getSignedTransactionForSetHashToDcId(byte[] _uniqueHash, BigInteger _dcId) {
         final Function function = new Function(
             FUNC_SETHASHTODCID,
-            Arrays.<Type>asList(new Bytes32(_uniqueHash),
+                Arrays.asList(new Bytes32(_uniqueHash),
                 new Uint256(_dcId)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
@@ -528,33 +520,33 @@ public class PoolData extends Contract {
         TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETHASHTODCID,
-            Arrays.<Type>asList(new Bytes32(_uniqueHash),
+                Arrays.asList(new Bytes32(_uniqueHash),
                 new Uint256(_dcId)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
     public Tuple2<byte[], BigInteger> getSetHashToDcIdInput(TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETHASHTODCID,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Bytes32>() {
+                List.of(),
+                Arrays.asList(new TypeReference<Bytes32>() {
             }, new TypeReference<Uint256>() {
             }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple2<byte[], BigInteger>(
+        return new Tuple2<>(
 
-            (byte[]) results.get(0).getValue(),
-            (BigInteger) results.get(1).getValue()
+                (byte[]) results.get(0).getValue(),
+                (BigInteger) results.get(1).getValue()
         );
     }
 
     public TransactionReceipt setIdToActivity(BigInteger _activityId, Activity _activity) {
         final Function function = new Function(
             FUNC_SETIDTOACTIVITY,
-            Arrays.<Type>asList(new Uint256(_activityId),
+                Arrays.asList(new Uint256(_activityId),
                 _activity),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
@@ -562,9 +554,9 @@ public class PoolData extends Contract {
         Activity _activity) {
         final Function function = new Function(
             FUNC_SETIDTOACTIVITY,
-            Arrays.<Type>asList(new Uint256(_activityId),
+                Arrays.asList(new Uint256(_activityId),
                 _activity),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
@@ -572,9 +564,9 @@ public class PoolData extends Contract {
         TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETIDTOACTIVITY,
-            Arrays.<Type>asList(new Uint256(_activityId),
+                Arrays.asList(new Uint256(_activityId),
                 _activity),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
@@ -582,136 +574,136 @@ public class PoolData extends Contract {
         TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETIDTOACTIVITY,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                List.of(),
+                Arrays.asList(new TypeReference<Uint256>() {
             }, new TypeReference<Activity>() {
             }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple2<BigInteger, Activity>(
+        return new Tuple2<>(
 
-            (BigInteger) results.get(0).getValue(),
-            (Activity) results.get(1)
+                (BigInteger) results.get(0).getValue(),
+                (Activity) results.get(1)
         );
     }
 
     public TransactionReceipt setIdToDc(BigInteger _dcId, Dc _dc) {
         final Function function = new Function(
             FUNC_SETIDTODC,
-            Arrays.<Type>asList(new Uint256(_dcId),
+                Arrays.asList(new Uint256(_dcId),
                 _dc),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
     public String getSignedTransactionForSetIdToDc(BigInteger _dcId, Dc _dc) {
         final Function function = new Function(
             FUNC_SETIDTODC,
-            Arrays.<Type>asList(new Uint256(_dcId),
+                Arrays.asList(new Uint256(_dcId),
                 _dc),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
     public String setIdToDc(BigInteger _dcId, Dc _dc, TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETIDTODC,
-            Arrays.<Type>asList(new Uint256(_dcId),
+                Arrays.asList(new Uint256(_dcId),
                 _dc),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
     public Tuple2<BigInteger, Dc> getSetIdToDcInput(TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETIDTODC,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                List.of(),
+                Arrays.asList(new TypeReference<Uint256>() {
             }, new TypeReference<Dc>() {
             }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple2<BigInteger, Dc>(
+        return new Tuple2<>(
 
-            (BigInteger) results.get(0).getValue(),
-            (Dc) results.get(1)
+                (BigInteger) results.get(0).getValue(),
+                (Dc) results.get(1)
         );
     }
 
     public TransactionReceipt setIdToPool(BigInteger _poolId, Pool _pool) {
         final Function function = new Function(
             FUNC_SETIDTOPOOL,
-            Arrays.<Type>asList(new Uint256(_poolId),
+                Arrays.asList(new Uint256(_poolId),
                 _pool),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
     public String getSignedTransactionForSetIdToPool(BigInteger _poolId, Pool _pool) {
         final Function function = new Function(
             FUNC_SETIDTOPOOL,
-            Arrays.<Type>asList(new Uint256(_poolId),
+                Arrays.asList(new Uint256(_poolId),
                 _pool),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
     public String setIdToPool(BigInteger _poolId, Pool _pool, TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETIDTOPOOL,
-            Arrays.<Type>asList(new Uint256(_poolId),
+                Arrays.asList(new Uint256(_poolId),
                 _pool),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
     public Tuple2<BigInteger, Pool> getSetIdToPoolInput(TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETIDTOPOOL,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                List.of(),
+                Arrays.asList(new TypeReference<Uint256>() {
             }, new TypeReference<Pool>() {
             }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple2<BigInteger, Pool>(
+        return new Tuple2<>(
 
-            (BigInteger) results.get(0).getValue(),
-            (Pool) results.get(1)
+                (BigInteger) results.get(0).getValue(),
+                (Pool) results.get(1)
         );
     }
 
     public TransactionReceipt setPoolAmount(BigInteger _poolAmount) {
         final Function function = new Function(
             FUNC_SETPOOLAMOUNT,
-            Arrays.<Type>asList(new Uint256(_poolAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_poolAmount)),
+                Collections.emptyList(), 0);
         return executeTransaction(function);
     }
 
     public String getSignedTransactionForSetPoolAmount(BigInteger _poolAmount) {
         final Function function = new Function(
             FUNC_SETPOOLAMOUNT,
-            Arrays.<Type>asList(new Uint256(_poolAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_poolAmount)),
+                Collections.emptyList(), 0);
         return createSignedTransaction(function);
     }
 
     public String setPoolAmount(BigInteger _poolAmount, TransactionCallback callback) {
         final Function function = new Function(
             FUNC_SETPOOLAMOUNT,
-            Arrays.<Type>asList(new Uint256(_poolAmount)),
-            Collections.<TypeReference<?>>emptyList(), 0);
+                List.of(new Uint256(_poolAmount)),
+                Collections.emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
 
     public Tuple1<BigInteger> getSetPoolAmountInput(TransactionReceipt transactionReceipt) {
         String data = transactionReceipt.getInput().substring(10);
         final Function function = new Function(FUNC_SETPOOLAMOUNT,
-            Arrays.<Type>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-            }));
+                List.of(),
+                List.of(new TypeReference<Uint256>() {
+                }));
         List<Type> results = this.functionReturnDecoder.decode(data, function.getOutputParameters());
-        return new Tuple1<BigInteger>(
+        return new Tuple1<>(
 
-            (BigInteger) results.get(0).getValue()
+                (BigInteger) results.get(0).getValue()
         );
     }
 }

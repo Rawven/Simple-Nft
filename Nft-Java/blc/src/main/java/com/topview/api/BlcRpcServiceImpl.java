@@ -229,7 +229,8 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     private void createActivity(String userKey, CreateActivityDTO args) {
         PoolLogic contract = client.getContractInstance(PoolLogic.class, userKey);
         TransactionReceipt activity = contract.createActivity(args.getName(), args.getPassword().toByteArray(), args.getCid(), args.getDcName(), BigInteger.valueOf(args.getAmount()));
-        Assert.isTrue(activity.isStatusOK(), "创建活动失败");
+        log.info(activity.toString());
+        Assert.isTrue(activity.isStatusOK(), "创建活动失败" + activity.getMessage());
     }
 
     private ActivityAndPool getIdToActivity(Integer id) {
@@ -237,7 +238,6 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
         try {
             Tuple2<DataStruct.Activity, DataStruct.Pool> result = contract.getIdToActivity(BigInteger.valueOf(id));
             DataStruct.Activity value1 = result.getValue1();
-            DataStruct.Pool value2 = result.getValue2();
             Activity activity = Activity.newBuilder().setName(value1.getName()).setEncodedKey(ByteString.copyFrom(value1.getEncodedKey())).setPoolId(value1.getPoolId().longValue()).build();
             Pool pool = Pool.getDefaultInstance();
             return ActivityAndPool.newBuilder().setActivity(activity).setPool(pool).build();
@@ -262,7 +262,7 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     private void getDcFromActivity(String userKey, GetDcFromActivityDTO args) {
         PoolLogic contract = client.getContractInstance(PoolLogic.class, userKey);
         TransactionReceipt transactionReceipt = contract.getDcFromActivity(BigInteger.valueOf(args.getActivityId()), args.getPassword().toByteArray());
-        Assert.isTrue(transactionReceipt.isStatusOK(), "领取失败");
+        Assert.isTrue(transactionReceipt.isStatusOK(), "领取失败" + transactionReceipt.getMessage());
 
     }
 

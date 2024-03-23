@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewSelectPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Select
 }
 
 func (l *SelectPoolLogic) SelectPool(req *types.SelectPoolRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	pool, err := api.GetNftClient().SelectPool(ctx, &nft.SelectPoolRequest{
+	pool, err := api.GetNftClient().SelectPool(l.ctx, &nft.SelectPoolRequest{
 		SelectPoolBo: &nft.SelectPoolBO{
 			Name:        req.Name,
 			CreatorName: req.CreatorName,

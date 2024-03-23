@@ -3,7 +3,6 @@ package user
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewGetNoticeByTitleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *GetNoticeByTitleLogic) GetNoticeByTitle(req *types.TitleNoticeRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	notice, err := api.GetUserClient().GetNoticeByTitle(ctx, &user.TitleNoticeRequest{
+	notice, err := api.GetUserClient().GetNoticeByTitle(l.ctx, &user.TitleNoticeRequest{
 		Title: req.Title,
 	})
 	toString, err := jsonx.MarshalToString(notice)

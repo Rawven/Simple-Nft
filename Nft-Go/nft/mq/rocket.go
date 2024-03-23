@@ -7,6 +7,7 @@ import (
 	"github.com/apache/rocketmq-client-go/v2/producer"
 	"github.com/apache/rocketmq-client-go/v2/rlog"
 	"github.com/dubbogo/gost/log/logger"
+	"github.com/spf13/viper"
 	"os"
 )
 
@@ -21,7 +22,7 @@ func InitMq() {
 	p, _ = rocketmq.NewProducer(
 		// 设置  nameSrvAddr
 		// nameSrvAddr 是 Topic 路由注册中心
-		producer.WithNameServer([]string{"10.21.2.154:9876"}),
+		producer.WithNameServer([]string{viper.GetString("rocketmq.nameserver")}),
 		// 指定发送失败时的重试时间
 		producer.WithRetry(2),
 		// 设置 Group

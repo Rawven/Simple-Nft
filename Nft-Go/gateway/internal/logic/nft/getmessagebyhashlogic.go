@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewGetMessageByHashLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *GetMessageByHashLogic) GetMessageByHash(req *types.GetMessageByHashRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	hash, err := api.GetNftClient().GetMessageByHash(ctx, &nft.GetMessageByHashRequest{
+	hash, err := api.GetNftClient().GetMessageByHash(l.ctx, &nft.GetMessageByHashRequest{
 		Hash: req.Hash,
 	})
 	if err != nil {

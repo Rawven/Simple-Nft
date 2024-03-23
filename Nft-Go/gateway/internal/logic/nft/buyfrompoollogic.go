@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
 
@@ -28,9 +27,7 @@ func NewBuyFromPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BuyFr
 }
 
 func (l *BuyFromPoolLogic) BuyFromPool(req *types.BuyFromPoolRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	pool, err := api.GetNftClient().BuyFromPool(ctx, &nft.BuyFromPoolRequest{BuyFromPoolBo: &nft.BuyFromPoolBO{
+	pool, err := api.GetNftClient().BuyFromPool(l.ctx, &nft.BuyFromPoolRequest{BuyFromPoolBo: &nft.BuyFromPoolBO{
 		PoolId: req.PoolId,
 	}})
 	if err != nil {

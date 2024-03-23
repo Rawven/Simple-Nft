@@ -79,6 +79,8 @@ public class ChainClient {
     }
 
     public <T> T getContractInstance(Class<T> tClass, String userKey) {
+        userKey = userKey.replace("\\", "").replace("\"", "");
+        log.info("userKey:{}", userKey);
         Object contract = localCache.getIfPresent(userKey + "_" + tClass.getName());
         if (contract != null) {
             return Convert.convert(tClass, contract);

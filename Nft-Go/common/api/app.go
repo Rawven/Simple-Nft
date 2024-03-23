@@ -122,13 +122,6 @@ func InitUserClient() {
 
 }
 
-func SetNftClient(client nft.NftClient) {
-	nftRpc = client
-}
-func SetUserClient(client user.UserClient) {
-	userRpc = client
-}
-
 func GetNftClient() nft.NftClient {
 	return nftRpc
 }

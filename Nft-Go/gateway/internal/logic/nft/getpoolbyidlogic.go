@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewGetPoolByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPo
 }
 
 func (l *GetPoolByIdLogic) GetPoolById(req *types.GetPoolByIdRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	id, err := api.GetNftClient().GetPoolById(ctx, &nft.GetPoolByIdRequest{
+	id, err := api.GetNftClient().GetPoolById(l.ctx, &nft.GetPoolByIdRequest{
 		Id: req.Id,
 	})
 	if err != nil {

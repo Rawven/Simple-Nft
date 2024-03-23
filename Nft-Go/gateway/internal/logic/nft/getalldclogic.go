@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewGetAllDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAllDc
 }
 
 func (l *GetAllDcLogic) GetAllDc() (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	dc, err := api.GetNftClient().GetAllDc(ctx, &nft.NftEmpty{})
+	dc, err := api.GetNftClient().GetAllDc(l.ctx, &nft.NftEmpty{})
 	if err != nil {
 		return nil, err
 	}

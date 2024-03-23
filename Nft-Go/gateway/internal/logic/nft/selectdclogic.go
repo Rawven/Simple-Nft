@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewSelectDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SelectDc
 }
 
 func (l *SelectDcLogic) SelectDc(req *types.SelectDcRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	dc, err := api.GetNftClient().SelectDc(ctx, &nft.SelectDcRequest{
+	dc, err := api.GetNftClient().SelectDc(l.ctx, &nft.SelectDcRequest{
 		Name: req.Name,
 	})
 	if err != nil {
