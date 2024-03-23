@@ -44,7 +44,10 @@ func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequ
 	}
 	activity := activityAndPool.Activity
 	pool := activityAndPool.Pool
-	mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.GetDcFromActivityBo.GetId())).Updates(model.ActivityInfo{Remainder: int32(pool.Left), Status: compare.Equal(pool.Left, 1)})
+	_, err = mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.GetDcFromActivityBo.GetId())).Updates(model.ActivityInfo{Remainder: int32(pool.Left), Status: compare.Equal(pool.Left, 1)})
+	if err != nil {
+		return nil, xerror.New("更新失败" + err.Error())
+	}
 	activityInfo, err := mysql.Where(mysql.Id.Eq(in.GetDcFromActivityBo.GetId())).First()
 	if err != nil {
 		return nil, xerror.New("查询失败")
@@ -55,7 +58,7 @@ func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequ
 	if err != nil {
 		return nil, xerror.New("调用dubbo失败")
 	}
-	dao.DcInfo.WithContext(l.ctx).Create(&model.DcInfo{
+	err := dao.DcInfo.WithContext(l.ctx).Create(&model.DcInfo{
 		Hash:           convertor.ToString(mint.UniqueId),
 		Cid:            pool.GetCid(),
 		Name:           pool.GetName(),
@@ -66,6 +69,9 @@ func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequ
 		CreatorName:    activityInfo.Name,
 		CreatorAddress: activityInfo.HostAddress,
 	})
+	if err != nil {
+		return nil, xerror.New("插入失败" + err.Error())
+	}
 	in.GetGetDcFromActivityBo().Password = cryptor.Sha256(in.GetDcFromActivityBo.Password)
 	_, err = dubbo.GetDcFromActivity(l.ctx, &blc.GetDcFromActivityRequest{
 		Key: &blc.UserKey{UserKey: info.PrivateKey},

@@ -37,7 +37,10 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 	dubbo := api.GetBlcDubbo()
 	my := dao.PoolInfo
 	//让PoolInfo指定id的数据中的left减一
-	my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).Update(my.Left, my.Left.Sub(1))
+	_, err = my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).Update(my.Left, my.Left.Sub(1))
+	if err != nil {
+		return nil, xerror.New("更新失败" + err.Error())
+	}
 	pool, err := my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).First()
 	if err != nil {
 		return nil, xerror.New("查询失败")

@@ -54,7 +54,7 @@ func GetDigitalCollectionHistory(in *nft.GetDigitalCollectionHistoryRequest, ctx
 	}
 	return &nft.CollectionMessageOnChainVO{
 		Name:            message.DcName,
-		Hash:            string(message.Hash),
+		Hash:            util.ByteArray2HexString(message.Hash),
 		Description:     poolInfo.Description,
 		CreatorAddress:  message.CreatorAddress,
 		OwnerAddress:    message.OwnerAddress,

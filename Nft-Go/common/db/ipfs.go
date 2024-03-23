@@ -9,7 +9,6 @@ import (
 )
 
 var IpfsClient *Ipfs
-var gateWay string
 
 type Ipfs struct {
 	Url string
@@ -22,8 +21,6 @@ func InitIpfs(url string) {
 		Url: url,
 		Sh:  sh,
 	}
-	//TODO gateway是啥？
-	gateWay = url
 	logger.Info("ipfs connect success")
 }
 

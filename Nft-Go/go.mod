@@ -5,7 +5,6 @@ go 1.22.0
 require (
 	dubbo.apache.org/dubbo-go/v3 v3.1.1
 	github.com/apache/rocketmq-client-go/v2 v2.1.2
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dubbogo/gost v1.14.0
 	github.com/dubbogo/grpc-go v1.42.10
 	github.com/dubbogo/triple v1.2.2-rc3

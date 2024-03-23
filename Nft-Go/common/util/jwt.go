@@ -3,6 +3,7 @@ package util
 import (
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/spf13/viper"
 	"math/rand"
 	"time"
 )
@@ -21,17 +22,20 @@ type UserInfo struct {
 }
 
 // 签名密钥
-const sign_key = "hello jwt"
+var key string
 
 // 随机字符串
 var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-func randStr(str_len int) string {
-	rand_bytes := make([]rune, str_len)
-	for i := range rand_bytes {
-		rand_bytes[i] = letters[rand.Intn(len(letters))]
+func initJwt() {
+	key = viper.GetString("key")
+}
+func randStr(str int) string {
+	bytes := make([]rune, str)
+	for i := range bytes {
+		bytes[i] = letters[rand.Intn(len(letters))]
 	}
-	return string(rand_bytes)
+	return string(bytes)
 }
 
 func GetJwt(userId int) (string, error) {
@@ -47,7 +51,7 @@ func GetJwt(userId int) (string, error) {
 			ID:        randStr(10),                                     // wt ID, 类似于盐值
 		},
 	}
-	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claim).SignedString([]byte(sign_key))
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claim).SignedString([]byte(key))
 	if err != nil {
 		return "", err
 	}
@@ -59,9 +63,9 @@ func GetJwt(userId int) (string, error) {
 	return token, nil
 }
 
-func ParseToken(token_string string) (*int, error) {
-	token, _ := jwt.ParseWithClaims(token_string, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(sign_key), nil //返回签名密钥
+func ParseToken(tokenStr string) (*int, error) {
+	token, _ := jwt.ParseWithClaims(tokenStr, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(key), nil //返回签名密钥
 	})
 	claims, _ := token.Claims.(*MyCustomClaims)
 	logger.Info(claims.UserID)

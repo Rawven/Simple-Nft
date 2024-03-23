@@ -44,6 +44,7 @@ func InitConfig(path string) {
 	if err != nil {
 		logger.Info("viper read config failed, err:", err)
 	}
+	initJwt()
 }
 
 func TurnTime(ti int64) string {
