@@ -4,24 +4,21 @@ import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
 	"Nft-Go/common/db"
+	"Nft-Go/common/interceptor"
+	"Nft-Go/common/registry"
 	"Nft-Go/common/util"
-	"Nft-Go/user/internal/config"
 	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/server"
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/mq"
 	"Nft-Go/user/sse"
-	"context"
 	"flag"
 	"github.com/dubbogo/gost/log/logger"
-	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
-	"github.com/zeromicro/zero-contrib/zrpc/registry/nacos"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -47,10 +44,9 @@ func main() {
 		Encoding: "plain",
 	}
 	logc.MustSetup(log)
-	var c config.Config
+	var c registry.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
-	c.RpcServerConf.Middlewares.Trace = false
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		user.RegisterUserServer(grpcServer, server.NewUserServer(ctx))
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
@@ -58,34 +54,10 @@ func main() {
 		}
 	})
 	defer s.Stop()
-	s.AddUnaryInterceptors(logInterceptor)
-	logger.Info("Starting rpc server at %s...\n", c.ListenOn)
+	s.AddUnaryInterceptors(interceptor.LogInterceptor)
 	// register service to nacos
-	sc := []constant.ServerConfig{
-		*constant.NewServerConfig("10.21.32.154", 8848),
-	}
-
-	cc := &constant.ClientConfig{
-		NamespaceId:         "public",
-		TimeoutMs:           5000,
-		NotLoadCacheAtStart: true,
-		LogDir:              "/tmp/nacos/log",
-		CacheDir:            "/tmp/nacos/cache",
-		LogLevel:            "debug",
-	}
-
-	opts := nacos.NewNacosConfig("user.rpc", c.ListenOn, sc, cc)
-	_ = nacos.RegisterService(opts)
+	registry.RegistryNacos("user.rpc", c)
+	logger.Info("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
-}
 
-func logInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	// 获取ctx中客户端传过来的metadata
-	md, ok := metadata.FromIncomingContext(ctx)
-	if ok {
-		logger.Info(md)
-	}
-	resp, err := handler(ctx, req)
-	logger.Info("该请求返回", resp, err)
-	return resp, err
 }
