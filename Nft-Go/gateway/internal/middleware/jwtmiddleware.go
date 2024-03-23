@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"Nft-Go/common/util"
-	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/convertor"
 	"google.golang.org/grpc/metadata"
 	"net/http"
@@ -32,9 +31,6 @@ func (m *JwtMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		toString := convertor.ToString(userId)
 		outgoingContext := metadata.AppendToOutgoingContext(reqCtx, "userId", toString)
 		newReq := r.WithContext(outgoingContext)
-		context, _ := metadata.FromOutgoingContext(outgoingContext)
-		logger.Info("???")
-		logger.Info(context)
 		next(w, newReq)
 	}
 }
