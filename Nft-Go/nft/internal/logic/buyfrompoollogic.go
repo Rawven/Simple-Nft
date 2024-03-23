@@ -34,49 +34,56 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败")
 	}
-	dubbo := api.GetBlcDubbo()
-	my := dao.PoolInfo
-	//让PoolInfo指定id的数据中的left减一
-	_, err = my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).Update(my.Left, my.Left.Sub(1))
-	if err != nil {
-		return nil, xerror.New("更新失败" + err.Error())
-	}
-	pool, err := my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).First()
-	if err != nil {
-		return nil, xerror.New("查询失败")
-	}
-	mint, err := dubbo.BeforeMint(l.ctx, &blc.BeforeMintRequest{
-		Id: pool.PoolId,
+	dubbo := api.GetBlcService()
+	err = dao.Q.Transaction(func(tx *dao.Query) error {
+		my := tx.PoolInfo
+		//让PoolInfo指定id的数据中的left减一
+		_, err = my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).Update(my.Left, my.Left.Sub(1))
+		if err != nil {
+			return xerror.New("更新失败")
+		}
+		pool, err := my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).First()
+		if err != nil {
+			return xerror.New("查询失败")
+		}
+		mint, err := dubbo.BeforeMint(l.ctx, &blc.BeforeMintRequest{
+			Id: pool.PoolId,
+		})
+		if err != nil {
+			return xerror.New("调用dubbo失败")
+		}
+		dcInfo := model.DcInfo{
+			Id:             int32(mint.DcId),
+			Hash:           util.ByteArray2HexString(mint.UniqueId),
+			Cid:            pool.Cid,
+			Name:           pool.Name,
+			Description:    pool.Description,
+			Price:          pool.Price,
+			OwnerName:      info.UserName,
+			OwnerAddress:   info.Address,
+			CreatorName:    pool.CreatorName,
+			CreatorAddress: pool.CreatorAddress,
+		}
+		err = dao.DcInfo.WithContext(l.ctx).Create(&dcInfo)
+		if err != nil {
+			return xerror.New("插入失败")
+		}
+		_, err = dubbo.Mint(l.ctx, &blc.MintRequest{
+			UserKey: &blc.UserKey{UserKey: info.PrivateKey},
+			PoolId:  pool.PoolId,
+		})
+		if err != nil {
+			return xerror.New("调用dubbo失败")
+		}
+		redis := db.GetRedis()
+		info.Balance = info.Balance - pool.Price
+		redis.Set(l.ctx, string(info.UserId), info, 0)
+		return nil
 	})
 	if err != nil {
-		return nil, xerror.New("调用dubbo失败")
+		return nil, xerror.New("购买失败" + err.Error())
 	}
-	dcInfo := model.DcInfo{
-		Id:             int32(mint.DcId),
-		Hash:           util.ByteArray2HexString(mint.UniqueId),
-		Cid:            pool.Cid,
-		Name:           pool.Name,
-		Description:    pool.Description,
-		Price:          pool.Price,
-		OwnerName:      info.UserName,
-		OwnerAddress:   info.Address,
-		CreatorName:    pool.CreatorName,
-		CreatorAddress: pool.CreatorAddress,
-	}
-	err = dao.DcInfo.WithContext(l.ctx).Create(&dcInfo)
-	if err != nil {
-		return nil, xerror.New("插入失败")
-	}
-	_, err = dubbo.Mint(l.ctx, &blc.MintRequest{
-		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
-		PoolId:  pool.PoolId,
-	})
-	if err != nil {
-		return nil, xerror.New("调用dubbo失败")
-	}
-	redis := db.GetRedis()
-	info.Balance = info.Balance - pool.Price
-	redis.Set(l.ctx, string(info.UserId), info, 0)
+
 	return &nft.CommonResult{
 		Code:    200,
 		Message: "success",

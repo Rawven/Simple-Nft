@@ -5,10 +5,10 @@ import (
 	"Nft-Go/common/api/user"
 	"Nft-Go/common/db"
 	global2 "Nft-Go/common/util"
+	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/model"
 	"Nft-Go/user/internal/svc"
 	"context"
-	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/zeromicro/go-zero/core/jsonx"
@@ -32,7 +32,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, error) {
 	//链上注册
-	dubbo := api.GetBlcDubbo()
+	dubbo := api.GetBlcService()
 	result, err := dubbo.SignUp(l.ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, err
@@ -47,24 +47,27 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		Address:    result.GetAddress(),
 		Avatar:     in.GetAvatar(),
 	}
-	mysql := db.GetMysql()
 	rds := db.GetRedis()
-	tx := mysql.Create(&mod)
-	if tx.Error != nil {
-		logger.Error("插入用户失败", tx.Error.Error())
-		return &user.Response{Message: tx.Error.Error()}, nil
-	}
-	role := model.UserRole{
-		ID:     0,
-		UserID: mod.ID,
-		RoleID: 2,
+	err = dao.Q.Transaction(func(tx *dao.Query) error {
+		err := tx.User.WithContext(l.ctx).Create(&mod)
+		if err != nil {
+			return xerror.New("插入用户失败: %w", err)
+		}
+		role := model.UserRole{
+			ID:     0,
+			UserID: mod.ID,
+			RoleID: 2,
+		}
+		err = tx.UserRole.WithContext(l.ctx).Create(&role)
+		if err != nil {
+			return xerror.New("插入role失败: %w", err)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, xerror.New("事务失败: %w", err)
 	}
 
-	tx = mysql.Create(&role)
-	if tx.Error != nil {
-		logger.Error("插入role失败", tx.Error.Error())
-		return &user.Response{Message: tx.Error.Error()}, nil
-	}
 	info := global2.UserInfo{
 		UserId:     int32(mod.ID),
 		UserName:   mod.Username,

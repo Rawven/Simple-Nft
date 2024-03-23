@@ -32,7 +32,7 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 	if len(in.Hash) != 42 && len(in.Hash) != 66 {
 		return nil, os.ErrInvalid
 	}
-	dubbo := api.GetBlcDubbo()
+	dubbo := api.GetBlcService()
 	mysql := dao.DcInfo
 	var dto nft.GetMessageByHashDTO
 	if len(in.Hash) == 42 {

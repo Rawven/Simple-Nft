@@ -2,6 +2,7 @@ package logic
 
 import (
 	"Nft-Go/common/api"
+	"Nft-Go/common/api/blc"
 	"Nft-Go/common/api/nft"
 	"Nft-Go/common/api/user"
 	"Nft-Go/common/util"
@@ -32,12 +33,22 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.CommonResult, error) {
 	mysql := dao.DcInfo
 	info, err := util.GetUserInfo(l.ctx)
 	userRpc := api.GetUserClient()
+	dubbo := api.GetBlcService()
+
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败")
 	}
 	name, err := userRpc.GetUserInfoByName(l.ctx, &user.UserNameRequest{Username: in.GiveDcBo.GetToAddress()})
+
+	_, err = dubbo.Give(l.ctx, &blc.GiveRequest{
+		GiveDTO: &blc.GiveDTO{
+			ToAddress: name.Address,
+			DcId:      in.GiveDcBo.DcId,
+		},
+	})
+
 	if err != nil {
-		return nil, xerror.New("获取用户信息失败")
+		return nil, xerror.New("调用blc失败" + err.Error())
 	}
 	dc, err := mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.GiveDcBo.DcId)).First()
 	if err != nil {

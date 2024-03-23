@@ -4,8 +4,8 @@ import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/blc"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
 	"Nft-Go/common/util"
+	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
 	"context"
 	"github.com/duke-git/lancet/v2/cryptor"
@@ -31,7 +31,7 @@ func NewCreateActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 }
 
 func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nft.CommonResult, error) {
-	dubbo := api.GetBlcDubbo()
+	dubbo := api.GetBlcService()
 	amount, err := dubbo.GetActivityAmount(l.ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, xerror.New("获取活动数量失败")
@@ -52,23 +52,29 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 		Remainder:     in.CreateActivityBo.GetAmount(),
 		Status:        true,
 	}
-	tx := db.GetMysql().Create(&activityInfo)
-	if tx.Error != nil {
-		return nil, xerror.New("插入活动失败")
-	}
-	//创建活动
-	_, err = dubbo.CreateActivity(l.ctx, &blc.CreateActivityRequest{
-		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
-		Args: &blc.CreateActivityDTO{
-			Name:     in.CreateActivityBo.Name,
-			Password: []byte(cryptor.Sha256(in.CreateActivityBo.Password)),
-			Amount:   int64(in.CreateActivityBo.Amount),
-			Cid:      in.CreateActivityBo.Cid,
-			DcName:   in.CreateActivityBo.DcName,
-		},
+	err = dao.Q.Transaction(func(tx *dao.Query) error {
+		err := tx.ActivityInfo.WithContext(l.ctx).Create(&activityInfo)
+		if err != nil {
+			return xerror.New("插入活动失败" + err.Error())
+		}
+		//创建活动
+		_, err = dubbo.CreateActivity(l.ctx, &blc.CreateActivityRequest{
+			UserKey: &blc.UserKey{UserKey: info.PrivateKey},
+			Args: &blc.CreateActivityDTO{
+				Name:     in.CreateActivityBo.Name,
+				Password: []byte(cryptor.Sha256(in.CreateActivityBo.Password)),
+				Amount:   int64(in.CreateActivityBo.Amount),
+				Cid:      in.CreateActivityBo.Cid,
+				DcName:   in.CreateActivityBo.DcName,
+			},
+		})
+		if err != nil {
+			return xerror.New("调用dubbo失败" + err.Error())
+		}
+		return nil
 	})
 	if err != nil {
-		return nil, xerror.New("调用dubbo失败")
+		return nil, xerror.New("插入失败" + err.Error())
 	}
 	return &nft.CommonResult{
 		Code:    200,

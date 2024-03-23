@@ -33,7 +33,7 @@ func NewGetDcFromActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequest) (*nft.CommonResult, error) {
 	info, err := util.GetUserInfo(l.ctx)
-	dubbo := api.GetBlcDubbo()
+	dubbo := api.GetBlcService()
 	mysql := dao.ActivityInfo
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败")

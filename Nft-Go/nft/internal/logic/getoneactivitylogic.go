@@ -28,7 +28,7 @@ func NewGetOneActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetOneActivityLogic) GetOneActivity(in *nft.GetOneActivityRequest) (*nft.ActivityDetailsVO, error) {
-	dubbo := api.GetBlcDubbo()
+	dubbo := api.GetBlcService()
 	activityAndPool, err := dubbo.GetIdToActivity(l.ctx, &blc.GetIdToActivityRequest{Id: in.Id})
 	if err != nil {
 		return nil, xerror.New("“获取活动失败”")

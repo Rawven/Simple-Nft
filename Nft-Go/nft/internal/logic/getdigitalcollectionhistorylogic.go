@@ -31,7 +31,7 @@ func (l *GetDigitalCollectionHistoryLogic) GetDigitalCollectionHistory(in *nft.G
 	return GetDigitalCollectionHistory(in, l.ctx)
 }
 func GetDigitalCollectionHistory(in *nft.GetDigitalCollectionHistoryRequest, ctx context.Context) (*nft.CollectionMessageOnChainVO, error) {
-	dubbo := api.GetBlcDubbo()
+	dubbo := api.GetBlcService()
 	mysql := dao.PoolInfo
 	message, err := dubbo.GetDcHistoryAndMessage(ctx, &blc.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
 	if err != nil {

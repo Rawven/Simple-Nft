@@ -4,8 +4,8 @@ import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/blc"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
 	"Nft-Go/common/util"
+	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
 	"Nft-Go/nft/internal/svc"
 	"context"
@@ -30,7 +30,7 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResult, error) {
-	dubbo := api.GetBlcDubbo()
+	dubbo := api.GetBlcService()
 	info, err := util.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败", err)
@@ -61,10 +61,6 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResu
 		CreatorAddress: info.Address,
 		Status:         in.CreatePoolBo.Status,
 	}
-	tx := db.GetMysql().Create(&poolInfo)
-	if tx.Error != nil {
-		return nil, xerror.New("插入池子失败")
-	}
 	_, err = dubbo.CreatePool(l.ctx, &blc.CreatePoolRequest{
 		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
 		Dto: &blc.CreatePoolDTO{
@@ -76,7 +72,11 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.CommonResu
 		},
 	})
 	if err != nil {
-		return nil, xerror.New("调用dubbo失败")
+		return nil, xerror.New("调用dubbo失败" + err.Error())
+	}
+	err = dao.PoolInfo.WithContext(l.ctx).Create(&poolInfo)
+	if err != nil {
+		return nil, xerror.New("插入失败" + err.Error())
 	}
 
 	return &nft.CommonResult{
