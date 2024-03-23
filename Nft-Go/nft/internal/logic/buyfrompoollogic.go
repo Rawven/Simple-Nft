@@ -50,7 +50,7 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 	}
 	dcInfo := model.DcInfo{
 		Id:             int32(mint.DcId),
-		Hash:           string(mint.UniqueId),
+		Hash:           util.ByteArray2HexString(mint.UniqueId),
 		Cid:            pool.Cid,
 		Name:           pool.Name,
 		Description:    pool.Description,
