@@ -28,7 +28,6 @@ func GetUserInfo(ctx context.Context) (*UserInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	logger.Info(parse)
 	return &UserInfo{
 		UserName:   parse.Get("UserName").String(),
 		Address:    parse.Get("Address").String(),
@@ -67,12 +66,4 @@ func HexString2ByteArray(hexString string) ([]byte, error) {
 
 func ByteArray2HexString(byteArray []byte) string {
 	return "0x" + fmt.Sprintf("%064x", new(big.Int).SetBytes(byteArray))
-}
-
-func GetMetadataContext(ctx context.Context) context.Context {
-	value := ctx.Value("userId")
-	ctx = metadata.AppendToOutgoingContext(ctx, "userId", value.(string))
-	logger.Info("GetMetadata")
-	logger.Info(ctx.Value("userId"))
-	return ctx
 }

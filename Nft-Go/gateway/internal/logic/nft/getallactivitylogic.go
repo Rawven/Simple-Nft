@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
 	"context"
@@ -27,9 +26,7 @@ func NewGetAllActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetAllActivityLogic) GetAllActivity() (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	activity, err := api.GetNftClient().GetAllActivity(ctx, &nft.NftEmpty{})
+	activity, err := api.GetNftClient().GetAllActivity(l.ctx, &nft.NftEmpty{})
 	if err != nil {
 		return nil, err
 	}

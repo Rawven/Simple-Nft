@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewGetDcFromActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetDcFromActivityLogic) GetDcFromActivity(req *types.GetDcFromActivityRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	activity, err := api.GetNftClient().GetDcFromActivity(ctx, &nft.GetDcFromActivityRequest{
+	activity, err := api.GetNftClient().GetDcFromActivity(l.ctx, &nft.GetDcFromActivityRequest{
 		GetDcFromActivityBo: &nft.GetDcFromActivityBO{
 			Id:       req.Id,
 			Password: req.Password,

@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewSearchActivitiesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *SearchActivitiesLogic) SearchActivities(req *types.SearchActivitiesRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	activities, err := api.GetNftClient().SearchActivities(ctx, &nft.SearchActivitiesRequest{
+	activities, err := api.GetNftClient().SearchActivities(l.ctx, &nft.SearchActivitiesRequest{
 		SearchActivityBO: &nft.SearchActivityBO{
 			HostName:     req.HostName,
 			ActivityName: req.ActivityName,

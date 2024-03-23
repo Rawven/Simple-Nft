@@ -3,7 +3,6 @@ package user
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,9 +27,7 @@ func NewGetUserInfoByUserNameLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *GetUserInfoByUserNameLogic) GetUserInfoByUserName(req *types.UserNameRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	name, err := api.GetUserClient().GetUserInfoByName(ctx, &user.UserNameRequest{
+	name, err := api.GetUserClient().GetUserInfoByName(l.ctx, &user.UserNameRequest{
 		Username: req.Username,
 	})
 	if err != nil {

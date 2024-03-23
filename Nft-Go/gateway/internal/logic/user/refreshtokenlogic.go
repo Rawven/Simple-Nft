@@ -3,7 +3,6 @@ package user
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
-	"Nft-Go/common/util"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -28,8 +27,7 @@ func NewRefreshTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Refr
 }
 
 func (l *RefreshTokenLogic) RefreshToken() (resp *types.CommonResponse, err error) {
-	ctx := util.GetMetadataContext(l.ctx)
-	token, err := api.GetUserClient().RefreshTokens(ctx, &user.Empty{})
+	token, err := api.GetUserClient().RefreshTokens(l.ctx, &user.Empty{})
 	toString, err := jsonx.MarshalToString(token.Data)
 	if err != nil {
 		return nil, err

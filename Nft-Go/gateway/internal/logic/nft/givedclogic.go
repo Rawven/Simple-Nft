@@ -3,7 +3,6 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/util"
 	"context"
 
 	"Nft-Go/gateway/internal/svc"
@@ -27,9 +26,7 @@ func NewGiveDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GiveDcLogi
 }
 
 func (l *GiveDcLogic) GiveDc(req *types.GiveDcRequest) (resp *types.CommonResponse, err error) {
-	// 生成 metadata 数据
-	ctx := util.GetMetadataContext(l.ctx)
-	dc, err := api.GetNftClient().GiveDc(ctx, &nft.GiveDcRequest{
+	dc, err := api.GetNftClient().GiveDc(l.ctx, &nft.GiveDcRequest{
 		GiveDcBo: &nft.GiveDcBO{
 			ToName:    req.ToName,
 			ToAddress: req.ToAddress,
