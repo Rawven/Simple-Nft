@@ -1,12 +1,14 @@
 package svc
 
-import "Nft-Go/nft/internal/config"
+import (
+	"Nft-Go/common/registry"
+)
 
 type ServiceContext struct {
-	Config config.Config
+	Config registry.Config
 }
 
-func NewServiceContext(c config.Config) *ServiceContext {
+func NewServiceContext(c registry.Config) *ServiceContext {
 	return &ServiceContext{
 		Config: c,
 	}

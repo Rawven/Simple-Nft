@@ -58,7 +58,7 @@ func (l *GetDcFromActivityLogic) GetDcFromActivity(in *nft.GetDcFromActivityRequ
 	if err != nil {
 		return nil, xerror.New("调用dubbo失败")
 	}
-	err := dao.DcInfo.WithContext(l.ctx).Create(&model.DcInfo{
+	err = dao.DcInfo.WithContext(l.ctx).Create(&model.DcInfo{
 		Hash:           convertor.ToString(mint.UniqueId),
 		Cid:            pool.GetCid(),
 		Name:           pool.GetName(),

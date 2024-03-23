@@ -16,4 +16,6 @@ fisco:
       poolLogic: "0xe117a3ad55a3c69adab5731fd21f0b1ee61a9667"
       userLogic: "0x7d9f2565ac99b30f2e3f26dd09c13aecbe08962f"
       userData: "0x92c9e53ccc9ff54413cac75a0952f8e2f907b977"
-
+rateLimit:
+  maxTokens: 100
+  tokenRate: 20

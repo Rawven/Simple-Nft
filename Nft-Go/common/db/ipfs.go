@@ -50,7 +50,6 @@ func (i *Ipfs) UnPinIPFS(hash string) (err error) {
 	if err != nil {
 		return
 	}
-
 	return nil
 }
 

@@ -68,6 +68,5 @@ func ParseToken(tokenStr string) (*int, error) {
 		return []byte(key), nil //返回签名密钥
 	})
 	claims, _ := token.Claims.(*MyCustomClaims)
-	logger.Info(claims.UserID)
 	return &claims.UserID, nil
 }

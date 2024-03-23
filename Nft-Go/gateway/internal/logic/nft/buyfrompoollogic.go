@@ -3,6 +3,7 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
+	"Nft-Go/gateway/internal/result"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
 
@@ -33,9 +34,5 @@ func (l *BuyFromPoolLogic) BuyFromPool(req *types.BuyFromPoolRequest) (resp *typ
 	if err != nil {
 		return nil, xerror.New("BuyFromPool failed")
 	}
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    pool.Message,
-		Message: "success",
-	}, nil
+	return result.OperateSuccess(pool.Message, "BuyFromPool success")
 }

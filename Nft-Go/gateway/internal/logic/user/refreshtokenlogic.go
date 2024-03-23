@@ -3,6 +3,7 @@ package user
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
+	"Nft-Go/gateway/internal/result"
 	"context"
 	"github.com/zeromicro/go-zero/core/jsonx"
 
@@ -32,9 +33,5 @@ func (l *RefreshTokenLogic) RefreshToken() (resp *types.CommonResponse, err erro
 	if err != nil {
 		return nil, err
 	}
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    toString,
-		Message: "success",
-	}, nil
+	return result.OperateSuccess(toString, "RefreshToken success")
 }

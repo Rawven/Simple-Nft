@@ -3,6 +3,7 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
+	"Nft-Go/gateway/internal/result"
 	"context"
 
 	"Nft-Go/gateway/internal/svc"
@@ -41,9 +42,5 @@ func (l *CreateActivityLogic) CreateActivity(req *types.CreateActivityRequest) (
 	if err != nil {
 		return nil, err
 	}
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    activity.Message,
-		Message: "success",
-	}, nil
+	return result.OperateSuccess(activity.Message, "CreateActivity success")
 }

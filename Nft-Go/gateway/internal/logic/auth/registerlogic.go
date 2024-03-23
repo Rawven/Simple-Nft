@@ -3,6 +3,7 @@ package auth
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
+	"Nft-Go/gateway/internal/result"
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
 	"context"
@@ -40,9 +41,5 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Common
 	if err != nil {
 		return nil, xerror.New("marshal failed: %w", err)
 	}
-	return &types.CommonResponse{
-		Code:    200,
-		Data:    register.Data,
-		Message: "success",
-	}, nil
+	return result.OperateSuccess(register.Data, "register success")
 }
