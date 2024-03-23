@@ -28,7 +28,6 @@ func InitRedis() {
 		DB:       0,                                 // use default DB
 	})
 	logger.Info("redis connect success")
-
 }
 func GetRedis() *redis.Client {
 	return dbRedis

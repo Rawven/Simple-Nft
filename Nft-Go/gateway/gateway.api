@@ -1,42 +1,9 @@
 syntax = "v1"
 
-type CommonResponse {
-    Code int `json:"code"`
-    Data string `json:"data"`
-	Message string `json:"message"`
-}
-
-type LoginRequest {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type RegisterRequest {
-	Username string `json:"username"`
-	Password string `json:"password"`
-    Email string `json:"email"`
-    Avatar string `json:"avatar"`
-}
-
-type UploadRequest {
-	File string `json:"file"`
-}
-
-type TitleNoticeRequest {
-	Title string `json:"title"`
-}
-
-type IdNoticeRequest {
-	Id string `json:"id"`
-}
-
-type UserNameRequest {
-	Username string `json:"username"`
-}
-
 @server(
+    middleware: RateLimitMiddleware
     group: auth
-	prefix: /v1
+    prefix:     /v1
 )
 service gateway {
 	@handler login
@@ -50,7 +17,7 @@ service gateway {
 }
 
 @server(
-	middleware: JwtMiddleware
+    middleware: RateLimitMiddleware,JwtMiddleware
     group: user
 	prefix:     /v1
 )
@@ -75,7 +42,7 @@ service gateway {
 }
 
 @server(
-    middleware: JwtMiddleware
+    middleware: RateLimitMiddleware,JwtMiddleware
     group: nft
     prefix:     /v1
 )
@@ -133,6 +100,40 @@ service gateway {
 
 	@handler GetMyPool
 	get /nft/GetMyPool returns (CommonResponse)
+}
+
+type CommonResponse {
+    Code int `json:"code"`
+    Data string `json:"data"`
+    Message string `json:"message"`
+}
+
+type LoginRequest {
+    Username string `json:"username"`
+    Password string `json:"password"`
+}
+
+type RegisterRequest {
+    Username string `json:"username"`
+    Password string `json:"password"`
+    Email string `json:"email"`
+    Avatar string `json:"avatar"`
+}
+
+type UploadRequest {
+    File string `json:"file"`
+}
+
+type TitleNoticeRequest {
+    Title string `json:"title"`
+}
+
+type IdNoticeRequest {
+    Id string `json:"id"`
+}
+
+type UserNameRequest {
+    Username string `json:"username"`
 }
 
 type GetMessageByHashRequest {

@@ -7,13 +7,15 @@ import (
 )
 
 type ServiceContext struct {
-	Config        config.Config
-	JwtMiddleware rest.Middleware
+	Config              config.Config
+	JwtMiddleware       rest.Middleware
+	RateLimitMiddleware rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config:        c,
-		JwtMiddleware: middleware.NewJwtMiddleware().Handle,
+		Config:              c,
+		JwtMiddleware:       middleware.NewJwtMiddleware().Handle,
+		RateLimitMiddleware: middleware.NewRateLimitMiddleware().Handle,
 	}
 }
