@@ -1,7 +1,6 @@
 package util
 
 import (
-	"context"
 	"github.com/duke-git/lancet/v2/fileutil"
 	"github.com/redis/go-redis/v9"
 	"io"
@@ -9,8 +8,8 @@ import (
 
 var limitScript *redis.Script
 
-func InitLimiter(ctx context.Context) {
-	file, f, err := fileutil.ReadFile("D:\\CodeProjects\\Nft-Project\\Nft-Go\\script\\redis_limiter.lua")
+func InitLimiter() {
+	file, f, err := fileutil.ReadFile("../script/redis_limiter.lua")
 	if err != nil {
 		panic(err)
 	}

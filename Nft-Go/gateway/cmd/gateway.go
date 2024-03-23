@@ -1,13 +1,12 @@
 package main
 
 import (
-	"Nft-Go/common/api"
 	"Nft-Go/common/db"
+	"Nft-Go/common/registry"
 	"Nft-Go/common/util"
 	"Nft-Go/gateway/internal/config"
 	"Nft-Go/gateway/internal/handler"
 	"Nft-Go/gateway/internal/svc"
-	"context"
 	"flag"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/zeromicro/go-zero/core/logc"
@@ -16,14 +15,16 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 )
 
-var configFile = flag.String("f", "D:\\CodeProjects\\Nft-Project\\Nft-Go\\gateway\\etc\\gateway.yaml", "the config file")
+var configFile = flag.String("f", "etc/gateway.yaml", "the config file")
 
 func main() {
 	flag.Parse()
-	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
-	api.InitGatewayService()
+	util.InitConfig("..")
+	registry.InitNacos()
+	registry.InitNftService()
+	registry.InitUserService()
 	db.InitRedis()
-	util.InitLimiter(context.Background())
+	util.InitLimiter()
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	log := logc.LogConf{

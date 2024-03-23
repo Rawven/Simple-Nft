@@ -14,6 +14,7 @@ import (
 	"Nft-Go/user/sse"
 	"flag"
 	"github.com/dubbogo/gost/log/logger"
+	"github.com/spf13/viper"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/service"
@@ -27,12 +28,12 @@ var configFile = flag.String("f", "etc/user.yaml", "the config file")
 func main() {
 	flag.Parse()
 	//config
-	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
+	util.InitConfig("..")
 	//db
 	db.InitMysql()
 	dao.SetDefault(db.GetMysql())
 	db.InitRedis()
-	db.InitIpfs("localhost:5001")
+	db.InitIpfs(viper.GetString("ipfs"))
 	//sse
 	sse.InitSse()
 	//mq

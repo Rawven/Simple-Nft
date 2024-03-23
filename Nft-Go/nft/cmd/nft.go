@@ -13,6 +13,7 @@ import (
 	"Nft-Go/nft/mq"
 	"flag"
 	"github.com/dubbogo/gost/log/logger"
+	"github.com/spf13/viper"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/service"
@@ -21,22 +22,23 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "D:\\CodeProjects\\Nft-Project\\Nft-Go\\nft\\etc\\nft.yaml", "the config file")
+var configFile = flag.String("f", "etc/nft.yaml", "the config file")
 
 func main() {
 	flag.Parse()
 	//config
-	util.InitConfig("D:\\CodeProjects\\Nft-Project\\Nft-Go")
+	util.InitConfig("..")
+	registry.InitNacos()
 	//db
 	db.InitMysql()
 	dao.SetDefault(db.GetMysql())
 	db.InitRedis()
-	db.InitIpfs("localhost:5001")
+	db.InitIpfs(viper.GetString("ipfs"))
 	//mq
 	mq.InitMq()
 	//api
 	api.InitDubbo()
-	api.InitUserClient()
+	registry.InitUserService()
 	//other
 	log := logc.LogConf{
 		Encoding: "plain",
@@ -59,6 +61,5 @@ func main() {
 	logger.Info("Starting rpc server at %s...\n", c.ListenOn)
 	// register service to nacos
 	registry.RegistryNacos("nft.rpc", c)
-
 	s.Start()
 }
