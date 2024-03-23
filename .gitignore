@@ -1,2 +1,6 @@
 /Nft-Java/blc/target/
-/log/
+/log
+/.idea
+/Nft-Go/.idea
+/.idea/
+/Nft-Go/.idea/

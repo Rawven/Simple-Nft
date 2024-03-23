@@ -1,12 +1,18 @@
+# database
 mysql:
   dsn: root:root@tcp(10.21.32.154:3306)/nft-go?charset=utf8mb4&parseTime=True&loc=Local
 redis:
   address: 10.21.32.221:6379
   password: 123456
-key: rawven
+ipfs: localhost:5001
+
+# middleware
 rocketmq:
   group: testGroup
   nameserver: 10.21.32.221:9876
+nacos:
+   address: 10.21.32.154
+   port: 8848
 fisco:
   group: group0
   contract:
@@ -19,3 +25,5 @@ fisco:
 rateLimit:
   maxTokens: 100
   tokenRate: 20
+
+key: rawven
