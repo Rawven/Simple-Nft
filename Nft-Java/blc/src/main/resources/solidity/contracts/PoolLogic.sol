@@ -77,6 +77,7 @@ contract PoolLogic {
         _;
         isMinting = false;
     }
+
     function beforeMint(uint256 _poolId) public view returns (uint256 dcId, bytes32 uniqueHash){
         dcId = _poolData.getDcAmount() + 1;
         uniqueHash = generateHash(_poolId);

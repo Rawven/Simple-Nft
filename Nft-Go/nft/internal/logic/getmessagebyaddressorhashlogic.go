@@ -8,41 +8,42 @@ import (
 	"Nft-Go/nft/internal/dao"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
-	"os"
 
 	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetMessageByHashLogic struct {
+var addressLen = 42
+var hashLen = 66
+
+type GetMessageByAddressOrHashLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetMessageByHashLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMessageByHashLogic {
-	return &GetMessageByHashLogic{
+func NewGetMessageByAddressOrHashLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMessageByAddressOrHashLogic {
+	return &GetMessageByAddressOrHashLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest) (*nft.GetMessageByHashDTO, error) {
-	if len(in.Hash) != 42 && len(in.Hash) != 66 {
-		return nil, os.ErrInvalid
+func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMessageByAddressOrHashRequest) (*nft.GetMessageByAddressOrHashDTO, error) {
+	if len(in.Hash) != addressLen && len(in.Hash) != hashLen {
+		return nil, xerror.New("hash长度不正确")
 	}
-	dubbo := api.GetBlcDubbo()
+	blcService := api.GetBlcService()
 	mysql := dao.DcInfo
-	var dto nft.GetMessageByHashDTO
-	if len(in.Hash) == 42 {
+	var dto nft.GetMessageByAddressOrHashDTO
+	if len(in.Hash) == addressLen {
 		var checkDto blc.CheckDcAndReturnTimeDTO
-		status, err := dubbo.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
+		status, err := blcService.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
 		if err != nil {
 			return nil, xerror.New("获取用户状态失败")
 		}
-		//为什么名字是hash？？？
-		collectionList, err := mysql.WithContext(l.ctx).Where(mysql.OwnerName.Eq(in.Hash)).Find()
+		collectionList, err := mysql.WithContext(l.ctx).Where(mysql.OwnerAddress.Eq(in.Hash)).Find()
 		if err != nil {
 			return nil, xerror.New("查询失败")
 		}
@@ -52,11 +53,11 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 		}
 		checkDto.Owner = in.Hash
 		checkDto.CollectionHash = checkArgs
-		time, err := dubbo.CheckDcAndReturnTime(l.ctx, &blc.CheckDcAndReturnTimeRequest{
+		time, err := blcService.CheckDcAndReturnTime(l.ctx, &blc.CheckDcAndReturnTimeRequest{
 			Dto: &checkDto,
 		})
 		if err != nil || !time.GetCheckResult() {
-			return nil, err
+			return nil, xerror.New("检查失败 请联系管理员")
 		}
 		timeList := time.TimeList
 		var overviewList []nft.DcOverviewVO
@@ -76,17 +77,17 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 		dto.Type = 0
 	} else {
 		hashBytes, _ := util.HexString2ByteArray(in.Hash)
-		id, err := dubbo.GetHashToDcId(l.ctx, &blc.GetHashToDcIdRequest{
+		id, err := blcService.GetHashToDcId(l.ctx, &blc.GetHashToDcIdRequest{
 			Hash: hashBytes,
 		})
 		if err != nil {
-			return nil, err
+			return nil, xerror.New("获取dcId失败", err)
 		}
-		history, err := GetDigitalCollectionHistory(&nft.GetDigitalCollectionHistoryRequest{
+		history, err := GetDcHistory(&nft.GetDcHistoryRequest{
 			Id: id.GetDcId(),
 		}, l.ctx)
 		if err != nil {
-			return nil, err
+			return nil, xerror.New("获取dc历史失败", err)
 		}
 		dto.CollectionMessageOnChainVO = history
 		dto.Type = 1

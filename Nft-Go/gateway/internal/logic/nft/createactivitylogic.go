@@ -29,15 +29,13 @@ func NewCreateActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 func (l *CreateActivityLogic) CreateActivity(req *types.CreateActivityRequest) (resp *types.CommonResponse, err error) {
 
 	activity, err := api.GetNftClient().CreateActivity(l.ctx, &nft.CreateActivityRequest{
-		CreateActivityBo: &nft.CreateActivityBO{
-			Name:          req.Name,
-			Description:   req.Description,
-			Password:      req.Password,
-			Amount:        req.Amount,
-			DcName:        req.DcName,
-			DcDescription: req.DcDescription,
-			Cid:           req.Cid,
-		},
+		Name:          req.Name,
+		Description:   req.Description,
+		Password:      req.Password,
+		Amount:        req.Amount,
+		DcName:        req.DcName,
+		DcDescription: req.DcDescription,
+		Cid:           req.Cid,
 	})
 	if err != nil {
 		return nil, err

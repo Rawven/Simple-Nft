@@ -27,7 +27,7 @@ func NewLogoutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogoutLogi
 }
 
 func (l *LogoutLogic) Logout() (resp *types.CommonResponse, err error) {
-	logout, err := api.GetUserClient().Logout(l.ctx, &user.Empty{})
+	logout, err := api.GetUserService().Logout(l.ctx, &user.Empty{})
 	if err != nil {
 		return nil, err
 	}

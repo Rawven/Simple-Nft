@@ -29,12 +29,10 @@ func NewSelectPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Select
 
 func (l *SelectPoolLogic) SelectPool(req *types.SelectPoolRequest) (resp *types.CommonResponse, err error) {
 	pool, err := api.GetNftClient().SelectPool(l.ctx, &nft.SelectPoolRequest{
-		SelectPoolBo: &nft.SelectPoolBO{
-			Name:        req.Name,
-			CreatorName: req.CreatorName,
-			MinPrice:    req.MinPrice,
-			MaxPrice:    req.MaxPrice,
-		},
+		Name:        req.Name,
+		CreatorName: req.CreatorName,
+		MinPrice:    req.MinPrice,
+		MaxPrice:    req.MaxPrice,
 	})
 	if err != nil {
 		return nil, err

@@ -88,8 +88,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/nft/GetMessageByHash",
-					Handler: nft.GetMessageByHashHandler(serverCtx),
+					Path:    "/nft/GetMessageByAddressOrHash",
+					Handler: nft.GetMessageByAddressOrHashHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,

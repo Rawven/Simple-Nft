@@ -24,12 +24,12 @@ func NewGetAllActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 	}
 }
 
-func (l *GetAllActivityLogic) GetAllActivity(in *nft.NftEmpty) (*nft.ActivityPageVOList, error) {
+func (l *GetAllActivityLogic) GetAllActivity(in *nft.Empty) (*nft.ActivityPageVOList, error) {
 	my := dao.ActivityInfo
 	activities, err := my.WithContext(l.ctx).Find()
 	if err != nil {
-		return nil, xerror.New("查询失败")
+		return nil, xerror.New("查询失败", err)
 	}
-	activityPageVOList := showForPage(activities)
+	activityPageVOList := dao.ShowForPage(activities)
 	return &nft.ActivityPageVOList{ActivityPageVO: activityPageVOList}, nil
 }

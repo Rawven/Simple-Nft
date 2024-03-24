@@ -28,7 +28,7 @@ func NewGetMyPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyPo
 }
 
 func (l *GetMyPoolLogic) GetMyPool() (resp *types.CommonResponse, err error) {
-	pool, err := api.GetNftClient().GetMyPool(l.ctx, &nft.NftEmpty{})
+	pool, err := api.GetNftClient().GetMyPool(l.ctx, &nft.Empty{})
 	if err != nil {
 		return nil, err
 	}

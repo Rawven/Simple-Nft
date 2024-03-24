@@ -28,11 +28,9 @@ func NewGiveDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GiveDcLogi
 
 func (l *GiveDcLogic) GiveDc(req *types.GiveDcRequest) (resp *types.CommonResponse, err error) {
 	dc, err := api.GetNftClient().GiveDc(l.ctx, &nft.GiveDcRequest{
-		GiveDcBo: &nft.GiveDcBO{
-			ToName:    req.ToName,
-			ToAddress: req.ToAddress,
-			DcId:      req.DcId,
-		},
+		ToName:    req.ToName,
+		ToAddress: req.ToAddress,
+		DcId:      req.DcId,
 	})
 	if err != nil {
 		return nil, err

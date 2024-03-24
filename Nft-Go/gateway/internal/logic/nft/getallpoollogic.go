@@ -28,7 +28,7 @@ func NewGetAllPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAll
 }
 
 func (l *GetAllPoolLogic) GetAllPool() (resp *types.CommonResponse, err error) {
-	pool, err := api.GetNftClient().GetAllPool(l.ctx, &nft.NftEmpty{})
+	pool, err := api.GetNftClient().GetAllPool(l.ctx, &nft.Empty{})
 	if err != nil {
 		return nil, err
 	}

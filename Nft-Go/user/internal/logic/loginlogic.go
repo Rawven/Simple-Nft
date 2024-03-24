@@ -32,7 +32,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
-	dubbo := api.GetBlcDubbo()
+	dubbo := api.GetBlcService()
 	red := db.GetRedis()
 	u := dao.User
 	_user, err := u.WithContext(l.ctx).Where(u.Username.Eq(in.GetUsername())).First()

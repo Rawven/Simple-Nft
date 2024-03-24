@@ -13,30 +13,30 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetDigitalCollectionHistoryLogic struct {
+type GetDcHistoryLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetDigitalCollectionHistoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDigitalCollectionHistoryLogic {
-	return &GetDigitalCollectionHistoryLogic{
+func NewGetDcHistoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDcHistoryLogic {
+	return &GetDcHistoryLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetDigitalCollectionHistoryLogic) GetDigitalCollectionHistory(in *nft.GetDigitalCollectionHistoryRequest) (*nft.CollectionMessageOnChainVO, error) {
-	return GetDigitalCollectionHistory(in, l.ctx)
+func (l *GetDcHistoryLogic) GetDcHistory(in *nft.GetDcHistoryRequest) (*nft.CollectionMessageOnChainVO, error) {
+	return GetDcHistory(in, l.ctx)
 }
-func GetDigitalCollectionHistory(in *nft.GetDigitalCollectionHistoryRequest, ctx context.Context) (*nft.CollectionMessageOnChainVO, error) {
-	dubbo := api.GetBlcDubbo()
+
+func GetDcHistory(in *nft.GetDcHistoryRequest, ctx context.Context) (*nft.CollectionMessageOnChainVO, error) {
+	blcService := api.GetBlcService()
 	mysql := dao.PoolInfo
-	message, err := dubbo.GetDcHistoryAndMessage(ctx, &blc.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
+	message, err := blcService.GetDcHistoryAndMessage(ctx, &blc.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
 	if err != nil {
-		return nil,
-			xerror.New("获取数字收藏历史失败")
+		return nil, xerror.New("调用合约失败", err)
 	}
 	traceArgs := message.GetArgs()
 	var list []*nft.TraceBackVO
@@ -50,7 +50,8 @@ func GetDigitalCollectionHistory(in *nft.GetDigitalCollectionHistoryRequest, ctx
 	}
 	poolInfo, err := mysql.WithContext(ctx).Where(mysql.PoolId.Eq(in.Id)).First()
 	if err != nil {
-		return nil, xerror.New("查询失败")
+		return nil, xerror.New("查询失败",
+			err)
 	}
 	return &nft.CollectionMessageOnChainVO{
 		Name:            message.DcName,

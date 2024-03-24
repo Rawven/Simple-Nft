@@ -28,7 +28,7 @@ func NewGetNoticeByTitleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *GetNoticeByTitleLogic) GetNoticeByTitle(req *types.TitleNoticeRequest) (resp *types.CommonResponse, err error) {
-	notice, err := api.GetUserClient().GetNoticeByTitle(l.ctx, &user.TitleNoticeRequest{
+	notice, err := api.GetUserService().GetNoticeByTitle(l.ctx, &user.TitleNoticeRequest{
 		Title: req.Title,
 	})
 	toString, err := jsonx.MarshalToString(notice)

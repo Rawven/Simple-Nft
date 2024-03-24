@@ -29,6 +29,7 @@ func main() {
 	flag.Parse()
 	//config
 	util.InitConfig("..")
+	registry.InitNacos()
 	//db
 	db.InitMysql()
 	dao.SetDefault(db.GetMysql())

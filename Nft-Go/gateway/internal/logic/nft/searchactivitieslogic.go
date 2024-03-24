@@ -29,10 +29,8 @@ func NewSearchActivitiesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *SearchActivitiesLogic) SearchActivities(req *types.SearchActivitiesRequest) (resp *types.CommonResponse, err error) {
 	activities, err := api.GetNftClient().SearchActivities(l.ctx, &nft.SearchActivitiesRequest{
-		SearchActivityBO: &nft.SearchActivityBO{
-			HostName:     req.HostName,
-			ActivityName: req.ActivityName,
-		},
+		HostName:     req.HostName,
+		ActivityName: req.ActivityName,
 	})
 	if err != nil {
 		return nil, err

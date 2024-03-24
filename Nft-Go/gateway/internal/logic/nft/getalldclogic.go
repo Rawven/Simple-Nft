@@ -28,7 +28,7 @@ func NewGetAllDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAllDc
 }
 
 func (l *GetAllDcLogic) GetAllDc() (resp *types.CommonResponse, err error) {
-	dc, err := api.GetNftClient().GetAllDc(l.ctx, &nft.NftEmpty{})
+	dc, err := api.GetNftClient().GetAllDc(l.ctx, &nft.Empty{})
 	if err != nil {
 		return nil, err
 	}

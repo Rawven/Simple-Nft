@@ -5,48 +5,47 @@ option go_package = "./nft";
 
 
 
-message CommonResult{
-  int32  code = 1;
+message Response{
   string message = 2;
 }
 
 
 service Nft {
-  rpc GetMessageByHash (GetMessageByHashRequest) returns (GetMessageByHashDTO) {}
-  rpc CreateActivity (CreateActivityRequest) returns (CommonResult) {}
-  rpc GetDcFromActivity (GetDcFromActivityRequest) returns (CommonResult) {}
-  rpc GetAllActivity (NftEmpty) returns (ActivityPageVOList) {}
+  rpc GetMessageByAddressOrHash (GetMessageByAddressOrHashRequest) returns (GetMessageByAddressOrHashDTO) {}
+  rpc CreateActivity (CreateActivityRequest) returns (Response) {}
+  rpc PrizeDcFromActivity (GetDcFromActivityRequest) returns (Response) {}
+  rpc GetAllActivity (Empty) returns (ActivityPageVOList) {}
   rpc GetOneActivity (GetOneActivityRequest) returns (ActivityDetailsVO) {}
   rpc SearchActivities (SearchActivitiesRequest) returns (ActivityPageVOList) {}
-  rpc GiveDc (GiveDcRequest) returns (CommonResult) {}
-  rpc GetAllDc (NftEmpty) returns (DcPageVOList) {}
+  rpc GiveDc (GiveDcRequest) returns (Response) {}
+  rpc GetAllDc (Empty) returns (DcPageVOList) {}
   rpc SelectDc (SelectDcRequest) returns (DcPageVOList) {}
   rpc GetDcById (GetDcByIdRequest) returns (DcDetailVO) {}
-  rpc GetMyDc (NftEmpty) returns (DcPageVOList) {}
-  rpc GetDigitalCollectionHistory (GetDigitalCollectionHistoryRequest) returns (CollectionMessageOnChainVO) {}
-  rpc CreatePool (CreatePoolRequest) returns (CommonResult) {}
-  rpc BuyFromPool (BuyFromPoolRequest) returns (CommonResult) {}
+  rpc GetMyDc (Empty) returns (DcPageVOList) {}
+  rpc GetDcHistory (GetDcHistoryRequest) returns (CollectionMessageOnChainVO) {}
+  rpc CreatePool (CreatePoolRequest) returns (Response) {}
+  rpc BuyFromPool (BuyFromPoolRequest) returns (Response) {}
   rpc SelectPool (SelectPoolRequest) returns (PoolPageVOList) {}
   rpc GetPoolById (GetPoolByIdRequest) returns (PoolDetailsVO) {}
-  rpc GetAllPool (NftEmpty) returns (PoolPageVOList) {}
-  rpc GetMyPool (NftEmpty) returns (PoolPageVOList) {}
+  rpc GetAllPool (Empty) returns (PoolPageVOList) {}
+  rpc GetMyPool (Empty) returns (PoolPageVOList) {}
 }
 
-message NftEmpty {
+message Empty {
 }
-message GetMessageByHashRequest {
+message GetMessageByAddressOrHashRequest {
   string hash = 1;
 }
 
-message GetMessageByHashDTO {
+message GetMessageByAddressOrHashDTO {
   int32 type = 1;
   AccountMessageVO accountMessageVO = 2;
-  CollectionMessageOnChainVO collectionMessageOnChainVO=3;
+  CollectionMessageOnChainVO collectionMessageOnChainVO = 3;
 }
 message AccountMessageVO {
   string hash = 1;
   string registerTime = 2;
-  repeated DcOverviewVO ownedCollections=3;
+  repeated DcOverviewVO ownedCollections = 3;
 }
 message DcOverviewVO {
   int32 id = 1;
@@ -55,10 +54,6 @@ message DcOverviewVO {
 }
 
 message CreateActivityRequest {
-  CreateActivityBO createActivityBo = 1;
-}
-
-message CreateActivityBO {
   string name = 1;
   string description = 2;
   string password = 3;
@@ -68,10 +63,8 @@ message CreateActivityBO {
   string cid = 7;
 }
 
+
 message GetDcFromActivityRequest {
-  GetDcFromActivityBO getDcFromActivityBo = 1;
-}
-message GetDcFromActivityBO {
   int32 id = 1;
   string password = 2;
 }
@@ -82,9 +75,6 @@ message GetOneActivityRequest {
 }
 
 message SearchActivitiesRequest {
-  SearchActivityBO searchActivityBO = 1;
-}
-message SearchActivityBO {
   string hostName = 1;
   string activityName = 2;
 }
@@ -120,9 +110,6 @@ message ActivityDetailsVO {
   string contractAddress = 11;
 }
 message GiveDcRequest {
-  GiveDcBO giveDcBo = 1;
-}
-message GiveDcBO {
   string toName = 1;
   string toAddress = 2;
   int32 dcId = 3;
@@ -137,7 +124,7 @@ message GetDcByIdRequest {
   int32 id = 1;
 }
 
-message GetDigitalCollectionHistoryRequest {
+message GetDcHistoryRequest {
   int32 id = 1;
 }
 
@@ -185,10 +172,6 @@ message TraceBackVO {
 
 
 message CreatePoolRequest {
-  CreatePoolBO createPoolBo = 1;
-  // Define the fields of CreatePoolBO according to their types in the Java code.
-}
-message CreatePoolBO {
   string name = 1;
   string description = 2;
   bool status = 3;
@@ -200,18 +183,10 @@ message CreatePoolBO {
 }
 
 message BuyFromPoolRequest {
-  BuyFromPoolBO buyFromPoolBo = 1;
-  // Define the fields of BuyFromPoolBO according to their types in the Java code.
-}
-message BuyFromPoolBO {
   int32 poolId = 1;
 }
 
 message SelectPoolRequest {
-  SelectPoolBO selectPoolBo = 1;
-  // Define the fields of SelectPoolBO according to their types in the Java code.
-}
-message SelectPoolBO {
   string name = 1;
   string creatorName = 2;
   int32 minPrice = 3;

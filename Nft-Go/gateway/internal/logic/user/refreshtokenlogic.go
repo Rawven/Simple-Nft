@@ -28,7 +28,7 @@ func NewRefreshTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Refr
 }
 
 func (l *RefreshTokenLogic) RefreshToken() (resp *types.CommonResponse, err error) {
-	token, err := api.GetUserClient().RefreshTokens(l.ctx, &user.Empty{})
+	token, err := api.GetUserService().RefreshTokens(l.ctx, &user.Empty{})
 	toString, err := jsonx.MarshalToString(token.Data)
 	if err != nil {
 		return nil, err

@@ -28,9 +28,9 @@ func NewBuyFromPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BuyFr
 }
 
 func (l *BuyFromPoolLogic) BuyFromPool(req *types.BuyFromPoolRequest) (resp *types.CommonResponse, err error) {
-	pool, err := api.GetNftClient().BuyFromPool(l.ctx, &nft.BuyFromPoolRequest{BuyFromPoolBo: &nft.BuyFromPoolBO{
+	pool, err := api.GetNftClient().BuyFromPool(l.ctx, &nft.BuyFromPoolRequest{
 		PoolId: req.PoolId,
-	}})
+	})
 	if err != nil {
 		return nil, xerror.New("BuyFromPool failed")
 	}

@@ -28,7 +28,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.CommonResponse, err error) {
-	register, err := api.GetUserClient().Register(l.ctx, &user.RegisterRequest{
+	register, err := api.GetUserService().Register(l.ctx, &user.RegisterRequest{
 		Username: req.Username,
 		Password: req.Password,
 		Email:    req.Email,

@@ -28,16 +28,16 @@ func NewGetOneActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetOneActivityLogic) GetOneActivity(in *nft.GetOneActivityRequest) (*nft.ActivityDetailsVO, error) {
-	dubbo := api.GetBlcDubbo()
-	activityAndPool, err := dubbo.GetIdToActivity(l.ctx, &blc.GetIdToActivityRequest{Id: in.Id})
+	blcService := api.GetBlcService()
+	activityAndPool, err := blcService.GetIdToActivity(l.ctx, &blc.GetIdToActivityRequest{Id: in.Id})
 	if err != nil {
-		return nil, xerror.New("“获取活动失败”")
+		return nil, xerror.New("获取活动失败", err)
 	}
 	activity := activityAndPool.Activity
 	pool := activityAndPool.Pool
 	activityInfo, err := dao.ActivityInfo.WithContext(l.ctx).Where(dao.ActivityInfo.Id.Eq(in.Id)).First()
 	if err != nil {
-		return nil, xerror.New("查询失败")
+		return nil, xerror.New("查询失败", err)
 	}
 	return &nft.ActivityDetailsVO{
 		Id:                  in.GetId(),

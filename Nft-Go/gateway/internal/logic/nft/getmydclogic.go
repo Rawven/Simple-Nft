@@ -28,7 +28,7 @@ func NewGetMyDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyDcLo
 }
 
 func (l *GetMyDcLogic) GetMyDc() (resp *types.CommonResponse, err error) {
-	dc, err := api.GetNftClient().GetMyDc(l.ctx, &nft.NftEmpty{})
+	dc, err := api.GetNftClient().GetMyDc(l.ctx, &nft.Empty{})
 	if err != nil {
 		return nil, err
 	}

@@ -122,14 +122,14 @@ type GetDigitalCollectionHistoryRequest struct {
 	Id int32 `json:"id"`
 }
 
+type GetMessageByAddressOrHashRequest struct {
+	Hash string `json:"hash"`
+}
+
 type GetMessageByHashDTO struct {
 	Type                       int32                      `json:"type"`
 	AccountMessageVO           AccountMessageVO           `json:"accountMessageVO"`
 	CollectionMessageOnChainVO CollectionMessageOnChainVO `json:"collectionMessageOnChainVO"`
-}
-
-type GetMessageByHashRequest struct {
-	Hash string `json:"hash"`
 }
 
 type GetOneActivityRequest struct {

@@ -28,7 +28,7 @@ func NewGetUserInfoByUserNameLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *GetUserInfoByUserNameLogic) GetUserInfoByUserName(req *types.UserNameRequest) (resp *types.CommonResponse, err error) {
-	name, err := api.GetUserClient().GetUserInfoByName(l.ctx, &user.UserNameRequest{
+	name, err := api.GetUserService().GetUserInfoByName(l.ctx, &user.UserNameRequest{
 		Username: req.Username,
 	})
 	if err != nil {
