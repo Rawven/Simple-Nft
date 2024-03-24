@@ -47,8 +47,8 @@ service gateway {
 	prefix:     /v1
 )
 service gateway {
-	@handler GetMessageByUserAddress
-	post /nft/GetMessageByUserAddress (GetMessageByUserAddressRequest) returns (CommonResponse)
+	@handler GetMessageByAddressOrHash
+	post /nft/GetMessageByAddressOrHash (GetMessageByAddressOrHashRequest) returns (CommonResponse)
 
 	@handler CreateActivity
 	post /nft/CreateActivity (CreateActivityRequest) returns (CommonResponse)
@@ -136,7 +136,7 @@ type UserNameRequest {
 	Username string `json:"username"`
 }
 
-type GetMessageByUserAddressRequest {
+type GetMessageByAddressOrHashRequest {
 	Hash string `json:"hash"`
 }
 

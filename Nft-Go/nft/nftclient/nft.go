@@ -12,38 +12,38 @@ import (
 )
 
 type (
-	AccountMessageVO               = nft2.AccountMessageVO
-	ActivityDetailsVO              = nft2.ActivityDetailsVO
-	ActivityPageVO                 = nft2.ActivityPageVO
-	ActivityPageVOList             = nft2.ActivityPageVOList
-	BuyFromPoolRequest             = nft2.BuyFromPoolRequest
-	CollectionMessageOnChainVO     = nft2.CollectionMessageOnChainVO
-	CreateActivityRequest          = nft2.CreateActivityRequest
-	CreatePoolRequest              = nft2.CreatePoolRequest
-	DcDetailVO                     = nft2.DcDetailVO
-	DcOverviewVO                   = nft2.DcOverviewVO
-	DcPageVO                       = nft2.DcPageVO
-	DcPageVOList                   = nft2.DcPageVOList
-	Empty                          = nft2.Empty
-	GetDcByIdRequest               = nft2.GetDcByIdRequest
-	GetDcFromActivityRequest       = nft2.GetDcFromActivityRequest
-	GetDcHistoryRequest            = nft2.GetDcHistoryRequest
-	GetMessageByUserAddressDTO     = nft2.GetMessageByUserAddressDTO
-	GetMessageByUserAddressRequest = nft2.GetMessageByUserAddressRequest
-	GetOneActivityRequest          = nft2.GetOneActivityRequest
-	GetPoolByIdRequest             = nft2.GetPoolByIdRequest
-	GiveDcRequest                  = nft2.GiveDcRequest
-	PoolDetailsVO                  = nft2.PoolDetailsVO
-	PoolPageVO                     = nft2.PoolPageVO
-	PoolPageVOList                 = nft2.PoolPageVOList
-	Response                       = nft2.Response
-	SearchActivitiesRequest        = nft2.SearchActivitiesRequest
-	SelectDcRequest                = nft2.SelectDcRequest
-	SelectPoolRequest              = nft2.SelectPoolRequest
-	TraceBackVO                    = nft2.TraceBackVO
+	AccountMessageVO                 = nft2.AccountMessageVO
+	ActivityDetailsVO                = nft2.ActivityDetailsVO
+	ActivityPageVO                   = nft2.ActivityPageVO
+	ActivityPageVOList               = nft2.ActivityPageVOList
+	BuyFromPoolRequest               = nft2.BuyFromPoolRequest
+	CollectionMessageOnChainVO       = nft2.CollectionMessageOnChainVO
+	CreateActivityRequest            = nft2.CreateActivityRequest
+	CreatePoolRequest                = nft2.CreatePoolRequest
+	DcDetailVO                       = nft2.DcDetailVO
+	DcOverviewVO                     = nft2.DcOverviewVO
+	DcPageVO                         = nft2.DcPageVO
+	DcPageVOList                     = nft2.DcPageVOList
+	Empty                            = nft2.Empty
+	GetDcByIdRequest                 = nft2.GetDcByIdRequest
+	GetDcFromActivityRequest         = nft2.GetDcFromActivityRequest
+	GetDcHistoryRequest              = nft2.GetDcHistoryRequest
+	GetMessageByAddressOrHashDTO     = nft2.GetMessageByAddressOrHashDTO
+	GetMessageByAddressOrHashRequest = nft2.GetMessageByAddressOrHashRequest
+	GetOneActivityRequest            = nft2.GetOneActivityRequest
+	GetPoolByIdRequest               = nft2.GetPoolByIdRequest
+	GiveDcRequest                    = nft2.GiveDcRequest
+	PoolDetailsVO                    = nft2.PoolDetailsVO
+	PoolPageVO                       = nft2.PoolPageVO
+	PoolPageVOList                   = nft2.PoolPageVOList
+	Response                         = nft2.Response
+	SearchActivitiesRequest          = nft2.SearchActivitiesRequest
+	SelectDcRequest                  = nft2.SelectDcRequest
+	SelectPoolRequest                = nft2.SelectPoolRequest
+	TraceBackVO                      = nft2.TraceBackVO
 
 	Nft interface {
-		GetMessageByUserAddress(ctx context.Context, in *GetMessageByUserAddressRequest, opts ...grpc.CallOption) (*GetMessageByUserAddressDTO, error)
+		GetMessageByAddressOrHash(ctx context.Context, in *GetMessageByAddressOrHashRequest, opts ...grpc.CallOption) (*GetMessageByAddressOrHashDTO, error)
 		CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*Response, error)
 		PrizeDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*Response, error)
 		GetAllActivity(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ActivityPageVOList, error)
@@ -74,9 +74,9 @@ func NewNft(cli zrpc.Client) Nft {
 	}
 }
 
-func (m *defaultNft) GetMessageByUserAddress(ctx context.Context, in *GetMessageByUserAddressRequest, opts ...grpc.CallOption) (*GetMessageByUserAddressDTO, error) {
+func (m *defaultNft) GetMessageByAddressOrHash(ctx context.Context, in *GetMessageByAddressOrHashRequest, opts ...grpc.CallOption) (*GetMessageByAddressOrHashDTO, error) {
 	client := nft2.NewNftClient(m.cli.Conn())
-	return client.GetMessageByUserAddress(ctx, in, opts...)
+	return client.GetMessageByAddressOrHash(ctx, in, opts...)
 }
 
 func (m *defaultNft) CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*Response, error) {

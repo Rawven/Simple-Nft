@@ -19,31 +19,31 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Nft_GetMessageByUserAddress_FullMethodName = "/user.Nft/GetMessageByUserAddress"
-	Nft_CreateActivity_FullMethodName          = "/user.Nft/CreateActivity"
-	Nft_PrizeDcFromActivity_FullMethodName     = "/user.Nft/PrizeDcFromActivity"
-	Nft_GetAllActivity_FullMethodName          = "/user.Nft/GetAllActivity"
-	Nft_GetOneActivity_FullMethodName          = "/user.Nft/GetOneActivity"
-	Nft_SearchActivities_FullMethodName        = "/user.Nft/SearchActivities"
-	Nft_GiveDc_FullMethodName                  = "/user.Nft/GiveDc"
-	Nft_GetAllDc_FullMethodName                = "/user.Nft/GetAllDc"
-	Nft_SelectDc_FullMethodName                = "/user.Nft/SelectDc"
-	Nft_GetDcById_FullMethodName               = "/user.Nft/GetDcById"
-	Nft_GetMyDc_FullMethodName                 = "/user.Nft/GetMyDc"
-	Nft_GetDcHistory_FullMethodName            = "/user.Nft/GetDcHistory"
-	Nft_CreatePool_FullMethodName              = "/user.Nft/CreatePool"
-	Nft_BuyFromPool_FullMethodName             = "/user.Nft/BuyFromPool"
-	Nft_SelectPool_FullMethodName              = "/user.Nft/SelectPool"
-	Nft_GetPoolById_FullMethodName             = "/user.Nft/GetPoolById"
-	Nft_GetAllPool_FullMethodName              = "/user.Nft/GetAllPool"
-	Nft_GetMyPool_FullMethodName               = "/user.Nft/GetMyPool"
+	Nft_GetMessageByAddressOrHash_FullMethodName = "/user.Nft/GetMessageByAddressOrHash"
+	Nft_CreateActivity_FullMethodName            = "/user.Nft/CreateActivity"
+	Nft_PrizeDcFromActivity_FullMethodName       = "/user.Nft/PrizeDcFromActivity"
+	Nft_GetAllActivity_FullMethodName            = "/user.Nft/GetAllActivity"
+	Nft_GetOneActivity_FullMethodName            = "/user.Nft/GetOneActivity"
+	Nft_SearchActivities_FullMethodName          = "/user.Nft/SearchActivities"
+	Nft_GiveDc_FullMethodName                    = "/user.Nft/GiveDc"
+	Nft_GetAllDc_FullMethodName                  = "/user.Nft/GetAllDc"
+	Nft_SelectDc_FullMethodName                  = "/user.Nft/SelectDc"
+	Nft_GetDcById_FullMethodName                 = "/user.Nft/GetDcById"
+	Nft_GetMyDc_FullMethodName                   = "/user.Nft/GetMyDc"
+	Nft_GetDcHistory_FullMethodName              = "/user.Nft/GetDcHistory"
+	Nft_CreatePool_FullMethodName                = "/user.Nft/CreatePool"
+	Nft_BuyFromPool_FullMethodName               = "/user.Nft/BuyFromPool"
+	Nft_SelectPool_FullMethodName                = "/user.Nft/SelectPool"
+	Nft_GetPoolById_FullMethodName               = "/user.Nft/GetPoolById"
+	Nft_GetAllPool_FullMethodName                = "/user.Nft/GetAllPool"
+	Nft_GetMyPool_FullMethodName                 = "/user.Nft/GetMyPool"
 )
 
 // NftClient is the client API for Nft service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NftClient interface {
-	GetMessageByUserAddress(ctx context.Context, in *GetMessageByUserAddressRequest, opts ...grpc.CallOption) (*GetMessageByUserAddressDTO, error)
+	GetMessageByAddressOrHash(ctx context.Context, in *GetMessageByAddressOrHashRequest, opts ...grpc.CallOption) (*GetMessageByAddressOrHashDTO, error)
 	CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*Response, error)
 	PrizeDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*Response, error)
 	GetAllActivity(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ActivityPageVOList, error)
@@ -71,9 +71,9 @@ func NewNftClient(cc grpc.ClientConnInterface) NftClient {
 	return &nftClient{cc}
 }
 
-func (c *nftClient) GetMessageByUserAddress(ctx context.Context, in *GetMessageByUserAddressRequest, opts ...grpc.CallOption) (*GetMessageByUserAddressDTO, error) {
-	out := new(GetMessageByUserAddressDTO)
-	err := c.cc.Invoke(ctx, Nft_GetMessageByUserAddress_FullMethodName, in, out, opts...)
+func (c *nftClient) GetMessageByAddressOrHash(ctx context.Context, in *GetMessageByAddressOrHashRequest, opts ...grpc.CallOption) (*GetMessageByAddressOrHashDTO, error) {
+	out := new(GetMessageByAddressOrHashDTO)
+	err := c.cc.Invoke(ctx, Nft_GetMessageByAddressOrHash_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -237,7 +237,7 @@ func (c *nftClient) GetMyPool(ctx context.Context, in *Empty, opts ...grpc.CallO
 // All implementations must embed UnimplementedNftServer
 // for forward compatibility
 type NftServer interface {
-	GetMessageByUserAddress(context.Context, *GetMessageByUserAddressRequest) (*GetMessageByUserAddressDTO, error)
+	GetMessageByAddressOrHash(context.Context, *GetMessageByAddressOrHashRequest) (*GetMessageByAddressOrHashDTO, error)
 	CreateActivity(context.Context, *CreateActivityRequest) (*Response, error)
 	PrizeDcFromActivity(context.Context, *GetDcFromActivityRequest) (*Response, error)
 	GetAllActivity(context.Context, *Empty) (*ActivityPageVOList, error)
@@ -262,8 +262,8 @@ type NftServer interface {
 type UnimplementedNftServer struct {
 }
 
-func (UnimplementedNftServer) GetMessageByUserAddress(context.Context, *GetMessageByUserAddressRequest) (*GetMessageByUserAddressDTO, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMessageByUserAddress not implemented")
+func (UnimplementedNftServer) GetMessageByAddressOrHash(context.Context, *GetMessageByAddressOrHashRequest) (*GetMessageByAddressOrHashDTO, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessageByAddressOrHash not implemented")
 }
 func (UnimplementedNftServer) CreateActivity(context.Context, *CreateActivityRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateActivity not implemented")
@@ -329,20 +329,20 @@ func RegisterNftServer(s grpc.ServiceRegistrar, srv NftServer) {
 	s.RegisterService(&Nft_ServiceDesc, srv)
 }
 
-func _Nft_GetMessageByUserAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMessageByUserAddressRequest)
+func _Nft_GetMessageByAddressOrHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessageByAddressOrHashRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NftServer).GetMessageByUserAddress(ctx, in)
+		return srv.(NftServer).GetMessageByAddressOrHash(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Nft_GetMessageByUserAddress_FullMethodName,
+		FullMethod: Nft_GetMessageByAddressOrHash_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NftServer).GetMessageByUserAddress(ctx, req.(*GetMessageByUserAddressRequest))
+		return srv.(NftServer).GetMessageByAddressOrHash(ctx, req.(*GetMessageByAddressOrHashRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -661,8 +661,8 @@ var Nft_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*NftServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetMessageByUserAddress",
-			Handler:    _Nft_GetMessageByUserAddress_Handler,
+			MethodName: "GetMessageByAddressOrHash",
+			Handler:    _Nft_GetMessageByAddressOrHash_Handler,
 		},
 		{
 			MethodName: "CreateActivity",

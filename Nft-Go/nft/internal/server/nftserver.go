@@ -22,9 +22,9 @@ func NewNftServer(svcCtx *svc.ServiceContext) *NftServer {
 	}
 }
 
-func (s *NftServer) GetMessageByUserAddress(ctx context.Context, in *nft2.GetMessageByUserAddressRequest) (*nft2.GetMessageByUserAddressDTO, error) {
-	l := logic.NewGetMessageByUserAddressLogic(ctx, s.svcCtx)
-	return l.GetMessageByUserAddress(in)
+func (s *NftServer) GetMessageByAddressOrHash(ctx context.Context, in *nft2.GetMessageByAddressOrHashRequest) (*nft2.GetMessageByAddressOrHashDTO, error) {
+	l := logic.NewGetMessageByAddressOrHashLogic(ctx, s.svcCtx)
+	return l.GetMessageByAddressOrHash(in)
 }
 
 func (s *NftServer) CreateActivity(ctx context.Context, in *nft2.CreateActivityRequest) (*nft2.Response, error) {

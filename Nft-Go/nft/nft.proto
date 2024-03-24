@@ -11,7 +11,7 @@ message Response{
 
 
 service Nft {
-  rpc GetMessageByUserAddress (GetMessageByUserAddressRequest) returns (GetMessageByUserAddressDTO) {}
+  rpc GetMessageByAddressOrHash (GetMessageByAddressOrHashRequest) returns (GetMessageByAddressOrHashDTO) {}
   rpc CreateActivity (CreateActivityRequest) returns (Response) {}
   rpc PrizeDcFromActivity (GetDcFromActivityRequest) returns (Response) {}
   rpc GetAllActivity (Empty) returns (ActivityPageVOList) {}
@@ -33,11 +33,11 @@ service Nft {
 
 message Empty {
 }
-message GetMessageByUserAddressRequest {
+message GetMessageByAddressOrHashRequest {
   string hash = 1;
 }
 
-message GetMessageByUserAddressDTO {
+message GetMessageByAddressOrHashDTO {
   int32 type = 1;
   AccountMessageVO accountMessageVO = 2;
   CollectionMessageOnChainVO collectionMessageOnChainVO = 3;

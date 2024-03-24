@@ -13,28 +13,31 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetMessageByUserAddressLogic struct {
+var addressLen = 42
+var hashLen = 66
+
+type GetMessageByAddressOrHashLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetMessageByUserAddressLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMessageByUserAddressLogic {
-	return &GetMessageByUserAddressLogic{
+func NewGetMessageByAddressOrHashLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMessageByAddressOrHashLogic {
+	return &GetMessageByAddressOrHashLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetMessageByUserAddressLogic) GetMessageByUserAddress(in *nft.GetMessageByUserAddressRequest) (*nft.GetMessageByUserAddressDTO, error) {
-	if len(in.Hash) != 42 && len(in.Hash) != 66 {
+func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMessageByAddressOrHashRequest) (*nft.GetMessageByAddressOrHashDTO, error) {
+	if len(in.Hash) != addressLen && len(in.Hash) != hashLen {
 		return nil, xerror.New("hash长度不正确")
 	}
 	blcService := api.GetBlcService()
 	mysql := dao.DcInfo
-	var dto nft.GetMessageByUserAddressDTO
-	if len(in.Hash) == 42 {
+	var dto nft.GetMessageByAddressOrHashDTO
+	if len(in.Hash) == addressLen {
 		var checkDto blc.CheckDcAndReturnTimeDTO
 		status, err := blcService.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
 		if err != nil {
@@ -54,7 +57,7 @@ func (l *GetMessageByUserAddressLogic) GetMessageByUserAddress(in *nft.GetMessag
 			Dto: &checkDto,
 		})
 		if err != nil || !time.GetCheckResult() {
-			return nil, err
+			return nil, xerror.New("检查失败 请联系管理员")
 		}
 		timeList := time.TimeList
 		var overviewList []nft.DcOverviewVO
@@ -78,13 +81,13 @@ func (l *GetMessageByUserAddressLogic) GetMessageByUserAddress(in *nft.GetMessag
 			Hash: hashBytes,
 		})
 		if err != nil {
-			return nil, err
+			return nil, xerror.New("获取dcId失败", err)
 		}
 		history, err := GetDcHistory(&nft.GetDcHistoryRequest{
 			Id: id.GetDcId(),
 		}, l.ctx)
 		if err != nil {
-			return nil, err
+			return nil, xerror.New("获取dc历史失败", err)
 		}
 		dto.CollectionMessageOnChainVO = history
 		dto.Type = 1

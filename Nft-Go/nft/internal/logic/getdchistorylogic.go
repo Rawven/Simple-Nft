@@ -50,7 +50,8 @@ func GetDcHistory(in *nft.GetDcHistoryRequest, ctx context.Context) (*nft.Collec
 	}
 	poolInfo, err := mysql.WithContext(ctx).Where(mysql.PoolId.Eq(in.Id)).First()
 	if err != nil {
-		return nil, xerror.New("查询失败", err)
+		return nil, xerror.New("查询失败",
+			err)
 	}
 	return &nft.CollectionMessageOnChainVO{
 		Name:            message.DcName,
