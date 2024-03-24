@@ -26,7 +26,7 @@ func NewGetAllNoticeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetA
 }
 
 func (l *GetAllNoticeLogic) GetAllNotice() (resp *types.CommonResponse, err error) {
-	notices, err := api.GetUserClient().GetAllNotices(l.ctx, &user.Empty{})
+	notices, err := api.GetUserService().GetAllNotices(l.ctx, &user.Empty{})
 	if err != nil {
 		return nil, err
 	}

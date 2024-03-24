@@ -24,14 +24,14 @@ func NewGetAllPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAll
 	}
 }
 
-func (l *GetAllPoolLogic) GetAllPool(in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
+func (l *GetAllPoolLogic) GetAllPool(in *nft.Empty) (*nft.PoolPageVOList, error) {
 	mysql := dao.PoolInfo
 	//查找所有poolInfo 按照id排序
 	poolInfos, err := mysql.WithContext(l.ctx).Order(mysql.PoolId).Find()
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
-	poolPageVOList := GetPoolPageVOList(poolInfos)
+	poolPageVOList := dao.GetPoolPageVOList(poolInfos)
 	return &nft.PoolPageVOList{
 		PoolPageVO: poolPageVOList,
 	}, nil

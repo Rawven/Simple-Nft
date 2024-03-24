@@ -28,11 +28,9 @@ func NewGetDcFromActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetDcFromActivityLogic) GetDcFromActivity(req *types.GetDcFromActivityRequest) (resp *types.CommonResponse, err error) {
-	activity, err := api.GetNftClient().GetDcFromActivity(l.ctx, &nft.GetDcFromActivityRequest{
-		GetDcFromActivityBo: &nft.GetDcFromActivityBO{
-			Id:       req.Id,
-			Password: req.Password,
-		},
+	activity, err := api.GetNftClient().PrizeDcFromActivity(l.ctx, &nft.GetDcFromActivityRequest{
+		Id:       req.Id,
+		Password: req.Password,
 	})
 	if err != nil {
 		return nil, err

@@ -33,7 +33,7 @@ func GetNftClient() nft.NftClient {
 	return nftRpc
 }
 
-func GetUserClient() user.UserClient {
+func GetUserService() user.UserClient {
 	return userRpc
 }
 

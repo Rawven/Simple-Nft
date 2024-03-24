@@ -19,7 +19,7 @@ package mq
 
 import (
 	"Nft-Go/common/util"
-	"Nft-Go/user/internal/logic"
+	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/model"
 	"Nft-Go/user/sse"
 	"context"
@@ -53,7 +53,7 @@ func InitMq() {
 				if err != nil {
 					return 0, err
 				}
-				err = logic.SaveNotice(model.Notice{
+				err = dao.Notice.Create(&model.Notice{
 					Title:       data.Get("title").String(),
 					Description: data.Get("description").String(),
 					PublishTime: data.Get("publishTime").String(),

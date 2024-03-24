@@ -25,16 +25,16 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreatePoolLogic) CreatePool(req *types.CreatePoolRequest) (resp *types.CommonResponse, err error) {
-	pool, err := api.GetNftClient().CreatePool(l.ctx, &nft.CreatePoolRequest{CreatePoolBo: &nft.CreatePoolBO{
+	pool, err := api.GetNftClient().CreatePool(l.ctx, &nft.CreatePoolRequest{
 		Name:        req.Name,
 		Description: req.Description,
 		Status:      req.Status,
 		Price:       req.Price,
 		Amount:      req.Amount,
 		LimitAmount: req.LimitAmount,
-		FilePath:    req.Cid,
+		Cid:         req.Cid,
 		Creator:     req.Creator,
-	}})
+	})
 	if err != nil {
 		return nil, err
 	}

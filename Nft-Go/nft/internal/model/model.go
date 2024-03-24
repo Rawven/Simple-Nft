@@ -1,5 +1,10 @@
 package model
 
+//主要用来辅助查询合约的数据
+
+/*
+* PoolInfo是藏品池，用户可以购买藏品池中的藏品
+ */
 type PoolInfo struct {
 	PoolId         int32  `json:"pool_id"`         // 池id
 	Cid            string `json:"cid"`             // ipfs上图片存储地址
@@ -14,6 +19,9 @@ type PoolInfo struct {
 	Status         bool   `json:"status"`          // 状态（true=>新品，false=>非卖）
 }
 
+/*
+* Dc是专属于用户的藏品，从Pool中创建
+ */
 type DcInfo struct {
 	Id             int32  `json:"id"`              // 唯一标识ID
 	Hash           string `json:"hash"`            // 藏品hash
@@ -27,6 +35,9 @@ type DcInfo struct {
 	CreatorAddress string `json:"creator_address"` // 创建者地址
 }
 
+/*
+* Activity在创建时会自带创建一个Pool,所以不可在Pool中创建Activity
+**/
 type ActivityInfo struct {
 	Id            int32  `json:"id"`             // 链中返回的id
 	Name          string `json:"name"`           // 活动名

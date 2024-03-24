@@ -29,42 +29,42 @@ func NewGiveDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GiveDcLogi
 	}
 }
 
-func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.CommonResult, error) {
+func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Response, error) {
 	mysql := dao.DcInfo
 	info, err := util.GetUserInfo(l.ctx)
-	userRpc := api.GetUserClient()
-	dubbo := api.GetBlcService()
 	if err != nil {
-		return nil, xerror.New("获取用户信息失败")
+		return nil, xerror.New("获取用户信息失败", err)
 	}
-	name, err := userRpc.GetUserInfoByName(l.ctx, &user.UserNameRequest{Username: in.GiveDcBo.GetToAddress()})
-
-	_, err = dubbo.Give(l.ctx, &blc.GiveRequest{
+	userRpc := api.GetUserService()
+	blcService := api.GetBlcService()
+	name, err := userRpc.GetUserInfoByName(l.ctx, &user.UserNameRequest{Username: in.GetToAddress()})
+	if err != nil {
+		return nil, xerror.New("调用user失败" + err.Error())
+	}
+	_, err = blcService.Give(l.ctx, &blc.GiveRequest{
 		GiveDTO: &blc.GiveDTO{
 			ToAddress: name.Address,
-			DcId:      in.GiveDcBo.DcId,
+			DcId:      in.DcId,
 		},
 	})
-
 	if err != nil {
 		return nil, xerror.New("调用blc失败" + err.Error())
 	}
-	dc, err := mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.GiveDcBo.DcId)).First()
+	dc, err := mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).First()
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
-	if name.Address != in.GiveDcBo.ToAddress {
+	if name.Address != in.ToAddress {
 		return nil, xerror.New("you are not the owner of this dc")
 	}
 	if dc.OwnerName != info.UserName {
 		return nil, xerror.New("you are not the owner of this dc")
 	}
-	_, err = mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.GiveDcBo.DcId)).Updates(model.DcInfo{OwnerName: in.GiveDcBo.ToName, OwnerAddress: in.GiveDcBo.ToAddress})
+	_, err = mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).Updates(model.DcInfo{OwnerName: in.ToName, OwnerAddress: in.ToAddress})
 	if err != nil {
 		return nil, xerror.New("更新失败")
 	}
-	return &nft.CommonResult{
-		Code:    200,
+	return &nft.Response{
 		Message: "success",
 	}, nil
 }

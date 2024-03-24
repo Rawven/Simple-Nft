@@ -23,12 +23,12 @@ func NewGetMyPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyPo
 	}
 }
 
-func (l *GetMyPoolLogic) GetMyPool(in *nft.NftEmpty) (*nft.PoolPageVOList, error) {
+func (l *GetMyPoolLogic) GetMyPool(in *nft.Empty) (*nft.PoolPageVOList, error) {
 	poolInfos, err := dao.PoolInfo.WithContext(l.ctx).Where(dao.PoolInfo.CreatorName.Eq("creatorName")).Order(dao.PoolInfo.PoolId.Desc()).Find()
 	if err != nil {
 		return nil, err
 	}
-	poolPageVOList := GetPoolPageVOList(poolInfos)
+	poolPageVOList := dao.GetPoolPageVOList(poolInfos)
 	return &nft.PoolPageVOList{
 		PoolPageVO: poolPageVOList,
 	}, nil

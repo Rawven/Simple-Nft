@@ -4,7 +4,7 @@ dubbo:
       protocol: nacos
       address: 10.21.32.154:8848
   consumer:
-     references:
+    references:
       BlcRpcServiceClientImpl:
         protocol: tri
         group: dubbo

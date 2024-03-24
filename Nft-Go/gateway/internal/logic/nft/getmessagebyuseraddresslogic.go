@@ -13,22 +13,22 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetMessageByHashLogic struct {
+type GetMessageByUserAddressLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetMessageByHashLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMessageByHashLogic {
-	return &GetMessageByHashLogic{
+func NewGetMessageByUserAddressLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMessageByUserAddressLogic {
+	return &GetMessageByUserAddressLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetMessageByHashLogic) GetMessageByHash(req *types.GetMessageByHashRequest) (resp *types.CommonResponse, err error) {
-	hash, err := api.GetNftClient().GetMessageByHash(l.ctx, &nft.GetMessageByHashRequest{
+func (l *GetMessageByUserAddressLogic) GetMessageByUserAddress(req *types.GetMessageByUserAddressRequest) (resp *types.CommonResponse, err error) {
+	hash, err := api.GetNftClient().GetMessageByUserAddress(l.ctx, &nft.GetMessageByUserAddressRequest{
 		Hash: req.Hash,
 	})
 	if err != nil {

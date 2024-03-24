@@ -8,41 +8,39 @@ import (
 	"Nft-Go/nft/internal/dao"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
-	"os"
 
 	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetMessageByHashLogic struct {
+type GetMessageByUserAddressLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetMessageByHashLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMessageByHashLogic {
-	return &GetMessageByHashLogic{
+func NewGetMessageByUserAddressLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMessageByUserAddressLogic {
+	return &GetMessageByUserAddressLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest) (*nft.GetMessageByHashDTO, error) {
+func (l *GetMessageByUserAddressLogic) GetMessageByUserAddress(in *nft.GetMessageByUserAddressRequest) (*nft.GetMessageByUserAddressDTO, error) {
 	if len(in.Hash) != 42 && len(in.Hash) != 66 {
-		return nil, os.ErrInvalid
+		return nil, xerror.New("hash长度不正确")
 	}
-	dubbo := api.GetBlcService()
+	blcService := api.GetBlcService()
 	mysql := dao.DcInfo
-	var dto nft.GetMessageByHashDTO
+	var dto nft.GetMessageByUserAddressDTO
 	if len(in.Hash) == 42 {
 		var checkDto blc.CheckDcAndReturnTimeDTO
-		status, err := dubbo.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
+		status, err := blcService.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
 		if err != nil {
 			return nil, xerror.New("获取用户状态失败")
 		}
-		//为什么名字是hash？？？
-		collectionList, err := mysql.WithContext(l.ctx).Where(mysql.OwnerName.Eq(in.Hash)).Find()
+		collectionList, err := mysql.WithContext(l.ctx).Where(mysql.OwnerAddress.Eq(in.Hash)).Find()
 		if err != nil {
 			return nil, xerror.New("查询失败")
 		}
@@ -52,7 +50,7 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 		}
 		checkDto.Owner = in.Hash
 		checkDto.CollectionHash = checkArgs
-		time, err := dubbo.CheckDcAndReturnTime(l.ctx, &blc.CheckDcAndReturnTimeRequest{
+		time, err := blcService.CheckDcAndReturnTime(l.ctx, &blc.CheckDcAndReturnTimeRequest{
 			Dto: &checkDto,
 		})
 		if err != nil || !time.GetCheckResult() {
@@ -76,13 +74,13 @@ func (l *GetMessageByHashLogic) GetMessageByHash(in *nft.GetMessageByHashRequest
 		dto.Type = 0
 	} else {
 		hashBytes, _ := util.HexString2ByteArray(in.Hash)
-		id, err := dubbo.GetHashToDcId(l.ctx, &blc.GetHashToDcIdRequest{
+		id, err := blcService.GetHashToDcId(l.ctx, &blc.GetHashToDcIdRequest{
 			Hash: hashBytes,
 		})
 		if err != nil {
 			return nil, err
 		}
-		history, err := GetDigitalCollectionHistory(&nft.GetDigitalCollectionHistoryRequest{
+		history, err := GetDcHistory(&nft.GetDcHistoryRequest{
 			Id: id.GetDcId(),
 		}, l.ctx)
 		if err != nil {

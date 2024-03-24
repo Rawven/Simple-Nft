@@ -33,7 +33,7 @@ func (l *GetNoticeByIdLogic) GetNoticeById(req *types.IdNoticeRequest) (resp *ty
 	if err != nil {
 		return nil, err
 	}
-	notice, err := api.GetUserClient().GetNoticeById(l.ctx, &user.IdNoticeRequest{Id: int32(toInt)})
+	notice, err := api.GetUserService().GetNoticeById(l.ctx, &user.IdNoticeRequest{Id: int32(toInt)})
 	if err != nil {
 		return nil, err
 	}

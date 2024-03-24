@@ -27,7 +27,7 @@ func NewGetAllActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetAllActivityLogic) GetAllActivity() (resp *types.CommonResponse, err error) {
-	activity, err := api.GetNftClient().GetAllActivity(l.ctx, &nft.NftEmpty{})
+	activity, err := api.GetNftClient().GetAllActivity(l.ctx, &nft.Empty{})
 	if err != nil {
 		return nil, err
 	}

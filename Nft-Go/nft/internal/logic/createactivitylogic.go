@@ -30,54 +30,54 @@ func NewCreateActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cr
 	}
 }
 
-func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nft.CommonResult, error) {
-	dubbo := api.GetBlcService()
-	amount, err := dubbo.GetActivityAmount(l.ctx, &emptypb.Empty{})
-	if err != nil {
-		return nil, xerror.New("获取活动数量失败")
-	}
+func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nft.Response, error) {
 	info, err := util.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败")
 	}
+	blcService := api.GetBlcService()
+	//获取活动数量
+	amount, err := blcService.GetActivityAmount(l.ctx, &emptypb.Empty{})
+	if err != nil {
+		return nil, xerror.New("调用合约获取活动数量失败" + err.Error())
+	}
 	activityInfo := model.ActivityInfo{
 		Id:            amount.GetAmount(),
 		Name:          info.UserName,
-		Description:   in.CreateActivityBo.Description,
-		DcDescription: in.CreateActivityBo.DcDescription,
-		Cid:           in.CreateActivityBo.Cid,
+		Description:   in.Description,
+		DcDescription: in.DcDescription,
+		Cid:           in.Cid,
 		HostName:      info.UserName,
 		HostAddress:   info.Address,
-		Amount:        in.CreateActivityBo.GetAmount(),
-		Remainder:     in.CreateActivityBo.GetAmount(),
+		Amount:        in.GetAmount(),
+		Remainder:     in.GetAmount(),
 		Status:        true,
 	}
+	//开始事务
 	err = dao.Q.Transaction(func(tx *dao.Query) error {
-		err := tx.ActivityInfo.WithContext(l.ctx).Create(&activityInfo)
-		if err != nil {
-			return xerror.New("插入活动失败" + err.Error())
-		}
-		//创建活动
-		_, err = dubbo.CreateActivity(l.ctx, &blc.CreateActivityRequest{
+		//调用合约创建活动
+		_, err = blcService.CreateActivity(l.ctx, &blc.CreateActivityRequest{
 			UserKey: &blc.UserKey{UserKey: info.PrivateKey},
 			Args: &blc.CreateActivityDTO{
-				Name:     in.CreateActivityBo.Name,
-				Password: []byte(cryptor.Sha256(in.CreateActivityBo.Password)),
-				Amount:   int64(in.CreateActivityBo.Amount),
-				Cid:      in.CreateActivityBo.Cid,
-				DcName:   in.CreateActivityBo.DcName,
+				Name:     in.Name,
+				Password: []byte(cryptor.Sha256(in.Password)),
+				Amount:   int64(in.Amount),
+				Cid:      in.Cid,
+				DcName:   in.DcName,
 			},
 		})
 		if err != nil {
-			return xerror.New("调用dubbo失败" + err.Error())
+			return xerror.New("调用合约创建活动失败" + err.Error())
+		}
+		//存储活动信息
+		err := tx.ActivityInfo.WithContext(l.ctx).Create(&activityInfo)
+		if err != nil {
+			return xerror.New("插入活动失败" + err.Error())
 		}
 		return nil
 	})
 	if err != nil {
 		return nil, xerror.New("插入失败" + err.Error())
 	}
-	return &nft.CommonResult{
-		Code:    200,
-		Message: "success",
-	}, nil
+	return &nft.Response{Message: "nft"}, nil
 }

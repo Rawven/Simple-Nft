@@ -29,39 +29,40 @@ func NewBuyFromPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BuyFr
 	}
 }
 
-func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonResult, error) {
+func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Response, error) {
 	info, err := util.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败")
 	}
-	dubbo := api.GetBlcService()
+	blcService := api.GetBlcService()
+	//开始事务
 	err = dao.Q.Transaction(func(tx *dao.Query) error {
-		my := tx.PoolInfo
 		//让PoolInfo指定id的数据中的left减一
-		_, err = my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).Update(my.Left, my.Left.Sub(1))
+		_, err = tx.PoolInfo.WithContext(l.ctx).Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).Update(tx.PoolInfo.Left, tx.PoolInfo.Left.Sub(1))
 		if err != nil {
-			return xerror.New("更新失败")
+			return xerror.New("更新失败" + err.Error())
 		}
-		pool, err := my.WithContext(l.ctx).Where(my.PoolId.Eq(in.BuyFromPoolBo.PoolId)).First()
+		//查询PoolInfo指定id的数据
+		pool, err := tx.PoolInfo.WithContext(l.ctx).Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).First()
 		if err != nil {
-			return xerror.New("查询失败")
+			return xerror.New("查询失败" + err.Error())
 		}
-		mint, err := dubbo.BeforeMint(l.ctx, &blc.BeforeMintRequest{
-			Id: pool.PoolId,
-		})
+		//调用合约获得下一个藏品的id和唯一哈希
+		beforeMint, err := blcService.BeforeMint(l.ctx, &blc.BeforeMintRequest{Id: pool.PoolId})
 		if err != nil {
-			return xerror.New("调用dubbo失败")
+			return xerror.New("调用合约异常：" + err.Error())
 		}
-		_, err = dubbo.Mint(l.ctx, &blc.MintRequest{
+		//铸造专属于用户的藏品（从藏品池里）
+		_, err = blcService.Mint(l.ctx, &blc.MintRequest{
 			UserKey: &blc.UserKey{UserKey: info.PrivateKey},
 			PoolId:  pool.PoolId,
 		})
 		if err != nil {
-			return xerror.New("调用dubbo失败")
+			return xerror.New("调用合约异常：" + err.Error())
 		}
 		dcInfo := model.DcInfo{
-			Id:             int32(mint.DcId),
-			Hash:           util.ByteArray2HexString(mint.UniqueId),
+			Id:             int32(beforeMint.DcId),
+			Hash:           util.ByteArray2HexString(beforeMint.UniqueId),
 			Cid:            pool.Cid,
 			Name:           pool.Name,
 			Description:    pool.Description,
@@ -71,15 +72,15 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 			CreatorName:    pool.CreatorName,
 			CreatorAddress: pool.CreatorAddress,
 		}
+		//创建购买成功的藏品记录
 		err = tx.DcInfo.WithContext(l.ctx).Create(&dcInfo)
 		if err != nil {
-			return xerror.New("创建失败")
+			return xerror.New("创建失败" + err.Error())
 		}
-		redis := db.GetRedis()
-		info.Balance = info.Balance - pool.Price
-		_, err = redis.Set(l.ctx, string(info.UserId), info, 0).Result()
+		info.Balance -= pool.Price
+		_, err = db.GetRedis().Set(l.ctx, string(info.UserId), info, 0).Result()
 		if err != nil {
-			return xerror.New("更新失败")
+			return xerror.New("redis更新失败" + err.Error())
 		}
 		return nil
 	})
@@ -87,8 +88,5 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.CommonR
 		return nil, xerror.New("购买失败" + err.Error())
 	}
 
-	return &nft.CommonResult{
-		Code:    200,
-		Message: "success",
-	}, nil
+	return &nft.Response{Message: "success"}, nil
 }

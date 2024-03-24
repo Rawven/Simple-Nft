@@ -26,18 +26,18 @@ func NewSearchActivitiesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *SearchActivitiesLogic) SearchActivities(in *nft.SearchActivitiesRequest) (*nft.ActivityPageVOList, error) {
-	if in.SearchActivityBO.ActivityName != "" {
-		mq.RankAdd(in.SearchActivityBO.ActivityName)
+	if in.ActivityName != "" {
+		mq.RankAdd(in.ActivityName)
 	}
-	if in.SearchActivityBO.HostName != "" {
-		mq.RankAdd(in.SearchActivityBO.HostName)
+	if in.HostName != "" {
+		mq.RankAdd(in.HostName)
 	}
 	ad := dao.ActivityInfo
-	find, err := ad.WithContext(l.ctx).Where(ad.HostName.Like(in.SearchActivityBO.HostName), ad.Name.Like(in.GetSearchActivityBO().GetActivityName())).Find()
+	find, err := ad.WithContext(l.ctx).Where(ad.HostName.Like(in.HostName), ad.Name.Like(in.GetActivityName())).Find()
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
-	page := showForPage(find)
+	page := dao.ShowForPage(find)
 	return &nft.ActivityPageVOList{
 		ActivityPageVO: page,
 	}, nil

@@ -28,7 +28,7 @@ func NewGetDigitalCollectionHistoryLogic(ctx context.Context, svcCtx *svc.Servic
 }
 
 func (l *GetDigitalCollectionHistoryLogic) GetDigitalCollectionHistory(req *types.GetDigitalCollectionHistoryRequest) (resp *types.CommonResponse, err error) {
-	history, err := api.GetNftClient().GetDigitalCollectionHistory(l.ctx, &nft.GetDigitalCollectionHistoryRequest{Id: req.Id})
+	history, err := api.GetNftClient().GetDcHistory(l.ctx, &nft.GetDcHistoryRequest{Id: req.Id})
 	if err != nil {
 		return nil, err
 	}

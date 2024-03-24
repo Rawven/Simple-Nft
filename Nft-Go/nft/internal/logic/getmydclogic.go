@@ -25,7 +25,7 @@ func NewGetMyDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMyDcLo
 	}
 }
 
-func (l *GetMyDcLogic) GetMyDc(in *nft.NftEmpty) (*nft.DcPageVOList, error) {
+func (l *GetMyDcLogic) GetMyDc(in *nft.Empty) (*nft.DcPageVOList, error) {
 	userInfo, err := util.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败")
@@ -34,7 +34,7 @@ func (l *GetMyDcLogic) GetMyDc(in *nft.NftEmpty) (*nft.DcPageVOList, error) {
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
-	list := GetDcPageVOList(dcInfos)
+	list := dao.GetDcPageVOList(dcInfos)
 	return &nft.DcPageVOList{
 		DcPageVO: list,
 	}, nil

@@ -128,7 +128,7 @@ type GetMessageByHashDTO struct {
 	CollectionMessageOnChainVO CollectionMessageOnChainVO `json:"collectionMessageOnChainVO"`
 }
 
-type GetMessageByHashRequest struct {
+type GetMessageByUserAddressRequest struct {
 	Hash string `json:"hash"`
 }
 

@@ -26,13 +26,12 @@ func NewSelectDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SelectDc
 }
 
 func (l *SelectDcLogic) SelectDc(in *nft.SelectDcRequest) (*nft.DcPageVOList, error) {
-	// todo: add your logic here and delete this line
 	if in.Name == "" {
 		find, err := dao.DcInfo.WithContext(l.ctx).Find()
 		if err != nil {
 			return nil, xerror.New("查询失败")
 		}
-		list := GetDcPageVOList(find)
+		list := dao.GetDcPageVOList(find)
 		return &nft.DcPageVOList{DcPageVO: list}, err
 	} else {
 		mq.RankAdd(in.Name)
@@ -40,7 +39,7 @@ func (l *SelectDcLogic) SelectDc(in *nft.SelectDcRequest) (*nft.DcPageVOList, er
 		if err != nil {
 			return nil, xerror.New("查询失败")
 		}
-		list := GetDcPageVOList(find)
+		list := dao.GetDcPageVOList(find)
 		return &nft.DcPageVOList{DcPageVO: list}, err
 	}
 }
