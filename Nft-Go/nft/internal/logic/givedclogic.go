@@ -34,7 +34,6 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.CommonResult, error) {
 	info, err := util.GetUserInfo(l.ctx)
 	userRpc := api.GetUserClient()
 	dubbo := api.GetBlcService()
-
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败")
 	}
