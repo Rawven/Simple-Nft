@@ -2,20 +2,14 @@ package com.topview.listener;
 
 import com.topview.client.ChainClient;
 import com.topview.constant.BlcToUserTag;
-import com.topview.constant.MqConstant;
 import com.topview.entity.struct.DataStruct;
 import com.topview.event.BlcNotice;
+import com.topview.event.Event;
 import com.topview.util.JsonUtil;
 import com.topview.util.MqUtil;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.fisco.bcos.sdk.jni.common.JniException;
 import org.fisco.bcos.sdk.v3.client.Client;
 import org.fisco.bcos.sdk.v3.codec.ContractCodec;
@@ -24,12 +18,20 @@ import org.fisco.bcos.sdk.v3.codec.abi.tools.TopicTools;
 import org.fisco.bcos.sdk.v3.eventsub.EventSubParams;
 import org.fisco.bcos.sdk.v3.eventsub.EventSubscribe;
 import org.fisco.bcos.sdk.v3.model.EventLog;
-import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import static com.topview.constant.EventConstant.CREATE_ACTIVITY;
-import static com.topview.constant.EventConstant.CREATE_POOL;
-import static com.topview.constant.EventConstant.POOL_TYPE;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.topview.constant.EventConstant.*;
 
 /**
  * 公告服务impl
@@ -42,8 +44,8 @@ import static com.topview.constant.EventConstant.POOL_TYPE;
 public class EventListener {
     @Resource
     private ChainClient sdk;
-    @Resource
-    private StreamBridge streamBridge;
+    @Setter(onMethod_ = @Autowired)
+    private RocketMQTemplate rocketmqTemplate;
     private Client client;
 
     private ContractCodec abiCodec;
@@ -59,7 +61,6 @@ public class EventListener {
         //加载abi字符串
         poolLogicAbi = new String(Files.readAllBytes(Paths.get("Nft-Java/blc/src/main/resources/solidity/abi/PoolLogic.abi")));
         //开启监听
-        //TODO 待优化
         createListen();
     }
 
@@ -93,6 +94,7 @@ public class EventListener {
         String createActivityTopic = tools.stringToTopic(CREATE_ACTIVITY);
         //开始监听
         eventSubscribe.subscribeEvent(params, (eventSubId, status, logs) -> {
+            log.info("receive event");
             for (EventLog event : logs) {
                 String top = event.getTopics().get(0);
                 try {
@@ -108,9 +110,9 @@ public class EventListener {
                     throw new RuntimeException("解析事件失败");
                 }
             }
-            System.out.println("event sub id: " + eventSubId);
-            System.out.println(" \t status: " + status);
-            System.out.println(" \t logs: " + logs);
+            log.info("event sub id: " + eventSubId);
+            log.info(" \t status: " + status);
+            log.info(" \t logs: " + logs);
         });
     }
 
@@ -124,7 +126,6 @@ public class EventListener {
         List<String> list = abiCodec.decodeEventToString(poolLogicAbi, eventName, event);
         //解析pool结构体字符串
         DataStruct.Pool structArgs = JsonUtil.jsonToObj(list.get(2), DataStruct.Pool.class);
-
         String description = "地址为" + list.get(1) + "的用户发行了【" + structArgs.getName() + "】的数藏池。" +
             "发行数量为" + structArgs.getAmount() + ",每位用户限制购买的数量为" + structArgs.getLimitAmount() + "。";
         BlcNotice notice = new BlcNotice()
@@ -134,7 +135,8 @@ public class EventListener {
             .setUserAddress(list.get(1))
             .setDescription(description);
         //发送通知消息
-        streamBridge.send(MqConstant.CHANEL_FIRST, MqUtil.createMsg(JsonUtil.objToJson(notice), BlcToUserTag.BLC_NOTICE));
+        Message<Event> msg = MqUtil.createMsg(JsonUtil.objToJson(notice), BlcToUserTag.BLC_NOTICE);
+        rocketmqTemplate.send("Nft-Go", msg);
     }
 
     private void logCreateActivity(EventLog event) throws ContractCodecException {
@@ -153,6 +155,7 @@ public class EventListener {
             .setPublishTime(LocalDateTime.now())
             .setUserAddress(list.get(1))
             .setDescription(description);
-        streamBridge.send(MqConstant.CHANEL_FIRST, MqUtil.createMsg(JsonUtil.objToJson(notice), BlcToUserTag.BLC_NOTICE));
+        Message<Event> msg = MqUtil.createMsg(JsonUtil.objToJson(notice), BlcToUserTag.BLC_NOTICE);
+        rocketmqTemplate.send("Nft-Go", msg);
     }
 }

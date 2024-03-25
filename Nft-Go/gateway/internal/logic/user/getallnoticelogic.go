@@ -35,6 +35,5 @@ func (l *GetAllNoticeLogic) GetAllNotice() (resp *types.CommonResponse, err erro
 	if err != nil {
 		return nil, err
 	}
-
 	return result.OperateSuccess(data, "GetAllNotice success")
 }

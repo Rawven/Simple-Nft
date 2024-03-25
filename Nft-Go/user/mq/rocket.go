@@ -34,11 +34,8 @@ import (
 
 func InitMq() {
 	rlog.SetLogger(&util.ZapLogger{})
-	// 设置推送消费者
 	c, _ := rocketmq.NewPushConsumer(
-		//消费组
 		consumer.WithGroupName(viper.Get("rocketmq.group").(string)),
-		// namesrv地址
 		consumer.WithNameServer([]string{viper.Get("rocketmq.nameserver").(string)}),
 		consumer.WithConsumerModel(consumer.BroadCasting),
 	)
