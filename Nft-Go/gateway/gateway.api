@@ -22,6 +22,15 @@ service gateway {
 	prefix:     /v1
 )
 service gateway {
+	@handler getDayRankingList
+	get /rank/dayRankingList returns (CommonResponse)
+
+	@handler getWeekRankingList
+	get /rank/weekRankingList returns (CommonResponse)
+
+	@handler getMonthRankingList
+	get /rank/monthRankingList returns (CommonResponse)
+
 	@handler getAllNotice
 	get /notice/all returns (CommonResponse)
 
@@ -80,8 +89,8 @@ service gateway {
 	@handler GetMyDc
 	get /nft/GetMyDc returns (CommonResponse)
 
-	@handler GetDigitalCollectionHistory
-	post /nft/GetDigitalCollectionHistory (GetDigitalCollectionHistoryRequest) returns (CommonResponse)
+	@handler GetDcHistory
+	post /nft/GetDcHistory (GetDcHistoryRequest) returns (CommonResponse)
 
 	@handler CreatePool
 	post /nft/CreatePool (CreatePoolRequest) returns (CommonResponse)
@@ -225,7 +234,7 @@ type GetDcByIdRequest {
 	Id int32 `json:"id"`
 }
 
-type GetDigitalCollectionHistoryRequest {
+type GetDcHistoryRequest {
 	Id int32 `json:"id"`
 }
 

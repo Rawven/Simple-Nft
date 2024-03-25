@@ -13,10 +13,20 @@ service User {
   rpc getNoticeByTitle(TitleNoticeRequest) returns (NoticeList);
   rpc getNoticeById(IdNoticeRequest) returns (Notice);
   rpc getUserInfoByName(UserNameRequest) returns (UserInfo);
+  rpc getDayRankingList(Empty) returns (RankingList);
+  rpc getWeekRankingList(Empty) returns (RankingList);
+  rpc getMonthRankingList(Empty) returns (RankingList);
 }
 
 message Empty {}
 
+message RankingList {
+  repeated Ranking rankings = 1;
+}
+message Ranking{
+  string title = 1;
+  int32 score = 2;
+}
 
 
 message UserNameRequest {

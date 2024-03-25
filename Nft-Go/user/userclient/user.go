@@ -6,7 +6,7 @@ package userclient
 import (
 	"context"
 
-	"Nft-Go/common/api/user"
+	"Nft-Go/user/pb/user"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -18,6 +18,8 @@ type (
 	LoginRequest       = user.LoginRequest
 	Notice             = user.Notice
 	NoticeList         = user.NoticeList
+	Ranking            = user.Ranking
+	RankingList        = user.RankingList
 	RegisterRequest    = user.RegisterRequest
 	Response           = user.Response
 	TitleNoticeRequest = user.TitleNoticeRequest
@@ -35,6 +37,9 @@ type (
 		GetNoticeByTitle(ctx context.Context, in *TitleNoticeRequest, opts ...grpc.CallOption) (*NoticeList, error)
 		GetNoticeById(ctx context.Context, in *IdNoticeRequest, opts ...grpc.CallOption) (*Notice, error)
 		GetUserInfoByName(ctx context.Context, in *UserNameRequest, opts ...grpc.CallOption) (*UserInfo, error)
+		GetDayRankingList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RankingList, error)
+		GetWeekRankingList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RankingList, error)
+		GetMonthRankingList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RankingList, error)
 	}
 
 	defaultUser struct {
@@ -91,4 +96,19 @@ func (m *defaultUser) GetNoticeById(ctx context.Context, in *IdNoticeRequest, op
 func (m *defaultUser) GetUserInfoByName(ctx context.Context, in *UserNameRequest, opts ...grpc.CallOption) (*UserInfo, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.GetUserInfoByName(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetDayRankingList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RankingList, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetDayRankingList(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetWeekRankingList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RankingList, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetWeekRankingList(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetMonthRankingList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*RankingList, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetMonthRankingList(ctx, in, opts...)
 }

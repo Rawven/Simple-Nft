@@ -83,8 +83,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/nft/GetDigitalCollectionHistory",
-					Handler: nft.GetDigitalCollectionHistoryHandler(serverCtx),
+					Path:    "/nft/GetDcHistory",
+					Handler: nft.GetDcHistoryHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
@@ -159,6 +159,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/notice/username",
 					Handler: user.GetUserInfoByUserNameHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/rank/dayRankingList",
+					Handler: user.GetDayRankingListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/rank/monthRankingList",
+					Handler: user.GetMonthRankingListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/rank/weekRankingList",
+					Handler: user.GetWeekRankingListHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,

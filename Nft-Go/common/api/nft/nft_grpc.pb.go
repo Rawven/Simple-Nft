@@ -19,24 +19,24 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Nft_GetMessageByAddressOrHash_FullMethodName = "/user.Nft/GetMessageByAddressOrHash"
-	Nft_CreateActivity_FullMethodName            = "/user.Nft/CreateActivity"
-	Nft_PrizeDcFromActivity_FullMethodName       = "/user.Nft/PrizeDcFromActivity"
-	Nft_GetAllActivity_FullMethodName            = "/user.Nft/GetAllActivity"
-	Nft_GetOneActivity_FullMethodName            = "/user.Nft/GetOneActivity"
-	Nft_SearchActivities_FullMethodName          = "/user.Nft/SearchActivities"
-	Nft_GiveDc_FullMethodName                    = "/user.Nft/GiveDc"
-	Nft_GetAllDc_FullMethodName                  = "/user.Nft/GetAllDc"
-	Nft_SelectDc_FullMethodName                  = "/user.Nft/SelectDc"
-	Nft_GetDcById_FullMethodName                 = "/user.Nft/GetDcById"
-	Nft_GetMyDc_FullMethodName                   = "/user.Nft/GetMyDc"
-	Nft_GetDcHistory_FullMethodName              = "/user.Nft/GetDcHistory"
-	Nft_CreatePool_FullMethodName                = "/user.Nft/CreatePool"
-	Nft_BuyFromPool_FullMethodName               = "/user.Nft/BuyFromPool"
-	Nft_SelectPool_FullMethodName                = "/user.Nft/SelectPool"
-	Nft_GetPoolById_FullMethodName               = "/user.Nft/GetPoolById"
-	Nft_GetAllPool_FullMethodName                = "/user.Nft/GetAllPool"
-	Nft_GetMyPool_FullMethodName                 = "/user.Nft/GetMyPool"
+	Nft_GetMessageByAddressOrHash_FullMethodName = "/nft.Nft/GetMessageByAddressOrHash"
+	Nft_CreateActivity_FullMethodName            = "/nft.Nft/CreateActivity"
+	Nft_PrizeDcFromActivity_FullMethodName       = "/nft.Nft/PrizeDcFromActivity"
+	Nft_GetAllActivity_FullMethodName            = "/nft.Nft/GetAllActivity"
+	Nft_GetOneActivity_FullMethodName            = "/nft.Nft/GetOneActivity"
+	Nft_SearchActivities_FullMethodName          = "/nft.Nft/SearchActivities"
+	Nft_GiveDc_FullMethodName                    = "/nft.Nft/GiveDc"
+	Nft_GetAllDc_FullMethodName                  = "/nft.Nft/GetAllDc"
+	Nft_SelectDc_FullMethodName                  = "/nft.Nft/SelectDc"
+	Nft_GetDcById_FullMethodName                 = "/nft.Nft/GetDcById"
+	Nft_GetMyDc_FullMethodName                   = "/nft.Nft/GetMyDc"
+	Nft_GetDcHistory_FullMethodName              = "/nft.Nft/GetDcHistory"
+	Nft_CreatePool_FullMethodName                = "/nft.Nft/CreatePool"
+	Nft_BuyFromPool_FullMethodName               = "/nft.Nft/BuyFromPool"
+	Nft_SelectPool_FullMethodName                = "/nft.Nft/SelectPool"
+	Nft_GetPoolById_FullMethodName               = "/nft.Nft/GetPoolById"
+	Nft_GetAllPool_FullMethodName                = "/nft.Nft/GetAllPool"
+	Nft_GetMyPool_FullMethodName                 = "/nft.Nft/GetMyPool"
 )
 
 // NftClient is the client API for Nft service.
@@ -657,7 +657,7 @@ func _Nft_GetMyPool_Handler(srv interface{}, ctx context.Context, dec func(inter
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Nft_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "user.Nft",
+	ServiceName: "nft.Nft",
 	HandlerType: (*NftServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

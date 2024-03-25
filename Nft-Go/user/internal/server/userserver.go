@@ -4,9 +4,9 @@
 package server
 
 import (
+	"Nft-Go/common/api/user"
 	"context"
 
-	"Nft-Go/common/api/user"
 	"Nft-Go/user/internal/logic"
 	"Nft-Go/user/internal/svc"
 )
@@ -65,4 +65,19 @@ func (s *UserServer) GetNoticeById(ctx context.Context, in *user.IdNoticeRequest
 func (s *UserServer) GetUserInfoByName(ctx context.Context, in *user.UserNameRequest) (*user.UserInfo, error) {
 	l := logic.NewGetUserInfoByNameLogic(ctx, s.svcCtx)
 	return l.GetUserInfoByName(in)
+}
+
+func (s *UserServer) GetDayRankingList(ctx context.Context, in *user.Empty) (*user.RankingList, error) {
+	l := logic.NewGetDayRankingListLogic(ctx, s.svcCtx)
+	return l.GetDayRankingList(in)
+}
+
+func (s *UserServer) GetWeekRankingList(ctx context.Context, in *user.Empty) (*user.RankingList, error) {
+	l := logic.NewGetWeekRankingListLogic(ctx, s.svcCtx)
+	return l.GetWeekRankingList(in)
+}
+
+func (s *UserServer) GetMonthRankingList(ctx context.Context, in *user.Empty) (*user.RankingList, error) {
+	l := logic.NewGetMonthRankingListLogic(ctx, s.svcCtx)
+	return l.GetMonthRankingList(in)
 }

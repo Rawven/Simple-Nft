@@ -1,9 +1,12 @@
 package com.topview.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * json util
@@ -13,12 +16,21 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class JsonUtil {
-    private static final ObjectMapper OBJECT_MAPPER;
+    public static final ObjectMapper OBJECT_MAPPER;
 
     static {
         OBJECT_MAPPER = new ObjectMapper();
     }
 
+    public static List<Object> strToList(String str) {
+        try {
+            return OBJECT_MAPPER.readValue(str, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            log.error("JsonUtil strToObj error:{}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
     public static Map jsonToMap(String json) {
         try {
             return OBJECT_MAPPER.readValue(json, Map.class);

@@ -1,8 +1,9 @@
 package com.topview.event;
 
-import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.math.BigInteger;
 
 /**
  * createo pool notice
@@ -15,7 +16,7 @@ import lombok.experimental.Accessors;
 public class BlcNotice {
     private String title;
     private Integer type;
-    private LocalDateTime publishTime;
+    private BigInteger publishTime;
     private String userAddress;
     private String description;
 

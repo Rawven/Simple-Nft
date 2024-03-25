@@ -1,15 +1,14 @@
 package com.topview.entity.struct;
 
-import java.math.BigInteger;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.fisco.bcos.sdk.v3.codec.datatypes.Address;
-import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicBytes;
-import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicStruct;
-import org.fisco.bcos.sdk.v3.codec.datatypes.StaticStruct;
-import org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.fisco.bcos.sdk.v3.codec.datatypes.*;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
+
+import java.math.BigInteger;
 
 /**
  * data struct
@@ -19,6 +18,8 @@ import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
  */
 public class DataStruct {
     @EqualsAndHashCode(callSuper = true) @Data
+    @Accessors(chain = true)
+    @NoArgsConstructor
     public static class Pool extends DynamicStruct {
         public String cid;
 
@@ -35,7 +36,6 @@ public class DataStruct {
         public String creator;
 
         public BigInteger createTime;
-
         public Pool(Utf8String cid, Utf8String name, Uint256 price, Uint256 amount, Uint256 left,
             Uint256 limitAmount, Address creator, Uint256 createTime) {
             super(cid, name, price, amount, left, limitAmount, creator, createTime);
@@ -92,6 +92,8 @@ public class DataStruct {
     }
 
     @EqualsAndHashCode(callSuper = true) @Data
+    @NoArgsConstructor
+    @Accessors(chain = true)
     public static class Activity extends DynamicStruct {
         public String name;
 

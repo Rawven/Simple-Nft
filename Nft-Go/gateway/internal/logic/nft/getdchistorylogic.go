@@ -13,21 +13,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetDigitalCollectionHistoryLogic struct {
+type GetDcHistoryLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetDigitalCollectionHistoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDigitalCollectionHistoryLogic {
-	return &GetDigitalCollectionHistoryLogic{
+func NewGetDcHistoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDcHistoryLogic {
+	return &GetDcHistoryLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetDigitalCollectionHistoryLogic) GetDigitalCollectionHistory(req *types.GetDigitalCollectionHistoryRequest) (resp *types.CommonResponse, err error) {
+func (l *GetDcHistoryLogic) GetDcHistory(req *types.GetDcHistoryRequest) (resp *types.CommonResponse, err error) {
 	history, err := api.GetNftClient().GetDcHistory(l.ctx, &nft.GetDcHistoryRequest{Id: req.Id})
 	if err != nil {
 		return nil, err

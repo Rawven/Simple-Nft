@@ -4,43 +4,44 @@
 package nftclient
 
 import (
-	nft2 "Nft-Go/common/api/nft"
 	"context"
+
+	"Nft-Go/nft/pb/nft"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 )
 
 type (
-	AccountMessageVO                 = nft2.AccountMessageVO
-	ActivityDetailsVO                = nft2.ActivityDetailsVO
-	ActivityPageVO                   = nft2.ActivityPageVO
-	ActivityPageVOList               = nft2.ActivityPageVOList
-	BuyFromPoolRequest               = nft2.BuyFromPoolRequest
-	CollectionMessageOnChainVO       = nft2.CollectionMessageOnChainVO
-	CreateActivityRequest            = nft2.CreateActivityRequest
-	CreatePoolRequest                = nft2.CreatePoolRequest
-	DcDetailVO                       = nft2.DcDetailVO
-	DcOverviewVO                     = nft2.DcOverviewVO
-	DcPageVO                         = nft2.DcPageVO
-	DcPageVOList                     = nft2.DcPageVOList
-	Empty                            = nft2.Empty
-	GetDcByIdRequest                 = nft2.GetDcByIdRequest
-	GetDcFromActivityRequest         = nft2.GetDcFromActivityRequest
-	GetDcHistoryRequest              = nft2.GetDcHistoryRequest
-	GetMessageByAddressOrHashDTO     = nft2.GetMessageByAddressOrHashDTO
-	GetMessageByAddressOrHashRequest = nft2.GetMessageByAddressOrHashRequest
-	GetOneActivityRequest            = nft2.GetOneActivityRequest
-	GetPoolByIdRequest               = nft2.GetPoolByIdRequest
-	GiveDcRequest                    = nft2.GiveDcRequest
-	PoolDetailsVO                    = nft2.PoolDetailsVO
-	PoolPageVO                       = nft2.PoolPageVO
-	PoolPageVOList                   = nft2.PoolPageVOList
-	Response                         = nft2.Response
-	SearchActivitiesRequest          = nft2.SearchActivitiesRequest
-	SelectDcRequest                  = nft2.SelectDcRequest
-	SelectPoolRequest                = nft2.SelectPoolRequest
-	TraceBackVO                      = nft2.TraceBackVO
+	AccountMessageVO                 = nft.AccountMessageVO
+	ActivityDetailsVO                = nft.ActivityDetailsVO
+	ActivityPageVO                   = nft.ActivityPageVO
+	ActivityPageVOList               = nft.ActivityPageVOList
+	BuyFromPoolRequest               = nft.BuyFromPoolRequest
+	CollectionMessageOnChainVO       = nft.CollectionMessageOnChainVO
+	CreateActivityRequest            = nft.CreateActivityRequest
+	CreatePoolRequest                = nft.CreatePoolRequest
+	DcDetailVO                       = nft.DcDetailVO
+	DcOverviewVO                     = nft.DcOverviewVO
+	DcPageVO                         = nft.DcPageVO
+	DcPageVOList                     = nft.DcPageVOList
+	Empty                            = nft.Empty
+	GetDcByIdRequest                 = nft.GetDcByIdRequest
+	GetDcFromActivityRequest         = nft.GetDcFromActivityRequest
+	GetDcHistoryRequest              = nft.GetDcHistoryRequest
+	GetMessageByAddressOrHashDTO     = nft.GetMessageByAddressOrHashDTO
+	GetMessageByAddressOrHashRequest = nft.GetMessageByAddressOrHashRequest
+	GetOneActivityRequest            = nft.GetOneActivityRequest
+	GetPoolByIdRequest               = nft.GetPoolByIdRequest
+	GiveDcRequest                    = nft.GiveDcRequest
+	PoolDetailsVO                    = nft.PoolDetailsVO
+	PoolPageVO                       = nft.PoolPageVO
+	PoolPageVOList                   = nft.PoolPageVOList
+	Response                         = nft.Response
+	SearchActivitiesRequest          = nft.SearchActivitiesRequest
+	SelectDcRequest                  = nft.SelectDcRequest
+	SelectPoolRequest                = nft.SelectPoolRequest
+	TraceBackVO                      = nft.TraceBackVO
 
 	Nft interface {
 		GetMessageByAddressOrHash(ctx context.Context, in *GetMessageByAddressOrHashRequest, opts ...grpc.CallOption) (*GetMessageByAddressOrHashDTO, error)
@@ -75,91 +76,91 @@ func NewNft(cli zrpc.Client) Nft {
 }
 
 func (m *defaultNft) GetMessageByAddressOrHash(ctx context.Context, in *GetMessageByAddressOrHashRequest, opts ...grpc.CallOption) (*GetMessageByAddressOrHashDTO, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetMessageByAddressOrHash(ctx, in, opts...)
 }
 
 func (m *defaultNft) CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.CreateActivity(ctx, in, opts...)
 }
 
 func (m *defaultNft) PrizeDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.PrizeDcFromActivity(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetAllActivity(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ActivityPageVOList, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetAllActivity(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetOneActivity(ctx context.Context, in *GetOneActivityRequest, opts ...grpc.CallOption) (*ActivityDetailsVO, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetOneActivity(ctx, in, opts...)
 }
 
 func (m *defaultNft) SearchActivities(ctx context.Context, in *SearchActivitiesRequest, opts ...grpc.CallOption) (*ActivityPageVOList, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.SearchActivities(ctx, in, opts...)
 }
 
 func (m *defaultNft) GiveDc(ctx context.Context, in *GiveDcRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GiveDc(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetAllDc(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DcPageVOList, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetAllDc(ctx, in, opts...)
 }
 
 func (m *defaultNft) SelectDc(ctx context.Context, in *SelectDcRequest, opts ...grpc.CallOption) (*DcPageVOList, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.SelectDc(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetDcById(ctx context.Context, in *GetDcByIdRequest, opts ...grpc.CallOption) (*DcDetailVO, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetDcById(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetMyDc(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DcPageVOList, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetMyDc(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetDcHistory(ctx context.Context, in *GetDcHistoryRequest, opts ...grpc.CallOption) (*CollectionMessageOnChainVO, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetDcHistory(ctx, in, opts...)
 }
 
 func (m *defaultNft) CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.CreatePool(ctx, in, opts...)
 }
 
 func (m *defaultNft) BuyFromPool(ctx context.Context, in *BuyFromPoolRequest, opts ...grpc.CallOption) (*Response, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.BuyFromPool(ctx, in, opts...)
 }
 
 func (m *defaultNft) SelectPool(ctx context.Context, in *SelectPoolRequest, opts ...grpc.CallOption) (*PoolPageVOList, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.SelectPool(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetPoolById(ctx context.Context, in *GetPoolByIdRequest, opts ...grpc.CallOption) (*PoolDetailsVO, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetPoolById(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetAllPool(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolPageVOList, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetAllPool(ctx, in, opts...)
 }
 
 func (m *defaultNft) GetMyPool(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PoolPageVOList, error) {
-	client := nft2.NewNftClient(m.cli.Conn())
+	client := nft.NewNftClient(m.cli.Conn())
 	return client.GetMyPool(ctx, in, opts...)
 }
