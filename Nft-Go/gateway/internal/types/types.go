@@ -118,7 +118,7 @@ type GetDcFromActivityRequest struct {
 	Password string `json:"password"`
 }
 
-type GetDigitalCollectionHistoryRequest struct {
+type GetDcHistoryRequest struct {
 	Id int32 `json:"id"`
 }
 

@@ -83,8 +83,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPost,
-					Path:    "/nft/GetDigitalCollectionHistory",
-					Handler: nft.GetDigitalCollectionHistoryHandler(serverCtx),
+					Path:    "/nft/GetDcHistory",
+					Handler: nft.GetDcHistoryHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,

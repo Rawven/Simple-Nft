@@ -1,0 +1,1493 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/nft/BuyFromPool": {
+      "post": {
+        "operationId": "BuyFromPool",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BuyFromPoolRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/CreateActivity": {
+      "post": {
+        "operationId": "CreateActivity",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateActivityRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/CreatePool": {
+      "post": {
+        "operationId": "CreatePool",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePoolRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetAllActivity": {
+      "get": {
+        "operationId": "GetAllActivity",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetAllDc": {
+      "get": {
+        "operationId": "GetAllDc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetAllPool": {
+      "get": {
+        "operationId": "GetAllPool",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetDcById": {
+      "post": {
+        "operationId": "GetDcById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetDcByIdRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetDcFromActivity": {
+      "post": {
+        "operationId": "GetDcFromActivity",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetDcFromActivityRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetDcHistory": {
+      "post": {
+        "operationId": "GetDcHistory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetDcHistoryRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetMessageByAddressOrHash": {
+      "post": {
+        "operationId": "GetMessageByAddressOrHash",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetMessageByAddressOrHashRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetMyDc": {
+      "get": {
+        "operationId": "GetMyDc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetMyPool": {
+      "get": {
+        "operationId": "GetMyPool",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetOneActivity": {
+      "post": {
+        "operationId": "GetOneActivity",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetOneActivityRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetPoolById": {
+      "post": {
+        "operationId": "GetPoolById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetPoolByIdRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GiveDc": {
+      "post": {
+        "operationId": "GiveDc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GiveDcRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/SearchActivities": {
+      "post": {
+        "operationId": "SearchActivities",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchActivitiesRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/SelectDc": {
+      "post": {
+        "operationId": "SelectDc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SelectDcRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/SelectPool": {
+      "post": {
+        "operationId": "SelectPool",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SelectPoolRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/notice/all": {
+      "get": {
+        "operationId": "getAllNotice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/notice/id": {
+      "post": {
+        "operationId": "getNoticeById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IdNoticeRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/notice/title": {
+      "post": {
+        "operationId": "getNoticeByTitle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TitleNoticeRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/notice/username": {
+      "post": {
+        "operationId": "getUserInfoByUserName",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserNameRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/upload": {
+      "post": {
+        "operationId": "upload",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UploadRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/v1/user/login": {
+      "post": {
+        "operationId": "login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/v1/user/logout": {
+      "get": {
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/refreshToken": {
+      "get": {
+        "operationId": "refreshToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/register": {
+      "post": {
+        "operationId": "register",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "auth"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AccountMessageVO": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string"
+        },
+        "registerTime": {
+          "type": "string"
+        },
+        "ownedCollections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DcOverviewVO"
+          }
+        }
+      },
+      "title": "AccountMessageVO",
+      "required": [
+        "hash",
+        "registerTime",
+        "ownedCollections"
+      ]
+    },
+    "ActivityDetailsVO": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "activityName": {
+          "type": "string"
+        },
+        "activityDescription": {
+          "type": "string"
+        },
+        "dcName": {
+          "type": "string"
+        },
+        "dcDescription": {
+          "type": "string"
+        },
+        "cid": {
+          "type": "string"
+        },
+        "hostName": {
+          "type": "string"
+        },
+        "hostAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "left": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "contractAddress": {
+          "type": "string"
+        }
+      },
+      "title": "ActivityDetailsVO",
+      "required": [
+        "id",
+        "activityName",
+        "activityDescription",
+        "dcName",
+        "dcDescription",
+        "cid",
+        "hostName",
+        "hostAddress",
+        "amount",
+        "left",
+        "contractAddress"
+      ]
+    },
+    "ActivityPageVO": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "cid": {
+          "type": "string"
+        },
+        "hostName": {
+          "type": "string"
+        },
+        "hostAddress": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "left": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "ActivityPageVO",
+      "required": [
+        "id",
+        "name",
+        "description",
+        "cid",
+        "hostName",
+        "hostAddress",
+        "amount",
+        "left"
+      ]
+    },
+    "ActivityPageVOList": {
+      "type": "object",
+      "properties": {
+        "activityPageVO": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActivityPageVO"
+          }
+        }
+      },
+      "title": "ActivityPageVOList",
+      "required": [
+        "activityPageVO"
+      ]
+    },
+    "BuyFromPoolRequest": {
+      "type": "object",
+      "properties": {
+        "poolId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "BuyFromPoolRequest",
+      "required": [
+        "poolId"
+      ]
+    },
+    "CollectionMessageOnChainVO": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "creatorAddress": {
+          "type": "string"
+        },
+        "ownerAddress": {
+          "type": "string"
+        },
+        "traceBackVOList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TraceBackVO"
+          }
+        }
+      },
+      "title": "CollectionMessageOnChainVO",
+      "required": [
+        "name",
+        "hash",
+        "description",
+        "creatorAddress",
+        "ownerAddress",
+        "traceBackVOList"
+      ]
+    },
+    "CommonResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "CommonResponse",
+      "required": [
+        "code",
+        "data",
+        "message"
+      ]
+    },
+    "CreateActivityRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dcName": {
+          "type": "string"
+        },
+        "dcDescription": {
+          "type": "string"
+        },
+        "cid": {
+          "type": "string"
+        }
+      },
+      "title": "CreateActivityRequest",
+      "required": [
+        "name",
+        "description",
+        "password",
+        "amount",
+        "dcName",
+        "dcDescription",
+        "cid"
+      ]
+    },
+    "CreatePoolRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "limitAmount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cid": {
+          "type": "string"
+        },
+        "creator": {
+          "type": "string"
+        }
+      },
+      "title": "CreatePoolRequest",
+      "required": [
+        "name",
+        "description",
+        "status",
+        "price",
+        "amount",
+        "limitAmount",
+        "cid",
+        "creator"
+      ]
+    },
+    "DcDetailVO": {
+      "type": "object",
+      "properties": {
+        "dcId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "Cid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "creatorName": {
+          "type": "string"
+        },
+        "creatorAddress": {
+          "type": "string"
+        },
+        "ownerName": {
+          "type": "string"
+        },
+        "ownerAddress": {
+          "type": "string"
+        },
+        "contractAddress": {
+          "type": "string"
+        }
+      },
+      "title": "DcDetailVO",
+      "required": [
+        "dcId",
+        "hash",
+        "Cid",
+        "name",
+        "description",
+        "price",
+        "creatorName",
+        "creatorAddress",
+        "ownerName",
+        "ownerAddress",
+        "contractAddress"
+      ]
+    },
+    "DcOverviewVO": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "getTime": {
+          "type": "string"
+        }
+      },
+      "title": "DcOverviewVO",
+      "required": [
+        "id",
+        "hash",
+        "getTime"
+      ]
+    },
+    "DcPageVO": {
+      "type": "object",
+      "properties": {
+        "Cid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "dcId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "creatorName": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "DcPageVO",
+      "required": [
+        "Cid",
+        "name",
+        "dcId",
+        "hash",
+        "creatorName",
+        "price"
+      ]
+    },
+    "DcPageVOList": {
+      "type": "object",
+      "properties": {
+        "dcPageVO": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DcPageVO"
+          }
+        }
+      },
+      "title": "DcPageVOList",
+      "required": [
+        "dcPageVO"
+      ]
+    },
+    "GetDcByIdRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetDcByIdRequest",
+      "required": [
+        "id"
+      ]
+    },
+    "GetDcFromActivityRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "GetDcFromActivityRequest",
+      "required": [
+        "id",
+        "password"
+      ]
+    },
+    "GetDcHistoryRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetDcHistoryRequest",
+      "required": [
+        "id"
+      ]
+    },
+    "GetMessageByAddressOrHashRequest": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string"
+        }
+      },
+      "title": "GetMessageByAddressOrHashRequest",
+      "required": [
+        "hash"
+      ]
+    },
+    "GetMessageByHashDTO": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "accountMessageVO": {
+          "$ref": "#/definitions/AccountMessageVO"
+        },
+        "collectionMessageOnChainVO": {
+          "$ref": "#/definitions/CollectionMessageOnChainVO"
+        }
+      },
+      "title": "GetMessageByHashDTO",
+      "required": [
+        "type",
+        "accountMessageVO",
+        "collectionMessageOnChainVO"
+      ]
+    },
+    "GetOneActivityRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetOneActivityRequest",
+      "required": [
+        "id"
+      ]
+    },
+    "GetPoolByIdRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetPoolByIdRequest",
+      "required": [
+        "id"
+      ]
+    },
+    "GiveDcRequest": {
+      "type": "object",
+      "properties": {
+        "toName": {
+          "type": "string"
+        },
+        "toAddress": {
+          "type": "string"
+        },
+        "dcId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GiveDcRequest",
+      "required": [
+        "toName",
+        "toAddress",
+        "dcId"
+      ]
+    },
+    "IdNoticeRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "title": "IdNoticeRequest",
+      "required": [
+        "id"
+      ]
+    },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "LoginRequest",
+      "required": [
+        "username",
+        "password"
+      ]
+    },
+    "PoolDetailsVO": {
+      "type": "object",
+      "properties": {
+        "poolId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "Cid": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "amount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "left": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "creatorName": {
+          "type": "string"
+        },
+        "creatorAddress": {
+          "type": "string"
+        },
+        "contractAddress": {
+          "type": "string"
+        }
+      },
+      "title": "PoolDetailsVO",
+      "required": [
+        "poolId",
+        "name",
+        "description",
+        "Cid",
+        "price",
+        "amount",
+        "left",
+        "creatorName",
+        "creatorAddress",
+        "contractAddress"
+      ]
+    },
+    "PoolPageVO": {
+      "type": "object",
+      "properties": {
+        "poolId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "Cid": {
+          "type": "string"
+        },
+        "creatorName": {
+          "type": "string"
+        },
+        "status": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "soldOut": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "PoolPageVO",
+      "required": [
+        "poolId",
+        "name",
+        "description",
+        "Cid",
+        "creatorName",
+        "status",
+        "soldOut",
+        "price"
+      ]
+    },
+    "PoolPageVOList": {
+      "type": "object",
+      "properties": {
+        "poolPageVO": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PoolPageVO"
+          }
+        }
+      },
+      "title": "PoolPageVOList",
+      "required": [
+        "poolPageVO"
+      ]
+    },
+    "RegisterRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "title": "RegisterRequest",
+      "required": [
+        "username",
+        "password",
+        "email",
+        "avatar"
+      ]
+    },
+    "SearchActivitiesRequest": {
+      "type": "object",
+      "properties": {
+        "hostName": {
+          "type": "string"
+        },
+        "activityName": {
+          "type": "string"
+        }
+      },
+      "title": "SearchActivitiesRequest",
+      "required": [
+        "hostName",
+        "activityName"
+      ]
+    },
+    "SelectDcRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "SelectDcRequest",
+      "required": [
+        "name"
+      ]
+    },
+    "SelectPoolRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "creatorName": {
+          "type": "string"
+        },
+        "minPrice": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxPrice": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "SelectPoolRequest",
+      "required": [
+        "name",
+        "creatorName",
+        "minPrice",
+        "maxPrice"
+      ]
+    },
+    "TitleNoticeRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        }
+      },
+      "title": "TitleNoticeRequest",
+      "required": [
+        "title"
+      ]
+    },
+    "TraceBackVO": {
+      "type": "object",
+      "properties": {
+        "fromAddress": {
+          "type": "string"
+        },
+        "toAddress": {
+          "type": "string"
+        },
+        "transferType": {
+          "type": "string"
+        },
+        "transferTime": {
+          "type": "string"
+        }
+      },
+      "title": "TraceBackVO",
+      "required": [
+        "fromAddress",
+        "toAddress",
+        "transferType",
+        "transferTime"
+      ]
+    },
+    "UploadRequest": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string"
+        }
+      },
+      "title": "UploadRequest",
+      "required": [
+        "file"
+      ]
+    },
+    "UserNameRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        }
+      },
+      "title": "UserNameRequest",
+      "required": [
+        "username"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

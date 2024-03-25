@@ -1,13 +1,13 @@
 package com.topview.util;
 
 import cn.hutool.core.util.IdUtil;
-import com.topview.event.Event;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageConst;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * mq util
@@ -18,12 +18,11 @@ import org.springframework.messaging.support.GenericMessage;
 @Slf4j
 public class MqUtil {
 
-    public static Message<Event> createMsg(String data, String tag) {
-        Map<String, Object> headers = new HashMap<>(2);
+    public static Message<String> createMsg(String data) {
+        Map<String, Object> headers = new HashMap<>(1);
         headers.put(MessageConst.PROPERTY_KEYS, IdUtil.getSnowflakeNextIdStr());
-        headers.put(MessageConst.PROPERTY_TAGS, tag);
         return new GenericMessage<>(
-            new Event(data), headers);
+                data, headers);
     }
 
 }

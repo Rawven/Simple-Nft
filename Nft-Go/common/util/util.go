@@ -51,6 +51,11 @@ func TurnTime(ti int64) string {
 	return time.Unix(ti, 0).Format("2006-01-02 15:04:05")
 }
 
+func TurnMysqlTime(timestamp int64) string {
+	t := time.Unix(0, timestamp*int64(time.Millisecond))
+	return t.Format("2006-01-02 15:04:05")
+}
+
 func HexString2ByteArray(hexString string) ([]byte, error) {
 	if hexString[:2] == "0x" {
 		hexString = hexString[2:]

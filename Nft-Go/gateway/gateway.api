@@ -80,8 +80,8 @@ service gateway {
 	@handler GetMyDc
 	get /nft/GetMyDc returns (CommonResponse)
 
-	@handler GetDigitalCollectionHistory
-	post /nft/GetDigitalCollectionHistory (GetDigitalCollectionHistoryRequest) returns (CommonResponse)
+	@handler GetDcHistory
+	post /nft/GetDcHistory (GetDcHistoryRequest) returns (CommonResponse)
 
 	@handler CreatePool
 	post /nft/CreatePool (CreatePoolRequest) returns (CommonResponse)
@@ -225,7 +225,7 @@ type GetDcByIdRequest {
 	Id int32 `json:"id"`
 }
 
-type GetDigitalCollectionHistoryRequest {
+type GetDcHistoryRequest {
 	Id int32 `json:"id"`
 }
 

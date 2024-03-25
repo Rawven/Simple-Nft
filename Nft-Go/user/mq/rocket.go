@@ -28,6 +28,7 @@ import (
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/rlog"
 	"github.com/dubbogo/gost/log/logger"
+	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -43,30 +44,37 @@ func InitMq() {
 	err := c.Subscribe("Nft-Go", consumer.MessageSelector{}, func(ctx context.Context, ext ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
 		for i := range ext {
 			logger.Info("Rocketmq Received:%v \n", ext[i])
-			json := util.GetFastJson()
-			data, err := json.ParseBytes(ext[i].Body)
+			data, err := util.GetFastJson().ParseBytes(ext[i].Body)
+			if err != nil {
+				return 0, xerror.New("json解析错误", err)
+			}
 			switch ext[i].GetTags() {
 			case "createPoolNotice":
+				time, err := data.Get("publishTime").Int64()
 				if err != nil {
-					return 0, err
+					return 0, xerror.New("时间转换错误", err)
 				}
 				err = dao.Notice.Create(&model.Notice{
 					Title:       data.Get("title").String(),
 					Description: data.Get("description").String(),
-					PublishTime: data.Get("publishTime").String(),
+					PublishTime: util.TurnMysqlTime(time),
 					UserAddress: data.Get("userAddress").String(),
 					Type:        data.Get("type").GetInt(),
 				})
+				if err != nil {
+					return 0, xerror.New("创建公告失败", err)
+				}
 				//发送通知 sse通知所有用户
 				sse.SendNotificationToAllUser(data.Get("title").String() + data.Get("description").String())
 				if err != nil {
-					return 0, err
+					return 0, xerror.New("发送通知失败", err)
 				}
 				break
 			case "rankAdd":
 				//TODO
 				break
 			default:
+				logger.Info("未知消息")
 				break
 			}
 		}

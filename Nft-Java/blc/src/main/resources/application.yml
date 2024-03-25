@@ -12,6 +12,7 @@ spring:
 rocketmq:
   name-server: 10.21.32.221:9876
   producer:
+
     # 发送同一类消息的设置为同一个group，保证唯一
     group: testGroup
     # 发送消息超时时间，默认3000

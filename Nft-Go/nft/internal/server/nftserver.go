@@ -4,11 +4,11 @@
 package server
 
 import (
+	"Nft-Go/common/api/nft"
 	"context"
 
 	"Nft-Go/nft/internal/logic"
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/pb/nft"
 )
 
 type NftServer struct {
