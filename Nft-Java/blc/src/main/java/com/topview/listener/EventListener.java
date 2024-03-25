@@ -117,11 +117,6 @@ public class EventListener {
 
     private void logCreatePool(EventLog event) throws ContractCodecException {
         String eventName = "LogCreatePool";
-        /*
-         * 第一个元素为对应的poolId
-         * 第二个元素为操作者地址
-         * 第三个元素为pool结构体
-         */
         List<String> list = abiCodec.decodeEventToString(poolLogicAbi, eventName, event);
         List<Object> pool = JsonUtil.strToList(list.get(2));
         DataStruct.Pool structArgs = new DataStruct.Pool()
@@ -142,18 +137,7 @@ public class EventListener {
             .setUserAddress(list.get(1))
             .setDescription(description);
         //发送通知消息
-        Message<String> msg = MqUtil.createMsg(JsonUtil.objToJson(notice));
-        rocketmqTemplate.asyncSend("Nft-Go:" + BlcToUserTag.BLC_NOTICE, msg, new SendCallback() {
-            @Override
-            public void onSuccess(SendResult sendResult) {
-                log.info("发送消息成功");
-            }
-
-            @Override
-            public void onException(Throwable throwable) {
-                log.error("发送消息失败", throwable);
-            }
-        });
+        sendBlcNotice(notice);
     }
 
     private void logCreateActivity(EventLog event) throws ContractCodecException {
@@ -174,8 +158,23 @@ public class EventListener {
                 .setPublishTime(BigInteger.valueOf(System.currentTimeMillis()))
             .setUserAddress(list.get(1))
             .setDescription(description);
+        //发送通知消息
+        sendBlcNotice(notice);
+    }
+
+    private void sendBlcNotice(BlcNotice notice) {
         Message<String> msg = MqUtil.createMsg(JsonUtil.objToJson(notice));
-        rocketmqTemplate.send("Nft-Go:" + BlcToUserTag.BLC_NOTICE, msg);
+        rocketmqTemplate.asyncSend("Nft-Go:" + BlcToUserTag.BLC_NOTICE, msg, new SendCallback() {
+            @Override
+            public void onSuccess(SendResult sendResult) {
+                log.info("发送消息成功");
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                log.error("发送消息失败", throwable);
+            }
+        });
     }
 
 }

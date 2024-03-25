@@ -18,6 +18,7 @@
 package mq
 
 import (
+	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/model"
@@ -30,7 +31,8 @@ import (
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/spf13/viper"
-	"os"
+	"github.com/valyala/fastjson"
+	"time"
 )
 
 func InitMq() {
@@ -40,6 +42,15 @@ func InitMq() {
 		consumer.WithNameServer([]string{viper.Get("rocketmq.nameserver").(string)}),
 		consumer.WithConsumerModel(consumer.BroadCasting),
 	)
+	subscribe(c)
+	err := c.Start()
+	if err != nil {
+		logger.Info("rocketmq:启动失败 " + err.Error())
+		return
+	}
+	logger.Info("mq connect success")
+}
+func subscribe(c rocketmq.PushConsumer) {
 	// 必须先在 开始前
 	err := c.Subscribe("Nft-Go", consumer.MessageSelector{}, func(ctx context.Context, ext ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
 		for i := range ext {
@@ -50,45 +61,59 @@ func InitMq() {
 			}
 			switch ext[i].GetTags() {
 			case "createPoolNotice":
-				time, err := data.Get("publishTime").Int64()
-				if err != nil {
-					return 0, xerror.New("时间转换错误", err)
-				}
-				err = dao.Notice.Create(&model.Notice{
-					Title:       data.Get("title").String(),
-					Description: data.Get("description").String(),
-					PublishTime: util.TurnMysqlTime(time),
-					UserAddress: data.Get("userAddress").String(),
-					Type:        data.Get("type").GetInt(),
-				})
+				err := createPoolService(data)
 				if err != nil {
 					return 0, xerror.New("创建公告失败", err)
 				}
-				//发送通知 sse通知所有用户
-				sse.SendNotificationToAllUser(data.Get("title").String() + data.Get("description").String())
-				if err != nil {
-					return 0, xerror.New("发送通知失败", err)
-				}
 				break
 			case "rankAdd":
-				//TODO
+				err := rankAdd(data)
+				if err != nil {
+					return 0, xerror.New("排行榜添加失败", err)
+				}
 				break
 			default:
 				logger.Info("未知消息")
 				break
 			}
 		}
-
 		return consumer.ConsumeSuccess, nil
 	})
 	if err != nil {
-		logger.Info(err.Error())
+		logger.Info("rocketmq:错误 " + err.Error())
 	}
-	err = c.Start()
-	if err != nil {
-		logger.Info(err.Error())
-		os.Exit(-1)
-	}
-	logger.Info("mq connect success")
+}
 
+func createPoolService(data *fastjson.Value) error {
+	time, err := data.Get("publishTime").Int64()
+	if err != nil {
+		return xerror.New("时间转换错误", err)
+	}
+	err = dao.Notice.Create(&model.Notice{
+		Title:       data.Get("title").String(),
+		Description: data.Get("description").String(),
+		PublishTime: util.TurnMysqlTime(time),
+		UserAddress: data.Get("userAddress").String(),
+		Type:        data.Get("type").GetInt(),
+	})
+	if err != nil {
+		return xerror.New("创建公告失败", err)
+	}
+	//发送通知 sse通知所有用户
+	sse.SendNotificationToAllUser(data.Get("title").String() + data.Get("description").String())
+	if err != nil {
+		return xerror.New("发送通知失败", err)
+	}
+	return nil
+}
+
+func rankAdd(data *fastjson.Value) error {
+	red := db.GetRedis()
+	//获得当前日期
+	today := time.Now().Format("2006-01-02")
+	_, err := red.ZIncrBy(context.Background(), today, 1, data.Get("title").String()).Result()
+	if err != nil {
+		return xerror.New("排行榜热度添加失败", err)
+	}
+	return nil
 }

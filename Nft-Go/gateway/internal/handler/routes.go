@@ -162,6 +162,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodGet,
+					Path:    "/rank/dayRankingList",
+					Handler: user.GetDayRankingListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/rank/monthRankingList",
+					Handler: user.GetMonthRankingListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/rank/weekRankingList",
+					Handler: user.GetWeekRankingListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
 					Path:    "/user/logout",
 					Handler: user.LogoutHandler(serverCtx),
 				},

@@ -28,11 +28,9 @@ func InitDubbo() {
 func GetBlcService() *blc.BlcRpcServiceClientImpl {
 	return grpcBlcImpl
 }
-
 func GetNftClient() nft.NftClient {
 	return nftRpc
 }
-
 func GetUserService() user.UserClient {
 	return userRpc
 }

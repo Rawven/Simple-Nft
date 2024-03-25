@@ -22,6 +22,15 @@ service gateway {
 	prefix:     /v1
 )
 service gateway {
+	@handler getDayRankingList
+	get /rank/dayRankingList returns (CommonResponse)
+
+	@handler getWeekRankingList
+	get /rank/weekRankingList returns (CommonResponse)
+
+	@handler getMonthRankingList
+	get /rank/monthRankingList returns (CommonResponse)
+
 	@handler getAllNotice
 	get /notice/all returns (CommonResponse)
 

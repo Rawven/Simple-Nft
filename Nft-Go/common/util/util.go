@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/viper"
 	"google.golang.org/grpc/metadata"
 	"math/big"
-	"time"
 )
 
 func GetUserInfo(ctx context.Context) (*UserInfo, error) {
@@ -45,15 +44,6 @@ func InitConfig(path string) {
 		logger.Info("viper read config failed, err:", err)
 	}
 	initJwt()
-}
-
-func TurnTime(ti int64) string {
-	return time.Unix(ti, 0).Format("2006-01-02 15:04:05")
-}
-
-func TurnMysqlTime(timestamp int64) string {
-	t := time.Unix(0, timestamp*int64(time.Millisecond))
-	return t.Format("2006-01-02 15:04:05")
 }
 
 func HexString2ByteArray(hexString string) ([]byte, error) {
