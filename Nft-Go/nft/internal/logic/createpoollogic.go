@@ -9,6 +9,7 @@ import (
 	"Nft-Go/nft/internal/model"
 	"Nft-Go/nft/internal/svc"
 	"context"
+	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -32,7 +33,6 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, error) {
 	blcService := api.GetBlcService()
 	info, err := util.GetUserInfo(l.ctx)
-	cid := in.Cid
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败", err)
 	}
@@ -41,7 +41,6 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 	if err != nil {
 		return nil, xerror.New("获取池子数量失败", err)
 	}
-	poolId := amount.Amount
 	//判断商品状态
 	if !in.Status {
 		in.LimitAmount = 1
@@ -50,8 +49,8 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 	}
 	//创建藏品池子
 	poolInfo := model.PoolInfo{
-		PoolId:         poolId,
-		Cid:            cid,
+		PoolId:         amount.Amount,
+		Cid:            in.Cid,
 		Name:           in.Name,
 		Description:    in.Description,
 		Price:          in.Price,
@@ -68,10 +67,18 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 			LimitAmount: int64(in.LimitAmount),
 			Price:       int64(in.Price),
 			Amount:      int64(in.Amount),
-			Cid:         cid,
+			Cid:         in.Cid,
 			DcName:      in.Name,
 		},
 	})
+	go func() {
+		for i := 0; i < 3; i++ {
+			err = util.DelCache("pool:"+convertor.ToString(i+1), l.ctx)
+			if err != nil {
+				logx.Info(xerror.New("旁路缓存失败--删除步骤", err))
+			}
+		}
+	}()
 	if err != nil {
 		return nil, xerror.New("调用合约失败" + err.Error())
 	}

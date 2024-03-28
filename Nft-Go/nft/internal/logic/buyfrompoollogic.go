@@ -9,6 +9,7 @@ import (
 	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
 	"context"
+	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
 
 	"Nft-Go/nft/internal/svc"
@@ -77,6 +78,15 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Respons
 		if err != nil {
 			return xerror.New("创建失败" + err.Error())
 		}
+		go func() {
+			for i := 0; i < 4; i++ {
+				err = util.DelCache("dc:"+convertor.ToString(i+1), l.ctx)
+				if err != nil {
+					logx.Info(xerror.New("旁路缓存失败--删除步骤", err))
+				}
+			}
+		}()
+
 		info.Balance -= pool.Price
 		_, err = db.GetRedis().Set(l.ctx, string(info.UserId), info, 0).Result()
 		if err != nil {
@@ -87,6 +97,5 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Respons
 	if err != nil {
 		return nil, xerror.New("购买失败" + err.Error())
 	}
-
 	return &nft.Response{Message: "success"}, nil
 }

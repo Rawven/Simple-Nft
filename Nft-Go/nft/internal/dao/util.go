@@ -5,7 +5,7 @@ import (
 	"Nft-Go/nft/internal/model"
 )
 
-func ShowForPage(activities []*model.ActivityInfo) []*nft.ActivityPageVO {
+func GetActivityForPage(activities []*model.ActivityInfo) []*nft.ActivityPageVO {
 	var activityPageVOList []*nft.ActivityPageVO
 	for _, activity := range activities {
 		activityPageVOList = append(activityPageVOList, &nft.ActivityPageVO{

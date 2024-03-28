@@ -54,10 +54,7 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Response, error) {
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
-	if name.Address != in.ToAddress {
-		return nil, xerror.New("you are not the owner of this dc")
-	}
-	if dc.OwnerName != info.UserName {
+	if name.Address != in.ToAddress || dc.OwnerName != info.UserName {
 		return nil, xerror.New("you are not the owner of this dc")
 	}
 	_, err = mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).Updates(model.DcInfo{OwnerName: in.ToName, OwnerAddress: in.ToAddress})

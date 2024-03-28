@@ -4,11 +4,11 @@
 package server
 
 import (
-	"Nft-Go/common/api/nft"
 	"context"
 
 	"Nft-Go/nft/internal/logic"
 	"Nft-Go/nft/internal/svc"
+	"Nft-Go/nft/pb/nft"
 )
 
 type NftServer struct {
@@ -37,9 +37,19 @@ func (s *NftServer) PrizeDcFromActivity(ctx context.Context, in *nft.GetDcFromAc
 	return l.PrizeDcFromActivity(in)
 }
 
-func (s *NftServer) GetAllActivity(ctx context.Context, in *nft.Empty) (*nft.ActivityPageVOList, error) {
-	l := logic.NewGetAllActivityLogic(ctx, s.svcCtx)
-	return l.GetAllActivity(in)
+func (s *NftServer) GetActivityPages(ctx context.Context, in *nft.PageRequest) (*nft.ActivityPageVOList, error) {
+	l := logic.NewGetActivityPagesLogic(ctx, s.svcCtx)
+	return l.GetActivityPages(in)
+}
+
+func (s *NftServer) GetDcPages(ctx context.Context, in *nft.PageRequest) (*nft.DcPageVOList, error) {
+	l := logic.NewGetDcPagesLogic(ctx, s.svcCtx)
+	return l.GetDcPages(in)
+}
+
+func (s *NftServer) GetPoolPages(ctx context.Context, in *nft.PageRequest) (*nft.PoolPageVOList, error) {
+	l := logic.NewGetPoolPagesLogic(ctx, s.svcCtx)
+	return l.GetPoolPages(in)
 }
 
 func (s *NftServer) GetOneActivity(ctx context.Context, in *nft.GetOneActivityRequest) (*nft.ActivityDetailsVO, error) {
@@ -55,11 +65,6 @@ func (s *NftServer) SearchActivities(ctx context.Context, in *nft.SearchActiviti
 func (s *NftServer) GiveDc(ctx context.Context, in *nft.GiveDcRequest) (*nft.Response, error) {
 	l := logic.NewGiveDcLogic(ctx, s.svcCtx)
 	return l.GiveDc(in)
-}
-
-func (s *NftServer) GetAllDc(ctx context.Context, in *nft.Empty) (*nft.DcPageVOList, error) {
-	l := logic.NewGetAllDcLogic(ctx, s.svcCtx)
-	return l.GetAllDc(in)
 }
 
 func (s *NftServer) SelectDc(ctx context.Context, in *nft.SelectDcRequest) (*nft.DcPageVOList, error) {
@@ -100,11 +105,6 @@ func (s *NftServer) SelectPool(ctx context.Context, in *nft.SelectPoolRequest) (
 func (s *NftServer) GetPoolById(ctx context.Context, in *nft.GetPoolByIdRequest) (*nft.PoolDetailsVO, error) {
 	l := logic.NewGetPoolByIdLogic(ctx, s.svcCtx)
 	return l.GetPoolById(in)
-}
-
-func (s *NftServer) GetAllPool(ctx context.Context, in *nft.Empty) (*nft.PoolPageVOList, error) {
-	l := logic.NewGetAllPoolLogic(ctx, s.svcCtx)
-	return l.GetAllPool(in)
 }
 
 func (s *NftServer) GetMyPool(ctx context.Context, in *nft.Empty) (*nft.PoolPageVOList, error) {

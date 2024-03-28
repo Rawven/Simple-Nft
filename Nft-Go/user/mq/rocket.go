@@ -110,7 +110,7 @@ func createPoolService(data *fastjson.Value) error {
 func rankAdd(data *fastjson.Value) error {
 	red := db.GetRedis()
 	//获得当前日期
-	today := time.Now().Format("2006-01-02")
+	today := util.FormatDateForDay(time.Now())
 	_, err := red.ZIncrBy(context.Background(), today, 1, data.Get("title").String()).Result()
 	if err != nil {
 		return xerror.New("排行榜热度添加失败", err)
