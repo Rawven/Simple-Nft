@@ -9,6 +9,7 @@ import (
 	"Nft-Go/nft/internal/model"
 	"Nft-Go/nft/internal/svc"
 	"context"
+	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -70,6 +71,14 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 			DcName:      in.Name,
 		},
 	})
+	go func() {
+		for i := 0; i < 3; i++ {
+			err = util.DelCache("pool:"+convertor.ToString(i+1), l.ctx)
+			if err != nil {
+				logx.Info(xerror.New("旁路缓存失败--删除步骤", err))
+			}
+		}
+	}()
 	if err != nil {
 		return nil, xerror.New("调用合约失败" + err.Error())
 	}

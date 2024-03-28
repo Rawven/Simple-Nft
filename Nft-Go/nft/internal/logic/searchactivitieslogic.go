@@ -37,7 +37,7 @@ func (l *SearchActivitiesLogic) SearchActivities(in *nft.SearchActivitiesRequest
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
-	page := dao.ShowForPage(find)
+	page := dao.GetActivityForPage(find)
 	return &nft.ActivityPageVOList{
 		ActivityPageVO: page,
 	}, nil

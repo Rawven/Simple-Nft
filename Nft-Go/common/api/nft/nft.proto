@@ -14,11 +14,12 @@ service Nft {
   rpc GetMessageByAddressOrHash (GetMessageByAddressOrHashRequest) returns (GetMessageByAddressOrHashDTO) {}
   rpc CreateActivity (CreateActivityRequest) returns (Response) {}
   rpc PrizeDcFromActivity (GetDcFromActivityRequest) returns (Response) {}
-  rpc GetAllActivity (Empty) returns (ActivityPageVOList) {}
+  rpc GetActivityPages (PageRequest) returns (ActivityPageVOList) {}
+  rpc GetDcPages (PageRequest) returns (DcPageVOList) {}
+  rpc GetPoolPages (PageRequest) returns (PoolPageVOList) {}
   rpc GetOneActivity (GetOneActivityRequest) returns (ActivityDetailsVO) {}
   rpc SearchActivities (SearchActivitiesRequest) returns (ActivityPageVOList) {}
   rpc GiveDc (GiveDcRequest) returns (Response) {}
-  rpc GetAllDc (Empty) returns (DcPageVOList) {}
   rpc SelectDc (SelectDcRequest) returns (DcPageVOList) {}
   rpc GetDcById (GetDcByIdRequest) returns (DcDetailVO) {}
   rpc GetMyDc (Empty) returns (DcPageVOList) {}
@@ -27,11 +28,15 @@ service Nft {
   rpc BuyFromPool (BuyFromPoolRequest) returns (Response) {}
   rpc SelectPool (SelectPoolRequest) returns (PoolPageVOList) {}
   rpc GetPoolById (GetPoolByIdRequest) returns (PoolDetailsVO) {}
-  rpc GetAllPool (Empty) returns (PoolPageVOList) {}
+
   rpc GetMyPool (Empty) returns (PoolPageVOList) {}
 }
 
 message Empty {
+}
+message PageRequest {
+  int32 page = 1;
+  int32 size = 2;
 }
 message GetMessageByAddressOrHashRequest {
   string hash = 1;
@@ -82,6 +87,7 @@ message SearchActivitiesRequest {
 
 message ActivityPageVOList {
   repeated ActivityPageVO activityPageVO = 1;
+  int32 total = 2;
 }
 
 message ActivityPageVO {
@@ -130,6 +136,7 @@ message GetDcHistoryRequest {
 
 message DcPageVOList {
   repeated DcPageVO dcPageVO = 1;
+  int32 total = 2;
 }
 message DcPageVO {
   string url = 1;
@@ -200,6 +207,7 @@ message GetPoolByIdRequest {
 
 message PoolPageVOList {
   repeated PoolPageVO poolPageVO = 1;
+  int32 total = 2;
 }
 message PoolPageVO {
   int32 poolId = 1;
