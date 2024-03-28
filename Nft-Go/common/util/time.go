@@ -2,7 +2,7 @@ package util
 
 import "time"
 
-func formatDateForDay(t time.Time) string {
+func FormatDateForDay(t time.Time) string {
 	return t.Format("2006-01-02")
 }
 

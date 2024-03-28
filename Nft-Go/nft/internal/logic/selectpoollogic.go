@@ -32,7 +32,6 @@ func (l *SelectPoolLogic) SelectPool(in *nft.SelectPoolRequest) (*nft.PoolPageVO
 	if in.CreatorName != "" {
 		mq.RankAdd(in.CreatorName)
 	}
-
 	info := dao.PoolInfo
 	//查询
 	find, err := info.WithContext(l.ctx).

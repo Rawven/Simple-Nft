@@ -2,11 +2,14 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
+	"Nft-Go/common/db"
+	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/dao"
-	"context"
-	"github.com/duke-git/lancet/v2/xerror"
-
+	"Nft-Go/nft/internal/model"
 	"Nft-Go/nft/internal/svc"
+	"context"
+	"github.com/dubbogo/gost/log/logger"
+	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,11 +28,28 @@ func NewGetAllActivityLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetAllActivityLogic) GetAllActivity(in *nft.Empty) (*nft.ActivityPageVOList, error) {
-	my := dao.ActivityInfo
-	activities, err := my.WithContext(l.ctx).Find()
-	if err != nil {
-		return nil, xerror.New("查询失败", err)
+	result, err := db.GetRedis().Exists(l.ctx, "activity").Result()
+	if result == 0 || err != nil {
+		my := dao.ActivityInfo
+		activities, err := my.WithContext(l.ctx).Find()
+		if err != nil {
+			return nil, xerror.New("数据库查询失败", err)
+		}
+		activityPageVOList := dao.ShowForPage(activities)
+		go func() {
+			err := util.SetCache("activity", l.ctx, activities)
+			if err != nil {
+				logger.Info(xerror.New("设置缓存失败", err))
+			}
+		}()
+		return &nft.ActivityPageVOList{ActivityPageVO: activityPageVOList}, nil
+	} else {
+		var activities []*model.ActivityInfo
+		err := util.GetCache("activity", l.ctx, &activities)
+		if err != nil {
+			return nil, xerror.New("获取缓存数据失败", err)
+		}
+		activityPageVOList := dao.ShowForPage(activities)
+		return &nft.ActivityPageVOList{ActivityPageVO: activityPageVOList}, nil
 	}
-	activityPageVOList := dao.ShowForPage(activities)
-	return &nft.ActivityPageVOList{ActivityPageVO: activityPageVOList}, nil
 }

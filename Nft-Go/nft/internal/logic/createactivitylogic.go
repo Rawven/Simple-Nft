@@ -8,6 +8,7 @@ import (
 	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
 	"context"
+	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -79,5 +80,11 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 	if err != nil {
 		return nil, xerror.New("插入失败" + err.Error())
 	}
+	go func() {
+		err := util.DelCache("activity", l.ctx)
+		if err != nil {
+			logger.Info(xerror.New("删除缓存失败", err))
+		}
+	}()
 	return &nft.Response{Message: "nft"}, nil
 }

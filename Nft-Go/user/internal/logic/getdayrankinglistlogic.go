@@ -29,7 +29,7 @@ func NewGetDayRankingListLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *GetDayRankingListLogic) GetDayRankingList(in *user.Empty) (*user.RankingList, error) {
 	redis := db.GetRedis()
-	today := time.Now().Format("2006-01-02")
+	today := util.FormatDateForDay(time.Now())
 	result, err := redis.ZRevRange(l.ctx, today, 0, -1).Result()
 	if err != nil {
 		return nil, xerror.New("redis查询失败", err)

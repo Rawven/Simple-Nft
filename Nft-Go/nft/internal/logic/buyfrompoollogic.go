@@ -77,6 +77,10 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Respons
 		if err != nil {
 			return xerror.New("创建失败" + err.Error())
 		}
+		go func() {
+
+		}()
+
 		info.Balance -= pool.Price
 		_, err = db.GetRedis().Set(l.ctx, string(info.UserId), info, 0).Result()
 		if err != nil {
@@ -87,6 +91,5 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Respons
 	if err != nil {
 		return nil, xerror.New("购买失败" + err.Error())
 	}
-
 	return &nft.Response{Message: "success"}, nil
 }

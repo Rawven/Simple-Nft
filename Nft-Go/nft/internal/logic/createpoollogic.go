@@ -32,7 +32,6 @@ func NewCreatePoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, error) {
 	blcService := api.GetBlcService()
 	info, err := util.GetUserInfo(l.ctx)
-	cid := in.Cid
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败", err)
 	}
@@ -41,7 +40,6 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 	if err != nil {
 		return nil, xerror.New("获取池子数量失败", err)
 	}
-	poolId := amount.Amount
 	//判断商品状态
 	if !in.Status {
 		in.LimitAmount = 1
@@ -50,8 +48,8 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 	}
 	//创建藏品池子
 	poolInfo := model.PoolInfo{
-		PoolId:         poolId,
-		Cid:            cid,
+		PoolId:         amount.Amount,
+		Cid:            in.Cid,
 		Name:           in.Name,
 		Description:    in.Description,
 		Price:          in.Price,
@@ -68,7 +66,7 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 			LimitAmount: int64(in.LimitAmount),
 			Price:       int64(in.Price),
 			Amount:      int64(in.Amount),
-			Cid:         cid,
+			Cid:         in.Cid,
 			DcName:      in.Name,
 		},
 	})
