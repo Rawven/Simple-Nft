@@ -16,7 +16,7 @@ func DelCache(key string, ctx context.Context) error {
 }
 
 func SetCache[T any](key string, ctx context.Context, value T) error {
-	data, err := jsonx.Marshal(value)
+	data, err := jsonx.MarshalToString(value)
 	if err != nil {
 		return xerror.New("缓存数据序列化异常", err)
 	}

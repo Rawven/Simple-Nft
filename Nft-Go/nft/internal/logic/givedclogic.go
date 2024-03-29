@@ -9,6 +9,7 @@ import (
 	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
 	"context"
+	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/xerror"
 
 	"Nft-Go/nft/internal/svc"
@@ -38,6 +39,13 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Response, error) {
 	userRpc := api.GetUserService()
 	blcService := api.GetBlcService()
 	name, err := userRpc.GetUserInfoByName(l.ctx, &user.UserNameRequest{Username: in.GetToAddress()})
+	dc, err := mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).First()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
+	if name.Address != in.ToAddress || dc.OwnerName != info.UserName {
+		return nil, xerror.New("you are not the owner of this dc")
+	}
 	if err != nil {
 		return nil, xerror.New("调用user失败" + err.Error())
 	}
@@ -50,17 +58,13 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Response, error) {
 	if err != nil {
 		return nil, xerror.New("调用blc失败" + err.Error())
 	}
-	dc, err := mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).First()
-	if err != nil {
-		return nil, xerror.New("查询失败")
-	}
-	if name.Address != in.ToAddress || dc.OwnerName != info.UserName {
-		return nil, xerror.New("you are not the owner of this dc")
-	}
-	_, err = mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).Updates(model.DcInfo{OwnerName: in.ToName, OwnerAddress: in.ToAddress})
-	if err != nil {
-		return nil, xerror.New("更新失败")
-	}
+	//异步更新数据库
+	go func() {
+		_, err = mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).Updates(model.DcInfo{OwnerName: in.ToName, OwnerAddress: in.ToAddress})
+		if err != nil {
+			logger.Error("更新失败")
+		}
+	}()
 	return &nft.Response{
 		Message: "success",
 	}, nil

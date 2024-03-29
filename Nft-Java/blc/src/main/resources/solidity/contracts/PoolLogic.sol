@@ -169,7 +169,6 @@ contract PoolLogic {
         emit LogCreateActivity(activityId, msg.sender, activity, _amount);
     }
 
-    //@TODO 密码泄露问题
     function getDcFromActivity(
         uint256 _activityId,
         bytes memory _encodedKey
