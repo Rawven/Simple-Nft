@@ -42,7 +42,6 @@ func (l *SelectPoolLogic) SelectPool(in *nft.SelectPoolRequest) (*nft.PoolPageVO
 		return nil, err
 	}
 	list := dao.GetPoolPageVOList(find)
-
 	return &nft.PoolPageVOList{
 		PoolPageVO: list,
 	}, nil

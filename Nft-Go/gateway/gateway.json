@@ -96,9 +96,9 @@
         ]
       }
     },
-    "/v1/nft/GetAllActivity": {
+    "/v1/nft/GetActivityPages": {
       "get": {
-        "operationId": "GetAllActivity",
+        "operationId": "GetActivityPages",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -107,40 +107,22 @@
             }
           }
         },
-        "requestBody": {},
-        "tags": [
-          "nft"
-        ]
-      }
-    },
-    "/v1/nft/GetAllDc": {
-      "get": {
-        "operationId": "GetAllDc",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/CommonResponse"
-            }
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
           }
-        },
-        "requestBody": {},
-        "tags": [
-          "nft"
-        ]
-      }
-    },
-    "/v1/nft/GetAllPool": {
-      "get": {
-        "operationId": "GetAllPool",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/CommonResponse"
-            }
-          }
-        },
+        ],
         "requestBody": {},
         "tags": [
           "nft"
@@ -220,6 +202,39 @@
             "schema": {
               "$ref": "#/definitions/GetDcHistoryRequest"
             }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetDcPages": {
+      "get": {
+        "operationId": "GetDcPages",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "requestBody": {},
@@ -335,6 +350,39 @@
             "schema": {
               "$ref": "#/definitions/GetPoolByIdRequest"
             }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "nft"
+        ]
+      }
+    },
+    "/v1/nft/GetPoolPages": {
+      "get": {
+        "operationId": "GetPoolPages",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "requestBody": {},
@@ -543,6 +591,57 @@
             }
           }
         ],
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/rank/dayRankingList": {
+      "get": {
+        "operationId": "getDayRankingList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/rank/monthRankingList": {
+      "get": {
+        "operationId": "getMonthRankingList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/rank/weekRankingList": {
+      "get": {
+        "operationId": "getWeekRankingList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CommonResponse"
+            }
+          }
+        },
         "requestBody": {},
         "tags": [
           "user"
@@ -1225,6 +1324,24 @@
       "required": [
         "username",
         "password"
+      ]
+    },
+    "PageRequest": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "PageRequest",
+      "required": [
+        "page",
+        "pageSize"
       ]
     },
     "PoolDetailsVO": {

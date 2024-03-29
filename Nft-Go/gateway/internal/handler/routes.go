@@ -58,18 +58,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodGet,
-					Path:    "/nft/GetAllActivity",
-					Handler: nft.GetAllActivityHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/nft/GetAllDc",
-					Handler: nft.GetAllDcHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/nft/GetAllPool",
-					Handler: nft.GetAllPoolHandler(serverCtx),
+					Path:    "/nft/GetActivityPages",
+					Handler: nft.GetActivityPagesHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
@@ -85,6 +75,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/nft/GetDcHistory",
 					Handler: nft.GetDcHistoryHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/nft/GetDcPages",
+					Handler: nft.GetDcPagesHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
@@ -110,6 +105,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/nft/GetPoolById",
 					Handler: nft.GetPoolByIdHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/nft/GetPoolPages",
+					Handler: nft.GetPoolPagesHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
