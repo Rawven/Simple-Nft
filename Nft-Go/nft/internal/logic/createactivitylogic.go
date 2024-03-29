@@ -59,7 +59,7 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 	err = dao.Q.Transaction(func(tx *dao.Query) error {
 		//调用合约创建活动
 		_, err = blcService.CreateActivity(l.ctx, &blc.CreateActivityRequest{
-			UserKey: &blc.UserKey{UserKey: info.PrivateKey},
+			UserKey: info.PrivateKey,
 			Args: &blc.CreateActivityDTO{
 				Name:     in.Name,
 				Password: []byte(cryptor.Sha256(in.Password)),

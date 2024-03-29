@@ -59,7 +59,7 @@ public class EventListener {
         //加载abi解码工具
         abiCodec = new ContractCodec(client.getCryptoSuite(), false);
         //加载abi字符串
-        poolLogicAbi = new String(Files.readAllBytes(Paths.get("Nft-Java/blc/src/main/resources/solidity/abi/PoolLogic.abi")));
+        poolLogicAbi = new String(Files.readAllBytes(Paths.get("blc/src/main/resources/solidity/abi/PoolLogic.abi")));
         //开启监听
         createListen();
     }

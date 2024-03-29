@@ -70,8 +70,7 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     @Override
     public Empty createActivity(CreateActivityRequest request) {
         com.topview.api.CreateActivityDTO args = request.getArgs();
-        com.topview.api.UserKey key = request.getUserKey();
-        createActivity(key.getUserKey(), args);
+        createActivity(request.getUserKey(), args);
         return Empty.getDefaultInstance();
     }
 
@@ -101,13 +100,14 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     @Override
-    public Empty getDcFromActivity(GetDcFromActivityRequest request) {
-        getDcFromActivity(request.getKey().getUserKey(), request.getArgs());
-        return Empty.getDefaultInstance();
+    public BeforeMintDTO getDcFromActivity(GetDcFromActivityRequest request) {
+        Tuple2<BigInteger, byte[]> dcFromActivity = getDcFromActivity(request.getUserKey(), request.getArgs());
+        return BeforeMintDTO.newBuilder().setDcId(dcFromActivity.getValue1().longValue()).setUniqueId(
+                ByteString.copyFrom(dcFromActivity.getValue2())).build();
     }
 
     @Override
-    public CompletableFuture<Empty> getDcFromActivityAsync(GetDcFromActivityRequest request) {
+    public CompletableFuture<BeforeMintDTO> getDcFromActivityAsync(GetDcFromActivityRequest request) {
         return null;
     }
 
@@ -178,7 +178,7 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
 
     @Override
     public Empty createPool(CreatePoolRequest request) {
-        createPool(request.getUserKey().getUserKey(), request.getDto());
+        createPool(request.getUserKey(), request.getDto());
         return Empty.getDefaultInstance();
     }
 
@@ -188,13 +188,14 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
     }
 
     @Override
-    public Empty mint(MintRequest request) {
-        mint(request.getUserKey().getUserKey(), request.getPoolId());
-        return Empty.getDefaultInstance();
+    public BeforeMintDTO mint(MintRequest request) {
+        Tuple2<BigInteger, byte[]> mint = mint(request.getUserKey(), request.getPoolId());
+        return BeforeMintDTO.newBuilder().setDcId(mint.getValue1().longValue()).setUniqueId(ByteString.copyFrom(mint.getValue2())).build();
+
     }
 
     @Override
-    public CompletableFuture<Empty> mintAsync(MintRequest request) {
+    public CompletableFuture<BeforeMintDTO> mintAsync(MintRequest request) {
         return null;
     }
 
@@ -259,11 +260,11 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
         }
     }
 
-    private void getDcFromActivity(String userKey, GetDcFromActivityDTO args) {
+    private Tuple2<BigInteger, byte[]>getDcFromActivity(String userKey, GetDcFromActivityDTO args) {
         PoolLogic contract = client.getContractInstance(PoolLogic.class, userKey);
         TransactionReceipt transactionReceipt = contract.getDcFromActivity(BigInteger.valueOf(args.getActivityId()), args.getPassword().toByteArray());
         Assert.isTrue(transactionReceipt.isStatusOK(), "领取失败" + transactionReceipt.getMessage());
-
+        return contract.getGetDcFromActivityOutput(transactionReceipt);
     }
 
     private Long getUserStatus(String hash) {
@@ -354,9 +355,10 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
 
     }
 
-    private void mint(String userKey, Integer poolId) {
+    private Tuple2<BigInteger,byte[]> mint(String userKey, Integer poolId) {
         PoolLogic contract = client.getContractInstance(PoolLogic.class, userKey);
         TransactionReceipt transactionReceipt = contract.mint(BigInteger.valueOf(poolId));
         Assert.isTrue(transactionReceipt.isStatusOK(), "铸币失败");
+        return contract.getMintOutput(transactionReceipt);
     }
 }
