@@ -9,6 +9,7 @@ import (
 	"Nft-Go/nft/internal/model"
 	"Nft-Go/nft/internal/svc"
 	"context"
+	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -47,22 +48,8 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 		in.Price = 0
 		in.Amount = 1
 	}
-	//创建藏品池子
-	poolInfo := model.PoolInfo{
-		PoolId:         amount.Amount,
-		Cid:            in.Cid,
-		Name:           in.Name,
-		Description:    in.Description,
-		Price:          in.Price,
-		Amount:         in.Amount,
-		Left:           in.Amount,
-		LimitAmount:    in.LimitAmount,
-		CreatorName:    info.UserName,
-		CreatorAddress: info.Address,
-		Status:         in.Status,
-	}
 	_, err = blcService.CreatePool(l.ctx, &blc.CreatePoolRequest{
-		UserKey: &blc.UserKey{UserKey: info.PrivateKey},
+		UserKey: info.PrivateKey,
 		Dto: &blc.CreatePoolDTO{
 			LimitAmount: int64(in.LimitAmount),
 			Price:       int64(in.Price),
@@ -71,20 +58,36 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 			DcName:      in.Name,
 		},
 	})
+	if err != nil {
+		return nil, xerror.New("调用合约失败" + err.Error())
+	}
+	//异步更新数据库
 	go func() {
+		//创建藏品池子
+		poolInfo := model.PoolInfo{
+			PoolId:         amount.Amount,
+			Cid:            in.Cid,
+			Name:           in.Name,
+			Description:    in.Description,
+			Price:          in.Price,
+			Amount:         in.Amount,
+			Left:           in.Amount,
+			LimitAmount:    in.LimitAmount,
+			CreatorName:    info.UserName,
+			CreatorAddress: info.Address,
+			Status:         in.Status,
+		}
 		for i := 0; i < 3; i++ {
 			err = util.DelCache("pool:"+convertor.ToString(i+1), l.ctx)
 			if err != nil {
 				logx.Info(xerror.New("旁路缓存失败--删除步骤", err))
 			}
 		}
+
+		err = dao.PoolInfo.WithContext(l.ctx).Create(&poolInfo)
+		if err != nil {
+			logger.Error("插入失败" + err.Error())
+		}
 	}()
-	if err != nil {
-		return nil, xerror.New("调用合约失败" + err.Error())
-	}
-	err = dao.PoolInfo.WithContext(l.ctx).Create(&poolInfo)
-	if err != nil {
-		return nil, xerror.New("插入失败" + err.Error())
-	}
 	return &nft.Response{Message: "success"}, nil
 }

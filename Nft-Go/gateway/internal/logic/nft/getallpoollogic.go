@@ -1,14 +1,10 @@
 package nft
 
 import (
-	"Nft-Go/common/api"
-	"Nft-Go/common/api/nft"
 	"Nft-Go/gateway/internal/result"
-	"context"
-	"github.com/zeromicro/go-zero/core/jsonx"
-
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
+	"context"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,14 +24,14 @@ func NewGetAllPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAll
 }
 
 func (l *GetAllPoolLogic) GetAllPool() (resp *types.CommonResponse, err error) {
-	pool, err := api.GetNftClient().GetAllPool(l.ctx, &nft.Empty{})
-	if err != nil {
-		return nil, err
-	}
-	toString, err := jsonx.MarshalToString(pool.PoolPageVO)
-	if err != nil {
-		return nil, err
-	}
+	//pool, err := api.GetNftClient().GetAllPool(l.ctx, &nft.Empty{})
+	//if err != nil {
+	//	return nil, err
+	//}
+	//toString, err := jsonx.MarshalToString(pool.PoolPageVO)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	return result.OperateSuccess(toString, "GetAllPool success")
+	return result.OperateSuccess("toString", "GetAllPool success")
 }

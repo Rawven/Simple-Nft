@@ -35,7 +35,7 @@ type BlcRpcServiceClient interface {
 	CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment)
 	GetIdToActivity(ctx context.Context, in *GetIdToActivityRequest, opts ...grpc_go.CallOption) (*ActivityAndPool, common.ErrorWithAttachment)
 	BeforeMint(ctx context.Context, in *BeforeMintRequest, opts ...grpc_go.CallOption) (*BeforeMintDTO, common.ErrorWithAttachment)
-	GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment)
+	GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc_go.CallOption) (*BeforeMintDTO, common.ErrorWithAttachment)
 	GetUserStatus(ctx context.Context, in *GetUserStatusRequest, opts ...grpc_go.CallOption) (*UserStatusResponse, common.ErrorWithAttachment)
 	CheckDcAndReturnTime(ctx context.Context, in *CheckDcAndReturnTimeRequest, opts ...grpc_go.CallOption) (*CheckDcAndReturnTimeOutputDTO, common.ErrorWithAttachment)
 	GetHashToDcId(ctx context.Context, in *GetHashToDcIdRequest, opts ...grpc_go.CallOption) (*GetHashToDcIdResponse, common.ErrorWithAttachment)
@@ -43,7 +43,7 @@ type BlcRpcServiceClient interface {
 	GetDcHistoryAndMessage(ctx context.Context, in *GetDcHistoryAndMessageRequest, opts ...grpc_go.CallOption) (*DcHistoryAndMessageOutputDTO, common.ErrorWithAttachment)
 	GetPoolAmount(ctx context.Context, in *emptypb.Empty, opts ...grpc_go.CallOption) (*PoolAmountResponse, common.ErrorWithAttachment)
 	CreatePool(ctx context.Context, in *CreatePoolRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment)
-	Mint(ctx context.Context, in *MintRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment)
+	Mint(ctx context.Context, in *MintRequest, opts ...grpc_go.CallOption) (*BeforeMintDTO, common.ErrorWithAttachment)
 }
 
 type blcRpcServiceClient struct {
@@ -57,7 +57,7 @@ type BlcRpcServiceClientImpl struct {
 	CreateActivity         func(ctx context.Context, in *CreateActivityRequest) (*emptypb.Empty, error)
 	GetIdToActivity        func(ctx context.Context, in *GetIdToActivityRequest) (*ActivityAndPool, error)
 	BeforeMint             func(ctx context.Context, in *BeforeMintRequest) (*BeforeMintDTO, error)
-	GetDcFromActivity      func(ctx context.Context, in *GetDcFromActivityRequest) (*emptypb.Empty, error)
+	GetDcFromActivity      func(ctx context.Context, in *GetDcFromActivityRequest) (*BeforeMintDTO, error)
 	GetUserStatus          func(ctx context.Context, in *GetUserStatusRequest) (*UserStatusResponse, error)
 	CheckDcAndReturnTime   func(ctx context.Context, in *CheckDcAndReturnTimeRequest) (*CheckDcAndReturnTimeOutputDTO, error)
 	GetHashToDcId          func(ctx context.Context, in *GetHashToDcIdRequest) (*GetHashToDcIdResponse, error)
@@ -65,7 +65,7 @@ type BlcRpcServiceClientImpl struct {
 	GetDcHistoryAndMessage func(ctx context.Context, in *GetDcHistoryAndMessageRequest) (*DcHistoryAndMessageOutputDTO, error)
 	GetPoolAmount          func(ctx context.Context, in *emptypb.Empty) (*PoolAmountResponse, error)
 	CreatePool             func(ctx context.Context, in *CreatePoolRequest) (*emptypb.Empty, error)
-	Mint                   func(ctx context.Context, in *MintRequest) (*emptypb.Empty, error)
+	Mint                   func(ctx context.Context, in *MintRequest) (*BeforeMintDTO, error)
 }
 
 func (c *BlcRpcServiceClientImpl) GetDubboStub(cc *triple.TripleConn) BlcRpcServiceClient {
@@ -116,8 +116,8 @@ func (c *blcRpcServiceClient) BeforeMint(ctx context.Context, in *BeforeMintRequ
 	return out, c.cc.Invoke(ctx, "/"+interfaceKey+"/BeforeMint", in, out)
 }
 
-func (c *blcRpcServiceClient) GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment) {
-	out := new(emptypb.Empty)
+func (c *blcRpcServiceClient) GetDcFromActivity(ctx context.Context, in *GetDcFromActivityRequest, opts ...grpc_go.CallOption) (*BeforeMintDTO, common.ErrorWithAttachment) {
+	out := new(BeforeMintDTO)
 	interfaceKey := ctx.Value(constant.InterfaceKey).(string)
 	return out, c.cc.Invoke(ctx, "/"+interfaceKey+"/GetDcFromActivity", in, out)
 }
@@ -164,8 +164,8 @@ func (c *blcRpcServiceClient) CreatePool(ctx context.Context, in *CreatePoolRequ
 	return out, c.cc.Invoke(ctx, "/"+interfaceKey+"/CreatePool", in, out)
 }
 
-func (c *blcRpcServiceClient) Mint(ctx context.Context, in *MintRequest, opts ...grpc_go.CallOption) (*emptypb.Empty, common.ErrorWithAttachment) {
-	out := new(emptypb.Empty)
+func (c *blcRpcServiceClient) Mint(ctx context.Context, in *MintRequest, opts ...grpc_go.CallOption) (*BeforeMintDTO, common.ErrorWithAttachment) {
+	out := new(BeforeMintDTO)
 	interfaceKey := ctx.Value(constant.InterfaceKey).(string)
 	return out, c.cc.Invoke(ctx, "/"+interfaceKey+"/Mint", in, out)
 }
@@ -180,7 +180,7 @@ type BlcRpcServiceServer interface {
 	CreateActivity(context.Context, *CreateActivityRequest) (*emptypb.Empty, error)
 	GetIdToActivity(context.Context, *GetIdToActivityRequest) (*ActivityAndPool, error)
 	BeforeMint(context.Context, *BeforeMintRequest) (*BeforeMintDTO, error)
-	GetDcFromActivity(context.Context, *GetDcFromActivityRequest) (*emptypb.Empty, error)
+	GetDcFromActivity(context.Context, *GetDcFromActivityRequest) (*BeforeMintDTO, error)
 	GetUserStatus(context.Context, *GetUserStatusRequest) (*UserStatusResponse, error)
 	CheckDcAndReturnTime(context.Context, *CheckDcAndReturnTimeRequest) (*CheckDcAndReturnTimeOutputDTO, error)
 	GetHashToDcId(context.Context, *GetHashToDcIdRequest) (*GetHashToDcIdResponse, error)
@@ -188,7 +188,7 @@ type BlcRpcServiceServer interface {
 	GetDcHistoryAndMessage(context.Context, *GetDcHistoryAndMessageRequest) (*DcHistoryAndMessageOutputDTO, error)
 	GetPoolAmount(context.Context, *emptypb.Empty) (*PoolAmountResponse, error)
 	CreatePool(context.Context, *CreatePoolRequest) (*emptypb.Empty, error)
-	Mint(context.Context, *MintRequest) (*emptypb.Empty, error)
+	Mint(context.Context, *MintRequest) (*BeforeMintDTO, error)
 	mustEmbedUnimplementedBlcRpcServiceServer()
 }
 
@@ -215,7 +215,7 @@ func (UnimplementedBlcRpcServiceServer) GetIdToActivity(context.Context, *GetIdT
 func (UnimplementedBlcRpcServiceServer) BeforeMint(context.Context, *BeforeMintRequest) (*BeforeMintDTO, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BeforeMint not implemented")
 }
-func (UnimplementedBlcRpcServiceServer) GetDcFromActivity(context.Context, *GetDcFromActivityRequest) (*emptypb.Empty, error) {
+func (UnimplementedBlcRpcServiceServer) GetDcFromActivity(context.Context, *GetDcFromActivityRequest) (*BeforeMintDTO, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDcFromActivity not implemented")
 }
 func (UnimplementedBlcRpcServiceServer) GetUserStatus(context.Context, *GetUserStatusRequest) (*UserStatusResponse, error) {
@@ -239,7 +239,7 @@ func (UnimplementedBlcRpcServiceServer) GetPoolAmount(context.Context, *emptypb.
 func (UnimplementedBlcRpcServiceServer) CreatePool(context.Context, *CreatePoolRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePool not implemented")
 }
-func (UnimplementedBlcRpcServiceServer) Mint(context.Context, *MintRequest) (*emptypb.Empty, error) {
+func (UnimplementedBlcRpcServiceServer) Mint(context.Context, *MintRequest) (*BeforeMintDTO, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Mint not implemented")
 }
 func (s *UnimplementedBlcRpcServiceServer) XXX_SetProxyImpl(impl protocol.Invoker) {

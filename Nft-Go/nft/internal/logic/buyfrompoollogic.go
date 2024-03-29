@@ -4,15 +4,14 @@ import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/blc"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
+	"Nft-Go/nft/internal/svc"
 	"context"
+	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
-
-	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -36,31 +35,34 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Respons
 		return nil, xerror.New("获取用户信息失败")
 	}
 	blcService := api.GetBlcService()
+	//铸造专属于用户的藏品（从藏品池里）
+	beforeMint, err := blcService.Mint(l.ctx, &blc.MintRequest{
+		UserKey: info.PrivateKey,
+		PoolId:  in.PoolId,
+	})
+	if err != nil {
+		return nil, xerror.New("调用合约异常：" + err.Error())
+	}
+	//异步更新数据库
+	go asyncUpdatePoolInfoInMysql(in, beforeMint, info)
+	return &nft.Response{Message: "success"}, nil
+}
+
+func asyncUpdatePoolInfoInMysql(in *nft.BuyFromPoolRequest, beforeMint *blc.BeforeMintDTO, info *util.UserInfo) {
 	//开始事务
-	err = dao.Q.Transaction(func(tx *dao.Query) error {
+	err := dao.Q.Transaction(func(tx *dao.Query) error {
+		ctx := context.Background()
 		//让PoolInfo指定id的数据中的left减一
-		_, err = tx.PoolInfo.WithContext(l.ctx).Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).Update(tx.PoolInfo.Left, tx.PoolInfo.Left.Sub(1))
-		if err != nil {
-			return xerror.New("更新失败" + err.Error())
+		_, err2 := tx.PoolInfo.Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).Update(tx.PoolInfo.Left, tx.PoolInfo.Left.Sub(1))
+		if err2 != nil {
+			return xerror.New("更新失败" + err2.Error())
 		}
 		//查询PoolInfo指定id的数据
-		pool, err := tx.PoolInfo.WithContext(l.ctx).Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).First()
-		if err != nil {
-			return xerror.New("查询失败" + err.Error())
+		pool, err2 := tx.PoolInfo.Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).First()
+		if err2 != nil {
+			return xerror.New("查询失败" + err2.Error())
 		}
 		//调用合约获得下一个藏品的id和唯一哈希
-		beforeMint, err := blcService.BeforeMint(l.ctx, &blc.BeforeMintRequest{Id: pool.PoolId})
-		if err != nil {
-			return xerror.New("调用合约异常：" + err.Error())
-		}
-		//铸造专属于用户的藏品（从藏品池里）
-		_, err = blcService.Mint(l.ctx, &blc.MintRequest{
-			UserKey: &blc.UserKey{UserKey: info.PrivateKey},
-			PoolId:  pool.PoolId,
-		})
-		if err != nil {
-			return xerror.New("调用合约异常：" + err.Error())
-		}
 		dcInfo := model.DcInfo{
 			Id:             int32(beforeMint.DcId),
 			Hash:           util.ByteArray2HexString(beforeMint.UniqueId),
@@ -74,28 +76,24 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Respons
 			CreatorAddress: pool.CreatorAddress,
 		}
 		//创建购买成功的藏品记录
-		err = tx.DcInfo.WithContext(l.ctx).Create(&dcInfo)
-		if err != nil {
-			return xerror.New("创建失败" + err.Error())
+		err2 = tx.DcInfo.Create(&dcInfo)
+		if err2 != nil {
+			return xerror.New("创建失败" + err2.Error())
 		}
-		go func() {
-			for i := 0; i < 4; i++ {
-				err = util.DelCache("dc:"+convertor.ToString(i+1), l.ctx)
-				if err != nil {
-					logx.Info(xerror.New("旁路缓存失败--删除步骤", err))
-				}
+		for i := 0; i < 4; i++ {
+			err2 = util.DelCache("dc:"+convertor.ToString(i+1), ctx)
+			if err2 != nil {
+				logx.Info(xerror.New("旁路缓存失败--删除步骤", err2))
 			}
-		}()
-
+		}
 		info.Balance -= pool.Price
-		_, err = db.GetRedis().Set(l.ctx, string(info.UserId), info, 0).Result()
+		err := util.SetCache(string(info.UserId), ctx, info)
 		if err != nil {
-			return xerror.New("redis更新失败" + err.Error())
+			return xerror.New("更新缓存失败" + err.Error())
 		}
 		return nil
 	})
 	if err != nil {
-		return nil, xerror.New("购买失败" + err.Error())
+		logger.Error("购买异步落库失败" + err.Error())
 	}
-	return &nft.Response{Message: "success"}, nil
 }

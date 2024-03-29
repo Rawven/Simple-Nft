@@ -43,8 +43,25 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 	if err != nil {
 		return nil, xerror.New("调用合约获取活动数量失败" + err.Error())
 	}
+	_, err = blcService.CreateActivity(l.ctx, &blc.CreateActivityRequest{
+		UserKey: info.PrivateKey,
+		Args: &blc.CreateActivityDTO{
+			Name:     in.Name,
+			Password: []byte(cryptor.Sha256(in.Password)),
+			Amount:   int64(in.Amount),
+			Cid:      in.Cid,
+			DcName:   in.DcName,
+		},
+	})
+	//异步更新数据库
+	go asyncUpdateActivityInfoInMysql(in, amount.GetAmount(), info)
+	return &nft.Response{Message: "nft"}, nil
+}
+
+func asyncUpdateActivityInfoInMysql(in *nft.CreateActivityRequest, amount int32, info *util.UserInfo) {
+	ctx := context.Background()
 	activityInfo := model.ActivityInfo{
-		Id:            amount.GetAmount(),
+		Id:            amount,
 		Name:          info.UserName,
 		Description:   in.Description,
 		DcDescription: in.DcDescription,
@@ -55,39 +72,14 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 		Remainder:     in.GetAmount(),
 		Status:        true,
 	}
-	//开始事务
-	err = dao.Q.Transaction(func(tx *dao.Query) error {
-		//调用合约创建活动
-		_, err = blcService.CreateActivity(l.ctx, &blc.CreateActivityRequest{
-			UserKey: &blc.UserKey{UserKey: info.PrivateKey},
-			Args: &blc.CreateActivityDTO{
-				Name:     in.Name,
-				Password: []byte(cryptor.Sha256(in.Password)),
-				Amount:   int64(in.Amount),
-				Cid:      in.Cid,
-				DcName:   in.DcName,
-			},
-		})
-		if err != nil {
-			return xerror.New("调用合约创建活动失败" + err.Error())
-		}
-		//存储活动信息
-		err := tx.ActivityInfo.WithContext(l.ctx).Create(&activityInfo)
-		if err != nil {
-			return xerror.New("插入活动失败" + err.Error())
-		}
-		return nil
-	})
+	err := dao.ActivityInfo.WithContext(ctx).Create(&activityInfo)
 	if err != nil {
-		return nil, xerror.New("插入失败" + err.Error())
+		logger.Error("插入活动失败" + err.Error())
 	}
-	go func() {
-		for i := 0; i < 2; i++ {
-			err := util.DelCache("activity:"+convertor.ToString(i+1), l.ctx)
-			if err != nil {
-				logger.Info(xerror.New("旁路缓存失败--删除缓存步骤", err))
-			}
+	for i := 0; i < 2; i++ {
+		err := util.DelCache("activity:"+convertor.ToString(i+1), ctx)
+		if err != nil {
+			logger.Info(xerror.New("旁路缓存失败--删除缓存步骤", err))
 		}
-	}()
-	return &nft.Response{Message: "nft"}, nil
+	}
 }

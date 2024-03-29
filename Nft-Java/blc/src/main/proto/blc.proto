@@ -13,7 +13,7 @@ service BlcRpcService {
   rpc CreateActivity (CreateActivityRequest) returns (google.protobuf.Empty);
   rpc GetIdToActivity (GetIdToActivityRequest) returns (ActivityAndPool);
   rpc BeforeMint (BeforeMintRequest) returns (BeforeMintDTO);
-  rpc GetDcFromActivity (GetDcFromActivityRequest) returns (google.protobuf.Empty);
+  rpc GetDcFromActivity (GetDcFromActivityRequest) returns (BeforeMintDTO);
   rpc GetUserStatus (GetUserStatusRequest) returns (UserStatusResponse);
   rpc CheckDcAndReturnTime (CheckDcAndReturnTimeRequest) returns (CheckDcAndReturnTimeOutputDTO);
   rpc GetHashToDcId (GetHashToDcIdRequest) returns (GetHashToDcIdResponse);
@@ -21,7 +21,7 @@ service BlcRpcService {
   rpc GetDcHistoryAndMessage (GetDcHistoryAndMessageRequest) returns (DcHistoryAndMessageOutputDTO);
   rpc GetPoolAmount (google.protobuf.Empty) returns (PoolAmountResponse);
   rpc CreatePool (CreatePoolRequest) returns (google.protobuf.Empty);
-  rpc Mint (MintRequest) returns (google.protobuf.Empty);
+  rpc Mint (MintRequest) returns (BeforeMintDTO);
 }
 
 // 为每个RPC方法定义请求和响应消息
@@ -44,7 +44,7 @@ message ActivityAmountResponse {
 }
 
 message CreateActivityRequest {
-  UserKey user_key = 1;
+  string user_key = 1;
   CreateActivityDTO args = 2;
 }
 
@@ -57,7 +57,7 @@ message BeforeMintRequest {
 }
 
 message GetDcFromActivityRequest {
-  UserKey key = 1;
+  string user_key = 1;
   GetDcFromActivityDTO args = 2;
 }
 
@@ -94,19 +94,16 @@ message PoolAmountResponse {
 }
 
 message CreatePoolRequest {
-  UserKey user_key = 1;
+  string user_key = 1;
   CreatePoolDTO dto = 2;
 }
 
 message MintRequest {
-  UserKey user_key = 1;
+  string user_key = 1;
   int32 pool_id = 2;
 }
 
 
-message UserKey {
-  string user_key = 1;
-}
 
 message GiveDTO {
   string to_address = 1;
