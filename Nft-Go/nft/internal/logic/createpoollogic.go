@@ -63,6 +63,7 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 	}
 	//异步更新数据库
 	go func() {
+		ctx := context.Background()
 		//创建藏品池子
 		poolInfo := model.PoolInfo{
 			PoolId:         amount.Amount,
@@ -78,13 +79,13 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 			Status:         in.Status,
 		}
 		for i := 0; i < 3; i++ {
-			err = util.DelCache("pool:"+convertor.ToString(i+1), l.ctx)
+			err = util.DelCache("pool:"+convertor.ToString(i+1), ctx)
 			if err != nil {
 				logx.Info(xerror.New("旁路缓存失败--删除步骤", err))
 			}
 		}
 
-		err = dao.PoolInfo.WithContext(l.ctx).Create(&poolInfo)
+		err = dao.PoolInfo.WithContext(ctx).Create(&poolInfo)
 		if err != nil {
 			logger.Error("插入失败" + err.Error())
 		}

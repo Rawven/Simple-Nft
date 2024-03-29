@@ -3,16 +3,11 @@ package mq
 import (
 	"Nft-Go/common/util"
 	"github.com/apache/rocketmq-client-go/v2"
-	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
 	"github.com/apache/rocketmq-client-go/v2/rlog"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/spf13/viper"
 	"os"
-)
-
-import (
-	"context"
 )
 
 var p rocketmq.Producer
@@ -35,19 +30,4 @@ func InitMq() {
 		os.Exit(1)
 	}
 	logger.Info("mq connect success")
-}
-
-func RankAdd(key string) {
-	msg := &primitive.Message{
-		Topic: "Nft-Go",
-		Body:  []byte(key),
-	}
-	msg.WithTag("rankAdd")
-	// 发送信息
-	res, err := p.SendSync(context.Background(), msg)
-	if err != nil {
-		logger.Error("send message error:%s\n", err)
-	} else {
-		logger.Info("send message success: result=%s\n", res.String())
-	}
 }

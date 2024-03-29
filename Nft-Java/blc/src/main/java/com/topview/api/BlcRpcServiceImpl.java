@@ -146,7 +146,7 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
 
     @Override
     public Empty give(GiveRequest request) {
-        give(request.getGiveDTO());
+        give(request.getGiveDTO(),request.getUserKey());
         return Empty.getDefaultInstance();
     }
 
@@ -308,8 +308,8 @@ public class BlcRpcServiceImpl implements com.topview.api.BlcRpcService {
         }
     }
 
-    private void give(GiveDTO giveDTO) {
-        PoolLogic contract = client.getContractAdminInstance(PoolLogic.class);
+    private void give(GiveDTO giveDTO,String userKey) {
+        PoolLogic contract = client.getContractInstance(PoolLogic.class,userKey);
         TransactionReceipt transactionReceipt = contract.give(giveDTO.getToAddress(), BigInteger.valueOf(giveDTO.getDcId()));
         Assert.isTrue(transactionReceipt.isStatusOK(), "赠送失败");
     }

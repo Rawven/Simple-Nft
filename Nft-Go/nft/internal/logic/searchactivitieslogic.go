@@ -2,8 +2,8 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
+	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/dao"
-	"Nft-Go/nft/mq"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
 
@@ -27,10 +27,10 @@ func NewSearchActivitiesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *SearchActivitiesLogic) SearchActivities(in *nft.SearchActivitiesRequest) (*nft.ActivityPageVOList, error) {
 	if in.ActivityName != "" {
-		mq.RankAdd(in.ActivityName)
+		db.GetRedis().HIncrByFloat(l.ctx, "rankAdd", in.ActivityName, 1)
 	}
 	if in.HostName != "" {
-		mq.RankAdd(in.HostName)
+		db.GetRedis().HIncrByFloat(l.ctx, "rankAdd", in.HostName, 1)
 	}
 	ad := dao.ActivityInfo
 	find, err := ad.WithContext(l.ctx).Where(ad.HostName.Like(in.HostName), ad.Name.Like(in.GetActivityName())).Find()

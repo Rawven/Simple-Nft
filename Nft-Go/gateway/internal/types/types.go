@@ -155,6 +155,11 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+type PageRequest struct {
+	Page     int32 `json:"page"`
+	PageSize int32 `json:"pageSize"`
+}
+
 type PoolDetailsVO struct {
 	PoolId          int32  `json:"poolId"`
 	Name            string `json:"name"`

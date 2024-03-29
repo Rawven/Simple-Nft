@@ -8,6 +8,7 @@ import (
 	"Nft-Go/common/registry"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/dao"
+	"Nft-Go/nft/internal/schedule"
 	"Nft-Go/nft/internal/server"
 	"Nft-Go/nft/internal/svc"
 	"Nft-Go/nft/mq"
@@ -39,6 +40,8 @@ func main() {
 	//api
 	api.InitDubbo()
 	registry.InitUserService()
+	//scheduler
+	schedule.InitListeningRankAdd()
 	//other
 	log := logc.LogConf{
 		Encoding: "plain",
