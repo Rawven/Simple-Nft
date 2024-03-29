@@ -38,11 +38,13 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Response, error) {
 	}
 	userRpc := api.GetUserService()
 	blcService := api.GetBlcService()
-	name, err := userRpc.GetUserInfoByName(l.ctx, &user.UserNameRequest{Username: in.GetToAddress()})
+	name, err := userRpc.GetUserInfoByName(l.ctx, &user.UserNameRequest{Username: in.GetToName()})
 	dc, err := mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).First()
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
+	logger.Info(dc)
+	logger.Info(name)
 	if name.Address != in.ToAddress || dc.OwnerName != info.UserName {
 		return nil, xerror.New("you are not the owner of this dc")
 	}
@@ -50,6 +52,7 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Response, error) {
 		return nil, xerror.New("调用user失败" + err.Error())
 	}
 	_, err = blcService.Give(l.ctx, &blc.GiveRequest{
+		UserKey: info.PrivateKey,
 		GiveDTO: &blc.GiveDTO{
 			ToAddress: name.Address,
 			DcId:      in.DcId,
@@ -60,7 +63,7 @@ func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Response, error) {
 	}
 	//异步更新数据库
 	go func() {
-		_, err = mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).Updates(model.DcInfo{OwnerName: in.ToName, OwnerAddress: in.ToAddress})
+		_, err = mysql.WithContext(context.Background()).Where(mysql.Id.Eq(in.DcId)).Updates(model.DcInfo{OwnerName: in.ToName, OwnerAddress: in.ToAddress})
 		if err != nil {
 			logger.Error("更新失败")
 		}

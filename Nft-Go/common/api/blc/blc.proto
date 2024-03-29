@@ -1,8 +1,8 @@
 // EDIT IT, change to your package, service and message
 syntax = "proto3";
-package api;
+package blc;
 
-option go_package = "./;api";
+option go_package = "./;blc";
 
 import "google/protobuf/empty.proto";  // 导入必要的protobuf包
 
@@ -83,7 +83,8 @@ message GetHashToDcIdResponse {
 }
 
 message GiveRequest {
-  GiveDTO giveDTO = 1;
+  string user_key = 1;
+  GiveDTO giveDTO = 2;
 }
 
 message GetDcHistoryAndMessageRequest {

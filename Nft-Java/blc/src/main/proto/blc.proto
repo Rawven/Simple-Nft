@@ -82,7 +82,8 @@ message GetHashToDcIdResponse {
 }
 
 message GiveRequest {
-  GiveDTO giveDTO = 1;
+  string user_key = 1;
+  GiveDTO giveDTO = 2;
 }
 
 message GetDcHistoryAndMessageRequest {
