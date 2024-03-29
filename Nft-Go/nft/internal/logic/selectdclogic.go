@@ -2,8 +2,8 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
+	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/dao"
-	"Nft-Go/nft/mq"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
 
@@ -34,7 +34,7 @@ func (l *SelectDcLogic) SelectDc(in *nft.SelectDcRequest) (*nft.DcPageVOList, er
 		list := dao.GetDcPageVOList(find)
 		return &nft.DcPageVOList{DcPageVO: list}, err
 	} else {
-		mq.RankAdd(in.Name)
+		db.GetRedis().HIncrByFloat(l.ctx, "rankAdd", in.GetName(), 1)
 		find, err := dao.DcInfo.WithContext(l.ctx).Where(dao.DcInfo.Name.Like(in.Name)).Find()
 		if err != nil {
 			return nil, xerror.New("查询失败")

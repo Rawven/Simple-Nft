@@ -18,7 +18,6 @@
 package mq
 
 import (
-	"Nft-Go/common/db"
 	"Nft-Go/common/util"
 	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/model"
@@ -32,7 +31,6 @@ import (
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/spf13/viper"
 	"github.com/valyala/fastjson"
-	"time"
 )
 
 func InitMq() {
@@ -66,12 +64,6 @@ func subscribe(c rocketmq.PushConsumer) {
 					return 0, xerror.New("创建公告失败", err)
 				}
 				break
-			case "rankAdd":
-				err := rankAdd(data)
-				if err != nil {
-					return 0, xerror.New("排行榜添加失败", err)
-				}
-				break
 			default:
 				logger.Info("未知消息")
 				break
@@ -103,17 +95,6 @@ func createPoolService(data *fastjson.Value) error {
 	sse.SendNotificationToAllUser(data.Get("title").String() + data.Get("description").String())
 	if err != nil {
 		return xerror.New("发送通知失败", err)
-	}
-	return nil
-}
-
-func rankAdd(data *fastjson.Value) error {
-	red := db.GetRedis()
-	//获得当前日期
-	today := util.FormatDateForDay(time.Now())
-	_, err := red.ZIncrBy(context.Background(), today, 1, data.Get("title").String()).Result()
-	if err != nil {
-		return xerror.New("排行榜热度添加失败", err)
 	}
 	return nil
 }

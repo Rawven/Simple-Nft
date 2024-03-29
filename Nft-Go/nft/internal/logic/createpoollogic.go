@@ -48,9 +48,8 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 		in.Price = 0
 		in.Amount = 1
 	}
-	logger.Info(info.PrivateKey)
 	_, err = blcService.CreatePool(l.ctx, &blc.CreatePoolRequest{
-		UserKey: info.PrivateKey, //TODO
+		UserKey: info.PrivateKey,
 		Dto: &blc.CreatePoolDTO{
 			LimitAmount: int64(in.LimitAmount),
 			Price:       int64(in.Price),
