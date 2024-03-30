@@ -9,8 +9,6 @@ import (
 	"Nft-Go/nft/internal/model"
 	"Nft-Go/nft/internal/svc"
 	"context"
-	"github.com/dubbogo/gost/log/logger"
-	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -62,7 +60,7 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 		return nil, xerror.New("调用合约失败" + err.Error())
 	}
 	//异步更新数据库
-	go func() {
+	go util.Retry(func() error {
 		ctx := context.Background()
 		//创建藏品池子
 		poolInfo := model.PoolInfo{
@@ -78,17 +76,12 @@ func (l *CreatePoolLogic) CreatePool(in *nft.CreatePoolRequest) (*nft.Response, 
 			CreatorAddress: info.Address,
 			Status:         in.Status,
 		}
-		for i := 0; i < 3; i++ {
-			err = util.DelCache("pool:"+convertor.ToString(i+1), ctx)
-			if err != nil {
-				logx.Info(xerror.New("旁路缓存失败--删除步骤", err))
-			}
-		}
-
+		util.DelPageCache(ctx, "pool", 3)
 		err = dao.PoolInfo.WithContext(ctx).Create(&poolInfo)
 		if err != nil {
-			logger.Error("插入失败" + err.Error())
+			return xerror.New("插入失败" + err.Error())
 		}
-	}()
+		return nil
+	})
 	return &nft.Response{Message: "success"}, nil
 }

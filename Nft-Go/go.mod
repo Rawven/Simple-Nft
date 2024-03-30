@@ -42,6 +42,7 @@ require (
 	github.com/aliyun/alibabacloud-dkms-transfer-go-sdk v0.1.7 // indirect
 	github.com/apache/dubbo-getty v1.4.9 // indirect
 	github.com/apache/dubbo-go-hessian2 v1.12.2 // indirect
+	github.com/avast/retry-go v2.7.0+incompatible // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bits-and-blooms/bitset v1.2.0 // indirect

@@ -8,8 +8,6 @@ import (
 	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
 	"context"
-	"github.com/dubbogo/gost/log/logger"
-	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -59,27 +57,26 @@ func (l *CreateActivityLogic) CreateActivity(in *nft.CreateActivityRequest) (*nf
 }
 
 func asyncUpdateActivityInfoInMysql(in *nft.CreateActivityRequest, amount int32, info *util.UserInfo) {
-	ctx := context.Background()
-	activityInfo := model.ActivityInfo{
-		Id:            amount,
-		Name:          info.UserName,
-		Description:   in.Description,
-		DcDescription: in.DcDescription,
-		Cid:           in.Cid,
-		HostName:      info.UserName,
-		HostAddress:   info.Address,
-		Amount:        in.GetAmount(),
-		Remainder:     in.GetAmount(),
-		Status:        true,
-	}
-	err := dao.ActivityInfo.WithContext(ctx).Create(&activityInfo)
-	if err != nil {
-		logger.Error("插入活动失败" + err.Error())
-	}
-	for i := 0; i < 2; i++ {
-		err := util.DelCache("activity:"+convertor.ToString(i+1), ctx)
-		if err != nil {
-			logger.Info(xerror.New("旁路缓存失败--删除缓存步骤", err))
-		}
-	}
+	util.Retry(
+		func() error {
+			ctx := context.Background()
+			activityInfo := model.ActivityInfo{
+				Id:            amount,
+				Name:          info.UserName,
+				Description:   in.Description,
+				DcDescription: in.DcDescription,
+				Cid:           in.Cid,
+				HostName:      info.UserName,
+				HostAddress:   info.Address,
+				Amount:        in.GetAmount(),
+				Remainder:     in.GetAmount(),
+				Status:        true,
+			}
+			err := dao.ActivityInfo.WithContext(ctx).Create(&activityInfo)
+			if err != nil {
+				return xerror.New("插入活动失败" + err.Error())
+			}
+			util.DelPageCache(ctx, "activity", 2)
+			return nil
+		})
 }
