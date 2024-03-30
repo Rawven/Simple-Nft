@@ -10,7 +10,6 @@ import (
 	"Nft-Go/nft/internal/svc"
 	"context"
 	"github.com/dubbogo/gost/log/logger"
-	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -49,51 +48,48 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Respons
 }
 
 func asyncUpdatePoolInfoInMysql(in *nft.BuyFromPoolRequest, beforeMint *blc.BeforeMintDTO, info *util.UserInfo) {
-	//开始事务
-	err := dao.Q.Transaction(func(tx *dao.Query) error {
-		ctx := context.Background()
-		//让PoolInfo指定id的数据中的left减一
-		_, err2 := tx.PoolInfo.Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).Update(tx.PoolInfo.Left, tx.PoolInfo.Left.Sub(1))
-		if err2 != nil {
-			return xerror.New("更新失败" + err2.Error())
-		}
-		//查询PoolInfo指定id的数据
-		pool, err2 := tx.PoolInfo.Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).First()
-		if err2 != nil {
-			return xerror.New("查询失败" + err2.Error())
-		}
-		//调用合约获得下一个藏品的id和唯一哈希
-		dcInfo := model.DcInfo{
-			Id:             int32(beforeMint.DcId),
-			Hash:           util.ByteArray2HexString(beforeMint.UniqueId),
-			Cid:            pool.Cid,
-			Name:           pool.Name,
-			Description:    pool.Description,
-			Price:          pool.Price,
-			OwnerName:      info.UserName,
-			OwnerAddress:   info.Address,
-			CreatorName:    pool.CreatorName,
-			CreatorAddress: pool.CreatorAddress,
-		}
-		//创建购买成功的藏品记录
-		err2 = tx.DcInfo.Create(&dcInfo)
-		if err2 != nil {
-			return xerror.New("创建失败" + err2.Error())
-		}
-		for i := 0; i < 4; i++ {
-			err2 = util.DelCache("dc:"+convertor.ToString(i+1), ctx)
+	util.Retry(func() error {
+		//开始事务
+		err := dao.Q.Transaction(func(tx *dao.Query) error {
+			//让PoolInfo指定id的数据中的left减一
+			_, err2 := tx.PoolInfo.Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).Update(tx.PoolInfo.Left, tx.PoolInfo.Left.Sub(1))
 			if err2 != nil {
-				logx.Info(xerror.New("旁路缓存失败--删除步骤", err2))
+				return xerror.New("更新失败" + err2.Error())
 			}
-		}
-		info.Balance -= pool.Price
-		err := util.SetCache(string(info.UserId), ctx, info)
+			//查询PoolInfo指定id的数据
+			pool, err2 := tx.PoolInfo.Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).First()
+			if err2 != nil {
+				return xerror.New("查询失败" + err2.Error())
+			}
+			//调用合约获得下一个藏品的id和唯一哈希
+			dcInfo := model.DcInfo{
+				Id:             int32(beforeMint.DcId),
+				Hash:           util.ByteArray2HexString(beforeMint.UniqueId),
+				Cid:            pool.Cid,
+				Name:           pool.Name,
+				Description:    pool.Description,
+				Price:          pool.Price,
+				OwnerName:      info.UserName,
+				OwnerAddress:   info.Address,
+				CreatorName:    pool.CreatorName,
+				CreatorAddress: pool.CreatorAddress,
+			}
+			//创建购买成功的藏品记录
+			err2 = tx.DcInfo.Create(&dcInfo)
+			info.Balance -= pool.Price
+			if err2 != nil {
+				return xerror.New("创建失败" + err2.Error())
+			}
+			return nil
+		})
 		if err != nil {
-			return xerror.New("更新缓存失败" + err.Error())
+			return xerror.New("购买异步落库失败" + err.Error())
+		}
+		util.DelPageCache(context.Background(), "dc", 4)
+		err = util.SetCache(string(info.UserId), context.Background(), info)
+		if err != nil {
+			logger.Error("购买异步落库失败" + err.Error())
 		}
 		return nil
 	})
-	if err != nil {
-		logger.Error("购买异步落库失败" + err.Error())
-	}
 }

@@ -8,7 +8,6 @@ import (
 	"Nft-Go/nft/internal/dao"
 	"Nft-Go/nft/internal/model"
 	"context"
-	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/compare"
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/cryptor"
@@ -61,36 +60,39 @@ func (l *PrizeDcFromActivityLogic) PrizeDcFromActivity(in *nft.GetDcFromActivity
 }
 
 func asyncPrizeUpdateDb(in *nft.GetDcFromActivityRequest, pool *blc.Pool, info *util.UserInfo, uniqueId []byte) {
-	//开启事务
-	ctx := context.Background()
-	err := dao.Q.Transaction(func(q *dao.Query) error {
-		act := q.ActivityInfo
-		_, err2 := act.WithContext(ctx).Where(act.Id.Eq(in.GetId())).Updates(model.ActivityInfo{Remainder: int32(pool.Left), Status: compare.Equal(pool.Left, 1)})
-		if err2 != nil {
-			return xerror.New("更新失败" + err2.Error())
-		}
-		activityInfo, err2 := act.Where(act.Id.Eq(in.GetId())).First()
-		if err2 != nil {
-			return xerror.New("查询失败", err2)
-		}
-		in.Password = cryptor.Sha256(in.Password)
-		err2 = q.DcInfo.WithContext(ctx).Create(&model.DcInfo{
-			Hash:           convertor.ToString(uniqueId),
-			Cid:            pool.GetCid(),
-			Name:           pool.GetName(),
-			Description:    activityInfo.Description,
-			Price:          int32(pool.GetPrice()),
-			OwnerName:      info.UserName,
-			OwnerAddress:   info.Address,
-			CreatorName:    activityInfo.Name,
-			CreatorAddress: activityInfo.HostAddress,
+	util.Retry(func() error {
+		//开启事务
+		ctx := context.Background()
+		err := dao.Q.Transaction(func(q *dao.Query) error {
+			act := q.ActivityInfo
+			_, err2 := act.WithContext(ctx).Where(act.Id.Eq(in.GetId())).Updates(model.ActivityInfo{Remainder: int32(pool.Left), Status: compare.Equal(pool.Left, 1)})
+			if err2 != nil {
+				return xerror.New("更新失败" + err2.Error())
+			}
+			activityInfo, err2 := act.Where(act.Id.Eq(in.GetId())).First()
+			if err2 != nil {
+				return xerror.New("查询失败", err2)
+			}
+			in.Password = cryptor.Sha256(in.Password)
+			err2 = q.DcInfo.WithContext(ctx).Create(&model.DcInfo{
+				Hash:           convertor.ToString(uniqueId),
+				Cid:            pool.GetCid(),
+				Name:           pool.GetName(),
+				Description:    activityInfo.Description,
+				Price:          int32(pool.GetPrice()),
+				OwnerName:      info.UserName,
+				OwnerAddress:   info.Address,
+				CreatorName:    activityInfo.Name,
+				CreatorAddress: activityInfo.HostAddress,
+			})
+			if err2 != nil {
+				return xerror.New("插入失败" + err2.Error())
+			}
+			return nil
 		})
-		if err2 != nil {
-			return xerror.New("插入失败" + err2.Error())
+		if err != nil {
+			return xerror.New("事务回滚", err)
 		}
 		return nil
 	})
-	if err != nil {
-		logger.Error("事务回滚", err)
-	}
 }

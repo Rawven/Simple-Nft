@@ -5,12 +5,16 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
+	"github.com/avast/retry-go"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc/metadata"
 	"math/big"
+	"time"
 )
+
+var RetryStrategy []retry.Option
 
 func GetUserInfo(ctx context.Context) (*UserInfo, error) {
 	fromIncomingContext, ok := metadata.FromIncomingContext(ctx)
@@ -44,6 +48,15 @@ func InitConfig(path string) {
 		logger.Info("viper read config failed, err:", err)
 	}
 	initJwt()
+	initRetry()
+}
+
+func initRetry() {
+	RetryStrategy = []retry.Option{
+		retry.Delay(100 * time.Millisecond),
+		retry.Attempts(5),
+		retry.LastErrorOnly(true),
+	}
 }
 
 func HexString2ByteArray(hexString string) ([]byte, error) {

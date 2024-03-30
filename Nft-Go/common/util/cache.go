@@ -3,9 +3,20 @@ package util
 import (
 	"Nft-Go/common/db"
 	"context"
+	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/zeromicro/go-zero/core/jsonx"
+	"github.com/zeromicro/go-zero/core/logx"
 )
+
+func DelPageCache(ctx context.Context, prefix string, page int) {
+	for i := 0; i < page; i++ {
+		err := DelCache(prefix+":"+convertor.ToString(i+1), ctx)
+		if err != nil {
+			logx.Info(xerror.New("旁路缓存失败--删除步骤", err))
+		}
+	}
+}
 
 func DelCache(key string, ctx context.Context) error {
 	err := db.GetRedis().Del(ctx, key).Err()
