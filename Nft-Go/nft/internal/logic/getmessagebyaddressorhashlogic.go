@@ -6,10 +6,9 @@ import (
 	"Nft-Go/common/api/nft"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/dao"
+	"Nft-Go/nft/internal/svc"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
-
-	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -38,11 +37,14 @@ func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMe
 	mysql := dao.DcInfo
 	var dto nft.GetMessageByAddressOrHashDTO
 	if len(in.Hash) == addressLen {
+
 		var checkDto blc.CheckDcAndReturnTimeDTO
 		status, err := blcService.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
 		if err != nil {
 			return nil, xerror.New("获取用户状态失败")
 		}
+		dto.AccountMessageVO.RegisterTime = util.TurnTime(status.GetStatus())
+
 		collectionList, err := mysql.WithContext(l.ctx).Where(mysql.OwnerAddress.Eq(in.Hash)).Find()
 		if err != nil {
 			return nil, xerror.New("查询失败")
@@ -59,20 +61,19 @@ func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMe
 		if err != nil || !time.GetCheckResult() {
 			return nil, xerror.New("检查失败 请联系管理员")
 		}
-		timeList := time.TimeList
-		var overviewList []nft.DcOverviewVO
+		var overviewList []*nft.DcOverviewVO
 		for i := 0; i < len(collectionList); i++ {
 			v := collectionList[i]
-			overviewList = append(overviewList, nft.DcOverviewVO{
+			overviewList = append(overviewList, &nft.DcOverviewVO{
 				Id:      v.Id,
 				Hash:    v.Hash,
-				GetTime: util.TurnTime(timeList[i]),
+				GetTime: util.TurnTime(time.TimeList[i]),
 			})
 		}
 		dto.AccountMessageVO = &nft.AccountMessageVO{
 			Hash:             in.Hash,
 			RegisterTime:     util.TurnTime(status.GetStatus()),
-			OwnedCollections: nil,
+			OwnedCollections: overviewList,
 		}
 		dto.Type = 0
 	} else {
@@ -93,4 +94,8 @@ func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMe
 		dto.Type = 1
 	}
 	return &dto, nil
+}
+
+func loadDto() {
+
 }
