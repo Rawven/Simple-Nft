@@ -8,6 +8,8 @@ import (
 	"Nft-Go/nft/internal/dao"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
+	"go.uber.org/multierr"
+	"sync"
 
 	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,31 +36,48 @@ func (l *GetDcHistoryLogic) GetDcHistory(in *nft.GetDcHistoryRequest) (*nft.Coll
 func GetDcHistory(in *nft.GetDcHistoryRequest, ctx context.Context) (*nft.CollectionMessageOnChainVO, error) {
 	blcService := api.GetBlcService()
 	mysql := dao.PoolInfo
-	message, err := blcService.GetDcHistoryAndMessage(ctx, &blc.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
-	if err != nil {
-		return nil, xerror.New("调用合约失败", err)
+	var vo *nft.CollectionMessageOnChainVO
+
+	var wg sync.WaitGroup
+	var merr error
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		message, err := blcService.GetDcHistoryAndMessage(ctx, &blc.GetDcHistoryAndMessageRequest{Id: int64(in.Id)})
+		if err != nil {
+			multierr.AppendInto(&merr, xerror.New("查询失败", err))
+			return
+		}
+		traceArgs := message.GetArgs()
+		var list []*nft.TraceBackVO
+		for _, trace := range traceArgs {
+			list = append(list, &nft.TraceBackVO{
+				FromAddress:  trace.Sender,
+				ToAddress:    trace.To,
+				TransferType: trace.OperateRecord,
+				TransferTime: util.TurnTime(trace.OperateTime),
+			})
+		}
+		vo.TraceBackVOList = list
+		vo.Name = message.DcName
+		vo.Hash = util.ByteArray2HexString(message.Hash)
+		vo.CreatorAddress = message.CreatorAddress
+		vo.OwnerAddress = message.OwnerAddress
+	}()
+
+	go func() {
+		defer wg.Done()
+		poolInfo, err := mysql.WithContext(ctx).Where(mysql.PoolId.Eq(in.Id)).First()
+		if err != nil {
+			multierr.AppendInto(&merr, xerror.New("查询失败", err))
+			return
+		}
+		vo.Description = poolInfo.Description
+	}()
+	wg.Wait()
+	if merr != nil {
+		return nil, merr
 	}
-	traceArgs := message.GetArgs()
-	var list []*nft.TraceBackVO
-	for _, trace := range traceArgs {
-		list = append(list, &nft.TraceBackVO{
-			FromAddress:  trace.Sender,
-			ToAddress:    trace.To,
-			TransferType: trace.OperateRecord,
-			TransferTime: util.TurnTime(trace.OperateTime),
-		})
-	}
-	poolInfo, err := mysql.WithContext(ctx).Where(mysql.PoolId.Eq(in.Id)).First()
-	if err != nil {
-		return nil, xerror.New("查询失败",
-			err)
-	}
-	return &nft.CollectionMessageOnChainVO{
-		Name:            message.DcName,
-		Hash:            util.ByteArray2HexString(message.Hash),
-		Description:     poolInfo.Description,
-		CreatorAddress:  message.CreatorAddress,
-		OwnerAddress:    message.OwnerAddress,
-		TraceBackVOList: list,
-	}, nil
+	return vo, nil
 }
