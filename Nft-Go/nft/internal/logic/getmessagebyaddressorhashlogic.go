@@ -6,11 +6,12 @@ import (
 	"Nft-Go/common/api/nft"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/dao"
+	"Nft-Go/nft/internal/svc"
 	"context"
 	"github.com/duke-git/lancet/v2/xerror"
-
-	"Nft-Go/nft/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
+	"go.uber.org/multierr"
+	"sync"
 )
 
 var addressLen = 42
@@ -38,11 +39,10 @@ func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMe
 	mysql := dao.DcInfo
 	var dto nft.GetMessageByAddressOrHashDTO
 	if len(in.Hash) == addressLen {
+
+		//查询用户信息
 		var checkDto blc.CheckDcAndReturnTimeDTO
-		status, err := blcService.GetUserStatus(l.ctx, &blc.GetUserStatusRequest{Hash: in.GetHash()})
-		if err != nil {
-			return nil, xerror.New("获取用户状态失败")
-		}
+		dto.Type = 0
 		collectionList, err := mysql.WithContext(l.ctx).Where(mysql.OwnerAddress.Eq(in.Hash)).Find()
 		if err != nil {
 			return nil, xerror.New("查询失败")
@@ -53,28 +53,52 @@ func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMe
 		}
 		checkDto.Owner = in.Hash
 		checkDto.CollectionHash = checkArgs
-		time, err := blcService.CheckDcAndReturnTime(l.ctx, &blc.CheckDcAndReturnTimeRequest{
-			Dto: &checkDto,
-		})
-		if err != nil || !time.GetCheckResult() {
-			return nil, xerror.New("检查失败 请联系管理员")
-		}
-		timeList := time.TimeList
-		var overviewList []nft.DcOverviewVO
-		for i := 0; i < len(collectionList); i++ {
-			v := collectionList[i]
-			overviewList = append(overviewList, nft.DcOverviewVO{
-				Id:      v.Id,
-				Hash:    v.Hash,
-				GetTime: util.TurnTime(timeList[i]),
+
+		//并发查询用户状态和dc时间
+		var wg sync.WaitGroup
+		//errs用于收集错误
+		var merr error
+		wg.Add(2)
+
+		//查询用户状态
+		go func() {
+			defer wg.Done()
+			status, err := blcService.GetUserStatus(context.Background(), &blc.GetUserStatusRequest{Hash: in.GetHash()})
+			if err != nil {
+				multierr.AppendInto(&merr, xerror.New("获取用户状态失败", err))
+				return
+			}
+			dto.AccountMessageVO.RegisterTime = util.TurnTime(status.GetStatus())
+		}()
+		//查询dc时间
+		go func() {
+			defer wg.Done()
+			time, err := blcService.CheckDcAndReturnTime(context.Background(), &blc.CheckDcAndReturnTimeRequest{
+				Dto: &checkDto,
 			})
+			if err != nil || !time.GetCheckResult() {
+				multierr.AppendInto(&merr, xerror.New("获取用户状态失败", err))
+				return
+			}
+			var overviewList []*nft.DcOverviewVO
+			for i := 0; i < len(collectionList); i++ {
+				v := collectionList[i]
+				overviewList = append(overviewList, &nft.DcOverviewVO{
+					Id:      v.Id,
+					Hash:    v.Hash,
+					GetTime: util.TurnTime(time.TimeList[i]),
+				})
+			}
+			dto.AccountMessageVO.Hash = in.Hash
+			dto.AccountMessageVO.OwnedCollections = overviewList
+		}()
+		wg.Wait()
+		//如果有错误则返回
+		if merr != nil {
+			return nil, merr
 		}
-		dto.AccountMessageVO = &nft.AccountMessageVO{
-			Hash:             in.Hash,
-			RegisterTime:     util.TurnTime(status.GetStatus()),
-			OwnedCollections: nil,
-		}
-		dto.Type = 0
+		return &dto, nil
+
 	} else {
 		hashBytes, _ := util.HexString2ByteArray(in.Hash)
 		id, err := blcService.GetHashToDcId(l.ctx, &blc.GetHashToDcIdRequest{

@@ -5,13 +5,20 @@ import (
 
 	"Nft-Go/gateway/internal/logic/nft"
 	"Nft-Go/gateway/internal/svc"
+	"Nft-Go/gateway/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func GetAllPoolHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetDcPagesHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		l := nft.NewGetAllPoolLogic(r.Context(), svcCtx)
-		resp, err := l.GetAllPool()
+		var req types.PageRequest
+		if err := httpx.Parse(r, &req); err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+			return
+		}
+
+		l := nft.NewGetDcPagesLogic(r.Context(), svcCtx)
+		resp, err := l.GetDcPages(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
