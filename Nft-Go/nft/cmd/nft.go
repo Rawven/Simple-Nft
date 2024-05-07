@@ -5,13 +5,14 @@ import (
 	"Nft-Go/common/api/nft"
 	"Nft-Go/common/db"
 	"Nft-Go/common/interceptor"
+	"Nft-Go/common/job"
 	"Nft-Go/common/registry"
 	"Nft-Go/common/util"
 	"Nft-Go/nft/internal/dao"
-	"Nft-Go/nft/internal/schedule"
+	"Nft-Go/nft/internal/mq"
 	"Nft-Go/nft/internal/server"
 	"Nft-Go/nft/internal/svc"
-	"Nft-Go/nft/mq"
+	"Nft-Go/nft/internal/task"
 	"flag"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/spf13/viper"
@@ -27,21 +28,22 @@ var configFile = flag.String("f", "etc/nft.yaml", "the config file")
 
 func main() {
 	flag.Parse()
-	//config
 	util.InitConfig("..")
 	registry.InitNacos()
-	//db
 	db.InitMysql()
 	dao.SetDefault(db.GetMysql())
 	db.InitRedis()
 	db.InitIpfs(viper.GetString("ipfs"))
-	//mq
 	mq.InitMq()
-	//api
 	api.InitDubbo()
 	registry.Discovery([]string{"nft"})
-	//scheduler
-	schedule.InitListeningRankAdd()
+	err := job.RegAndRunTask([]job.XxlTaskFunc{
+		task.AuctionCheck(),
+		task.RankAdd(),
+	})
+	if err != nil {
+		return
+	}
 	//other
 	log := logc.LogConf{
 		Encoding: "plain",

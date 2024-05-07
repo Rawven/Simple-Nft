@@ -22,7 +22,7 @@ import (
 	"Nft-Go/common/util"
 	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/model"
-	"Nft-Go/user/sse"
+	"Nft-Go/user/internal/sse"
 	"context"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
