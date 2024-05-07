@@ -29,8 +29,8 @@ func NewGetDcPagesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDcP
 
 func (l *GetDcPagesLogic) GetDcPages(req *types.PageRequest) (resp *types.CommonResponse, err error) {
 	dc, err := api.GetNftClient().GetDcPages(l.ctx, &nft.PageRequest{
-		Page: 1,
-		Size: 0,
+		Page: req.Page,
+		Size: req.PageSize,
 	})
 	if err != nil {
 		return nil, err

@@ -33,6 +33,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, error) {
 	//链上注册
 	dubbo := api.GetBlcService()
+	rds := db.GetRedis()
 	result, err := dubbo.SignUp(l.ctx, &emptypb.Empty{})
 	if err != nil {
 		return nil, err
@@ -47,7 +48,6 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		Address:    result.GetAddress(),
 		Avatar:     in.GetAvatar(),
 	}
-	rds := db.GetRedis()
 	err = dao.Q.Transaction(func(tx *dao.Query) error {
 		err := tx.User.WithContext(l.ctx).Create(&mod)
 		if err != nil {
@@ -67,7 +67,6 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 	if err != nil {
 		return nil, xerror.New("事务失败: %w", err)
 	}
-
 	info := global2.UserInfo{
 		UserId:     int32(mod.ID),
 		UserName:   mod.Username,
@@ -77,6 +76,9 @@ func (l *RegisterLogic) Register(in *user.RegisterRequest) (*user.Response, erro
 		PrivateKey: mod.PrivateKey,
 	}
 	token, err := global2.GetJwt(int(info.UserId))
+	if err != nil {
+		return nil, xerror.New("jwt failed: %w", err)
+	}
 	json, err := jsonx.MarshalToString(info)
 	if err != nil {
 		return nil, xerror.New("marshal failed: %w", err)

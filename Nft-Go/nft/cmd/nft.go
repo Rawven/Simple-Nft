@@ -39,7 +39,7 @@ func main() {
 	mq.InitMq()
 	//api
 	api.InitDubbo()
-	registry.InitUserService()
+	registry.Discovery([]string{"nft"})
 	//scheduler
 	schedule.InitListeningRankAdd()
 	//other
@@ -59,10 +59,9 @@ func main() {
 		}
 	})
 	defer s.Stop()
-
 	s.AddUnaryInterceptors(interceptor.LogInterceptor)
 	logger.Info("Starting rpc server at %s...\n", c.ListenOn)
 	// register service to nacos
-	registry.RegistryNacos("nft.rpc", c)
+	registry.RegiService("nft.rpc", c)
 	s.Start()
 }

@@ -52,6 +52,9 @@ func (l *PrizeDcFromActivityLogic) PrizeDcFromActivity(in *nft.GetDcFromActivity
 			Password:   []byte(in.GetPassword()),
 		},
 	})
+	if err != nil {
+		return nil, xerror.New("调用合约领取藏品失败", err)
+	}
 	//异步更新数据库
 	go asyncPrizeUpdateDb(in, pool, info, mint.GetUniqueId())
 	return &nft.Response{

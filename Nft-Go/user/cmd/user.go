@@ -61,7 +61,7 @@ func main() {
 	defer s.Stop()
 	s.AddUnaryInterceptors(interceptor.LogInterceptor)
 	// register service to nacos
-	registry.RegistryNacos("user.rpc", c)
+	registry.RegiService("user.rpc", c)
 	logger.Info("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()
 

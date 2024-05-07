@@ -37,13 +37,13 @@ func InitNacos() {
 		LogLevel:            "debug",
 	}
 }
-func RegistryNacos(serviceName string, c Config) {
+func RegiService(serviceName string, c Config) {
 	// register service to nacos
 	opts := nacos.NewNacosConfig(serviceName, c.ListenOn, sc, cc)
 	_ = nacos.RegisterService(opts)
 }
 
-func InitNftService() {
+func Discovery(serviceNames []string) {
 	client, err := clients.NewNamingClient(
 		vo.NacosClientParam{
 			ClientConfig:  cc,
@@ -53,38 +53,26 @@ func InitNftService() {
 	if err != nil {
 		logger.Error("初始化nacos失败: %s", err.Error())
 	}
-	instance, err := client.SelectOneHealthyInstance(vo.SelectOneHealthInstanceParam{
-		ServiceName: "nft.rpc",
-		GroupName:   "DEFAULT_GROUP",     // 默认值DEFAULT_GROUP
-		Clusters:    []string{"DEFAULT"}, // 默认值DEFAULT
-	})
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", instance.Ip, instance.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("监听%s:%d失败:%s", instance.Ip, instance.Port, err.Error())
+	for _, service := range serviceNames {
+		service = service + ".rpc"
+		instance, err := client.SelectOneHealthyInstance(vo.SelectOneHealthInstanceParam{
+			ServiceName: service,
+			GroupName:   "DEFAULT_GROUP",     // 默认值DEFAULT_GROUP
+			Clusters:    []string{"DEFAULT"}, // 默认值DEFAULT
+		})
+		if err != nil {
+			logger.Error("获取服务实例失败: %s", err.Error())
+		}
+		conn, err := grpc.Dial(fmt.Sprintf("%s:%d", instance.Ip, instance.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
+		if err != nil {
+			log.Fatalf("监听%s:%d失败:%s", instance.Ip, instance.Port, err.Error())
+		}
+		switch service {
+		case "nft.rpc":
+			api.SetNftClient(nft.NewNftClient(conn))
+		case "user.rpc":
+			api.SetUserClient(user.NewUserClient(conn))
+		}
+		logger.Info("%s rpc init success", service)
 	}
-	api.SetNftClient(nft.NewNftClient(conn))
-	logger.Info("nft rpc init success")
-}
-
-func InitUserService() {
-	namingClient, err := clients.NewNamingClient(
-		vo.NacosClientParam{
-			ClientConfig:  cc,
-			ServerConfigs: sc,
-		},
-	)
-	if err != nil {
-		logger.Error("初始化nacos失败: %s", err.Error())
-	}
-	instance1, err := namingClient.SelectOneHealthyInstance(vo.SelectOneHealthInstanceParam{
-		ServiceName: "user.rpc",
-		GroupName:   "DEFAULT_GROUP",
-		Clusters:    []string{"DEFAULT"},
-	})
-	conn1, err := grpc.Dial(fmt.Sprintf("%s:%d", instance1.Ip, instance1.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("监听%s:%d失败:%s", instance1.Ip, instance1.Port, err.Error())
-	}
-	api.SetUserClient(user.NewUserClient(conn1))
-	logger.Info("user rpc init success")
 }

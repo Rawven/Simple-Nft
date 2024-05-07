@@ -112,8 +112,5 @@ func createPoolService(data *fastjson.Value) error {
 	}
 	//发送通知 sse通知所有用户
 	sse.SendNotificationToAllUser(data.Get("title").String() + data.Get("description").String())
-	if err != nil {
-		return xerror.New("发送通知失败", err)
-	}
 	return nil
 }

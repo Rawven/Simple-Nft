@@ -29,8 +29,8 @@ func NewGetPoolPagesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetP
 
 func (l *GetPoolPagesLogic) GetPoolPages(req *types.PageRequest) (resp *types.CommonResponse, err error) {
 	pool, err := api.GetNftClient().GetPoolPages(l.ctx, &nft.PageRequest{
-		Page: 1,
-		Size: 0,
+		Page: req.Page,
+		Size: req.PageSize,
 	})
 	if err != nil {
 		return nil, err

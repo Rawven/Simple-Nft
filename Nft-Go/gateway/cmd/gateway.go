@@ -21,8 +21,7 @@ func main() {
 	flag.Parse()
 	util.InitConfig("..")
 	registry.InitNacos()
-	registry.InitNftService()
-	registry.InitUserService()
+	registry.Discovery([]string{"user", "nft"})
 	db.InitRedis()
 	util.InitLimiter()
 	var c config.Config
@@ -33,7 +32,6 @@ func main() {
 	logc.MustSetup(log)
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
-
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 	logger.Info("Starting server at %s:%d...\n", c.Host, c.Port)

@@ -37,7 +37,6 @@ func GetDcHistory(in *nft.GetDcHistoryRequest, ctx context.Context) (*nft.Collec
 	blcService := api.GetBlcService()
 	mysql := dao.PoolInfo
 	var vo *nft.CollectionMessageOnChainVO
-
 	var wg sync.WaitGroup
 	var merr error
 	wg.Add(2)

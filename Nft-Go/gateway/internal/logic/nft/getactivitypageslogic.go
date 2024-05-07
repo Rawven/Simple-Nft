@@ -29,8 +29,8 @@ func NewGetActivityPagesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *GetActivityPagesLogic) GetActivityPages(req *types.PageRequest) (resp *types.CommonResponse, err error) {
 	activity, err := api.GetNftClient().GetActivityPages(l.ctx, &nft.PageRequest{
-		Page: 1,
-		Size: 0,
+		Page: req.Page,
+		Size: req.PageSize,
 	})
 	if err != nil {
 		return nil, err

@@ -9,7 +9,6 @@ import (
 	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/svc"
 	"context"
-	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/duke-git/lancet/v2/xerror"
 	"github.com/zeromicro/go-zero/core/jsonx"
@@ -67,17 +66,11 @@ func (l *LoginLogic) Login(in *user.LoginRequest) (*user.Response, error) {
 	if err != nil {
 		return nil, xerror.New("json序列化失败")
 	}
-	toString := convertor.ToString(_user.ID)
-	logger.Info(json)
-	result, err := red.Set(l.ctx, toString, json, 0).Result()
+	idStr := convertor.ToString(_user.ID)
+	result, err := red.Set(l.ctx, idStr, json, 0).Result()
 	if err != nil || result == "" {
 		return nil, xerror.New("redis存储失败", err)
 	}
-	id, err := red.Get(l.ctx, "24").Result()
-	if err != nil {
-		return nil, err
-	}
-	logger.Info("id", id)
 	return &user.Response{
 		Message: "登录成功",
 		Code:    200,
