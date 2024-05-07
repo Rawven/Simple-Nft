@@ -28,5 +28,4 @@ fisco:
 rateLimit:
   maxTokens: 100
   tokenRate: 20
-
 key: rawven
