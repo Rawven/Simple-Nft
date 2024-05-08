@@ -4,8 +4,9 @@
 package userclient
 
 import (
-	"Nft-Go/common/api/user"
 	"context"
+
+	"Nft-Go/user/pb/user"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -32,6 +33,7 @@ type (
 		Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 		RefreshTokens(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 		Upload(ctx context.Context, opts ...grpc.CallOption) (user.User_UploadClient, error)
+		SaveNotice(ctx context.Context, in *Notice, opts ...grpc.CallOption) (*Response, error)
 		GetAllNotices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NoticeList, error)
 		GetNoticeByTitle(ctx context.Context, in *TitleNoticeRequest, opts ...grpc.CallOption) (*NoticeList, error)
 		GetNoticeById(ctx context.Context, in *IdNoticeRequest, opts ...grpc.CallOption) (*Notice, error)
@@ -75,6 +77,11 @@ func (m *defaultUser) RefreshTokens(ctx context.Context, in *Empty, opts ...grpc
 func (m *defaultUser) Upload(ctx context.Context, opts ...grpc.CallOption) (user.User_UploadClient, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Upload(ctx, opts...)
+}
+
+func (m *defaultUser) SaveNotice(ctx context.Context, in *Notice, opts ...grpc.CallOption) (*Response, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.SaveNotice(ctx, in, opts...)
 }
 
 func (m *defaultUser) GetAllNotices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NoticeList, error) {
