@@ -37,9 +37,6 @@ func (l *GetActivityPagesLogic) GetActivityPages(in *nft.PageRequest) (*nft.Acti
 			return nil, xerror.New("数据库查询失败", err)
 		}
 		activityPageVOList := dao.GetActivityForPage(activities)
-		if err != nil {
-			return nil, xerror.New("数据库查询失败", err)
-		}
 		//如果查询的是热点数据，异步加载热点数据到缓存
 		go func() {
 			if in.Page <= 2 {

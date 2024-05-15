@@ -10,7 +10,7 @@ message Response{
 }
 
 
-service Nft {
+service NftBase {
   rpc GetMessageByAddressOrHash (GetMessageByAddressOrHashRequest) returns (GetMessageByAddressOrHashDTO) {}
   rpc CreateActivity (CreateActivityRequest) returns (Response) {}
   rpc PrizeDcFromActivity (GetDcFromActivityRequest) returns (Response) {}
@@ -28,8 +28,11 @@ service Nft {
   rpc BuyFromPool (BuyFromPoolRequest) returns (Response) {}
   rpc SelectPool (SelectPoolRequest) returns (PoolPageVOList) {}
   rpc GetPoolById (GetPoolByIdRequest) returns (PoolDetailsVO) {}
-
   rpc GetMyPool (Empty) returns (PoolPageVOList) {}
+}
+
+service NftAuction{
+
 }
 
 message Empty {

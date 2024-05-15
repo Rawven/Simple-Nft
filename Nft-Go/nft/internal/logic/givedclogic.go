@@ -31,22 +31,22 @@ func NewGiveDcLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GiveDcLogi
 
 func (l *GiveDcLogic) GiveDc(in *nft.GiveDcRequest) (*nft.Response, error) {
 	mysql := dao.DcInfo
+	userRpc := api.GetUserService()
+	blcService := api.GetBlcService()
 	info, err := util.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, xerror.New("获取用户信息失败", err)
 	}
-	userRpc := api.GetUserService()
-	blcService := api.GetBlcService()
 	name, err := userRpc.GetUserInfoByName(l.ctx, &user.UserNameRequest{Username: in.GetToName()})
+	if err != nil {
+		return nil, xerror.New("获取用户信息失败", err)
+	}
 	dc, err := mysql.WithContext(l.ctx).Where(mysql.Id.Eq(in.DcId)).First()
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
 	if name.Address != in.ToAddress || dc.OwnerName != info.UserName {
-		return nil, xerror.New("you are not the owner of this dc")
-	}
-	if err != nil {
-		return nil, xerror.New("调用user失败" + err.Error())
+		return nil, xerror.New("信息不匹配")
 	}
 	_, err = blcService.Give(l.ctx, &blc.GiveRequest{
 		UserKey: info.PrivateKey,

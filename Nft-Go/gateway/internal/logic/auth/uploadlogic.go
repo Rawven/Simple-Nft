@@ -24,7 +24,6 @@ func NewUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UploadLogi
 }
 
 func (l *UploadLogic) Upload(req *types.UploadRequest) (resp *types.CommonResponse, err error) {
-	// todo: add your logic here and delete this line
 
 	return
 }

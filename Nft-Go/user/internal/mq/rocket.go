@@ -22,7 +22,7 @@ import (
 	"Nft-Go/common/util"
 	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/model"
-	"Nft-Go/user/sse"
+	"Nft-Go/user/internal/sse"
 	"context"
 	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/consumer"
@@ -112,8 +112,5 @@ func createPoolService(data *fastjson.Value) error {
 	}
 	//发送通知 sse通知所有用户
 	sse.SendNotificationToAllUser(data.Get("title").String() + data.Get("description").String())
-	if err != nil {
-		return xerror.New("发送通知失败", err)
-	}
 	return nil
 }

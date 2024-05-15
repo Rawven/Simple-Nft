@@ -5,7 +5,10 @@ redis:
   address: 10.21.32.221:6379
   password: 123456
 ipfs: localhost:5001
-
+xxl:
+  server: http://10.21.32.192/xxl-job-admin
+  token: xdclass.net
+  key: Nft-Go
 # middleware
 rocketmq:
   group: testGroup
@@ -25,5 +28,4 @@ fisco:
 rateLimit:
   maxTokens: 100
   tokenRate: 20
-
 key: rawven

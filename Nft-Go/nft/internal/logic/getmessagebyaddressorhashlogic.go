@@ -39,7 +39,6 @@ func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMe
 	mysql := dao.DcInfo
 	var dto nft.GetMessageByAddressOrHashDTO
 	if len(in.Hash) == addressLen {
-
 		//查询用户信息
 		var checkDto blc.CheckDcAndReturnTimeDTO
 		dto.Type = 0
@@ -53,13 +52,11 @@ func (l *GetMessageByAddressOrHashLogic) GetMessageByAddressOrHash(in *nft.GetMe
 		}
 		checkDto.Owner = in.Hash
 		checkDto.CollectionHash = checkArgs
-
 		//并发查询用户状态和dc时间
 		var wg sync.WaitGroup
 		//errs用于收集错误
 		var merr error
 		wg.Add(2)
-
 		//查询用户状态
 		go func() {
 			defer wg.Done()

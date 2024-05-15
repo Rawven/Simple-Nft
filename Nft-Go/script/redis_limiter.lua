@@ -10,7 +10,7 @@ local lastTimestamp = tonumber(result[2])
 if not currentTokens then
     currentTokens = maxTokens
 else
--- 计算桶中的令牌数
+    -- 计算桶中的令牌数
     local timePassed = currentTime - lastTimestamp
     local tokensToAdd = timePassed * tokenRate
     currentTokens = math.min(currentTokens + tokensToAdd, maxTokens)
@@ -21,6 +21,6 @@ if currentTokens and currentTokens > 0 then
     redis.call("hset", key, "timestamp", currentTime)
     return 1
 else
--- 如果桶中没有令牌 则返回0
+    -- 如果桶中没有令牌 则返回0
     return 0
 end

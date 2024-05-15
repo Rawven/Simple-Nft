@@ -2,7 +2,7 @@ package logic
 
 import (
 	"Nft-Go/common/api/user"
-	global2 "Nft-Go/common/util"
+	global "Nft-Go/common/util"
 	"Nft-Go/user/internal/svc"
 	"context"
 
@@ -24,12 +24,12 @@ func NewRefreshTokensLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ref
 }
 
 func (l *RefreshTokensLogic) RefreshTokens(in *user.Empty) (*user.Response, error) {
-	info, err := global2.GetUserInfo(l.ctx)
+	info, err := global.GetUserInfo(l.ctx)
 	if err != nil {
 		return nil, err
 	}
 	// 生成新的token
-	jwt, err := global2.GetJwt(int(info.UserId))
+	jwt, err := global.GetJwt(int(info.UserId))
 	if err != nil {
 		return nil, err
 	}
