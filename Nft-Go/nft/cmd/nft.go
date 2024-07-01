@@ -36,7 +36,7 @@ func main() {
 	db.InitIpfs(viper.GetString("ipfs"))
 	mq.InitMq()
 	api.InitDubbo()
-	registry.Discovery([]string{"nft"})
+	registry.Discovery([]string{"user"})
 	err := job.RegAndRunTask([]job.XxlTaskFunc{
 		task.AuctionCheck(),
 		task.RankAdd(),

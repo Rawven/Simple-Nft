@@ -11,7 +11,6 @@ import (
 	"Nft-Go/user/internal/dao"
 	"Nft-Go/user/internal/mq"
 	"Nft-Go/user/internal/server"
-	"Nft-Go/user/internal/sse"
 	"Nft-Go/user/internal/svc"
 	"Nft-Go/user/internal/task"
 	"flag"
@@ -35,7 +34,6 @@ func main() {
 	dao.SetDefault(db.GetMysql())
 	db.InitRedis()
 	db.InitIpfs(viper.GetString("ipfs"))
-	sse.InitSse()
 	mq.InitMq()
 	api.InitDubbo()
 	err := job.RegAndRunTask([]job.XxlTaskFunc{task.UpdateRanking()})

@@ -24,6 +24,7 @@ const (
 	User_Logout_FullMethodName              = "/user.User/logout"
 	User_RefreshTokens_FullMethodName       = "/user.User/refreshTokens"
 	User_Upload_FullMethodName              = "/user.User/upload"
+	User_SaveNotice_FullMethodName          = "/user.User/saveNotice"
 	User_GetAllNotices_FullMethodName       = "/user.User/getAllNotices"
 	User_GetNoticeByTitle_FullMethodName    = "/user.User/getNoticeByTitle"
 	User_GetNoticeById_FullMethodName       = "/user.User/getNoticeById"
@@ -42,6 +43,7 @@ type UserClient interface {
 	Logout(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 	RefreshTokens(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Response, error)
 	Upload(ctx context.Context, opts ...grpc.CallOption) (User_UploadClient, error)
+	SaveNotice(ctx context.Context, in *Notice, opts ...grpc.CallOption) (*Response, error)
 	GetAllNotices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NoticeList, error)
 	GetNoticeByTitle(ctx context.Context, in *TitleNoticeRequest, opts ...grpc.CallOption) (*NoticeList, error)
 	GetNoticeById(ctx context.Context, in *IdNoticeRequest, opts ...grpc.CallOption) (*Notice, error)
@@ -129,6 +131,15 @@ func (x *userUploadClient) CloseAndRecv() (*Response, error) {
 	return m, nil
 }
 
+func (c *userClient) SaveNotice(ctx context.Context, in *Notice, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, User_SaveNotice_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userClient) GetAllNotices(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*NoticeList, error) {
 	out := new(NoticeList)
 	err := c.cc.Invoke(ctx, User_GetAllNotices_FullMethodName, in, out, opts...)
@@ -201,6 +212,7 @@ type UserServer interface {
 	Logout(context.Context, *Empty) (*Response, error)
 	RefreshTokens(context.Context, *Empty) (*Response, error)
 	Upload(User_UploadServer) error
+	SaveNotice(context.Context, *Notice) (*Response, error)
 	GetAllNotices(context.Context, *Empty) (*NoticeList, error)
 	GetNoticeByTitle(context.Context, *TitleNoticeRequest) (*NoticeList, error)
 	GetNoticeById(context.Context, *IdNoticeRequest) (*Notice, error)
@@ -229,6 +241,9 @@ func (UnimplementedUserServer) RefreshTokens(context.Context, *Empty) (*Response
 }
 func (UnimplementedUserServer) Upload(User_UploadServer) error {
 	return status.Errorf(codes.Unimplemented, "method Upload not implemented")
+}
+func (UnimplementedUserServer) SaveNotice(context.Context, *Notice) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveNotice not implemented")
 }
 func (UnimplementedUserServer) GetAllNotices(context.Context, *Empty) (*NoticeList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllNotices not implemented")
@@ -360,6 +375,24 @@ func (x *userUploadServer) Recv() (*UploadRequest, error) {
 		return nil, err
 	}
 	return m, nil
+}
+
+func _User_SaveNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Notice)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SaveNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SaveNotice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SaveNotice(ctx, req.(*Notice))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _User_GetAllNotices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -510,6 +543,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "refreshTokens",
 			Handler:    _User_RefreshTokens_Handler,
+		},
+		{
+			MethodName: "saveNotice",
+			Handler:    _User_SaveNotice_Handler,
 		},
 		{
 			MethodName: "getAllNotices",

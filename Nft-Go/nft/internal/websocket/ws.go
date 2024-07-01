@@ -23,6 +23,8 @@ func NewWebsocketServer() *Server {
 	return &Server{}
 }
 
+var ws *Server
+
 func (ws *Server) echo(w http.ResponseWriter, r *http.Request) {
 	// Upgrade HTTP request to WebSocket connection
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -33,7 +35,7 @@ func (ws *Server) echo(w http.ResponseWriter, r *http.Request) {
 	defer func(conn *websocket.Conn) {
 		err := conn.Close()
 		if err != nil {
-			log.Println(err)
+			logger.Error(err)
 		}
 	}(conn)
 	userId := getUserId(r)
@@ -56,10 +58,10 @@ func (ws *Server) echo(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (ws *Server) SendMessageToAll(messageType int, message []byte) {
+func (ws *Server) SendMessageToAll(message []byte) {
 	ws.mapForConnections.Range(func(key, value interface{}) bool {
 		conn := value.(*websocket.Conn)
-		err := conn.WriteMessage(messageType, message)
+		err := conn.WriteMessage(websocket.TextMessage, message)
 		if err != nil {
 			log.Println(err)
 			err := conn.Close()
@@ -72,13 +74,13 @@ func (ws *Server) SendMessageToAll(messageType int, message []byte) {
 	})
 }
 
-func (ws *Server) SendMessageToUser(userId int, messageType int, message []byte) error {
+func (ws *Server) SendMessageToUser(userId int, message []byte) error {
 	value, ok := ws.mapForConnections.Load(userId)
 	if !ok {
 		return fmt.Errorf("connection not found for user %v", userId)
 	}
 	conn := value.(*websocket.Conn)
-	return conn.WriteMessage(messageType, message)
+	return conn.WriteMessage(websocket.TextMessage, message)
 }
 
 func getUserId(r *http.Request) int {
@@ -91,4 +93,8 @@ func InitWebsocket() {
 	ws := NewWebsocketServer()
 	http.HandleFunc("/echo", ws.echo)
 	log.Fatal(http.ListenAndServe(":9991", nil))
+}
+
+func Use() *Server {
+	return ws
 }
