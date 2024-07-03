@@ -4,10 +4,9 @@ import (
 	"Nft-Go/common/db"
 	"Nft-Go/common/job"
 	"Nft-Go/common/util"
+	"Nft-Go/nft/internal/logic"
 	"context"
-	"fmt"
 	"github.com/dubbogo/gost/log/logger"
-	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/xxl-job/xxl-job-executor-go"
 	"strconv"
 	"time"
@@ -30,38 +29,67 @@ func RankAdd() job.XxlTaskFunc {
 			red := db.GetRedis()
 			ctx := context.Background()
 
-			// 先通过分布式锁完成排行榜的增加数据的获取
-			locked, err := red.SetNX(ctx, "rankAddLock", 1, 10*time.Second).Result()
-			if err != nil || !locked {
-				fmt.Println("获取分布式锁失败:", err)
-				return "获取分布式锁失败"
+			// 获取所有搜索热度和购买热度
+			buyResult, err := red.HGetAll(ctx, logic.RankAddBuy).Result()
+			if err != nil {
+				logger.Error("获取购买热度失败", err)
+				return "获取购买热度失败"
 			}
-			result, err := red.HGetAll(ctx, "rankAdd").Result()
-			for k, v := range result {
-				//让指定哈希表的指定值减少v
-				iV, _ := strconv.ParseInt(v, 10, 64)
-				red.HIncrBy(ctx, "rankAdd", k, -iV)
+
+			searchResult, err := red.HGetAll(ctx, logic.RankAddSearch).Result()
+			if err != nil {
+				logger.Error("获取搜索热度失败", err)
+				return "获取搜索热度失败"
 			}
-			red.Del(ctx, "rankAddLock")
+
+			// 清空现有的热度值
+			pipe := red.TxPipeline()
+
+			for k, v := range buyResult {
+				buyValue, err := strconv.ParseInt(v, 10, 64)
+				if err != nil {
+					logger.Error("转换购买热度值失败", err)
+					continue
+				}
+				pipe.HIncrBy(ctx, logic.RankAddBuy, k, -buyValue)
+			}
+
+			for k, v := range searchResult {
+				searchValue, err := strconv.ParseInt(v, 10, 64)
+				if err != nil {
+					logger.Error("转换搜索热度值失败", err)
+					continue
+				}
+				pipe.HIncrBy(ctx, logic.RankAddSearch, k, -searchValue)
+			}
+
+			// 计算新热度值并存储在新的哈希表中
+			// 热度公式：热度 = 购买热度 * 0.7 + 搜索热度 * 0.3
+			combinedHotness := make(map[string]float64)
+
+			for k, v := range buyResult {
+				buyValue, _ := strconv.ParseInt(v, 10, 64)
+				combinedHotness[k] += float64(buyValue) * 0.7
+			}
+
+			for k, v := range searchResult {
+				searchValue, _ := strconv.ParseInt(v, 10, 64)
+				combinedHotness[k] += float64(searchValue) * 0.3
+			}
 
 			// 进行排行榜数据更新
 			today := util.FormatDateForDay(time.Now())
-			// 使用 Redis Pipeline 进行批量操作
-			pipe := red.Pipeline()
-			for key, value := range result {
-				float, err := convertor.ToFloat(value)
-				if err != nil {
-					logger.Error("转换失败", err)
-					continue
-				}
-				pipe.ZIncrBy(ctx, today, float, key)
+
+			for key, value := range combinedHotness {
+				pipe.ZIncrBy(ctx, today, value, key)
 			}
-			// 执行 Pipeline
+
 			_, err = pipe.Exec(ctx)
 			if err != nil {
 				logger.Error("执行Pipeline失败", err)
 				return "执行Pipeline失败"
 			}
+
 			return "RankAdd执行成功"
 		},
 	}

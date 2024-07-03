@@ -2,7 +2,6 @@ package logic
 
 import (
 	"Nft-Go/common/api/nft"
-	"Nft-Go/common/db"
 	"Nft-Go/nft/internal/dao"
 	"context"
 
@@ -27,10 +26,10 @@ func NewSelectPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Select
 func (l *SelectPoolLogic) SelectPool(in *nft.SelectPoolRequest) (*nft.PoolPageVOList, error) {
 	//对热度榜进行操作
 	if in.Name != "" {
-		db.GetRedis().HIncrByFloat(l.ctx, "rankAdd", in.GetName(), 1)
+		incrementRank(l.ctx, RankAddSearch, in.GetName())
 	}
 	if in.CreatorName != "" {
-		db.GetRedis().HIncrByFloat(l.ctx, "rankAdd", in.GetCreatorName(), 1)
+		incrementRank(l.ctx, RankAddSearch, in.GetCreatorName())
 	}
 	info := dao.PoolInfo
 	//查询
