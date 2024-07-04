@@ -44,6 +44,7 @@ func (l *PrizeDcFromActivityLogic) PrizeDcFromActivity(in *nft.GetDcFromActivity
 	}
 	activity := activityAndPool.Activity
 	pool := activityAndPool.Pool
+	incrementRank(l.ctx, RankAddBuy, pool.Name)
 	//调用合约领取藏品 GetDcFromActivity内部会调用合约的mint方法 获得藏品的最新id和唯一哈希
 	mint, err := blcService.GetDcFromActivity(l.ctx, &blc.GetDcFromActivityRequest{
 		UserKey: info.PrivateKey,

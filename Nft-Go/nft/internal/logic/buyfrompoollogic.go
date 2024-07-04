@@ -50,6 +50,7 @@ func (l *BuyFromPoolLogic) BuyFromPool(in *nft.BuyFromPoolRequest) (*nft.Respons
 func asyncUpdatePoolInfoInMysql(in *nft.BuyFromPoolRequest, beforeMint *blc.BeforeMintDTO, info *util.UserInfo) {
 	util.Retry(func() error {
 		//开始事务
+		ctx := context.Background()
 		err := dao.Q.Transaction(func(tx *dao.Query) error {
 			//让PoolInfo指定id的数据中的left减一
 			_, err2 := tx.PoolInfo.Where(tx.PoolInfo.PoolId.Eq(in.PoolId)).Update(tx.PoolInfo.Left, tx.PoolInfo.Left.Sub(1))
@@ -80,16 +81,19 @@ func asyncUpdatePoolInfoInMysql(in *nft.BuyFromPoolRequest, beforeMint *blc.Befo
 			if err2 != nil {
 				return xerror.New("创建失败" + err2.Error())
 			}
+			incrementRank(ctx, RankAddBuy, pool.CreatorName)
+			incrementRank(ctx, RankAddBuy, pool.Name)
 			return nil
 		})
 		if err != nil {
 			return xerror.New("购买异步落库失败" + err.Error())
 		}
-		util.DelPageCache(context.Background(), "dc", 4)
-		err = util.SetCache(string(info.UserId), context.Background(), info)
+		util.DelPageCache(ctx, "dc", 4)
+		err = util.SetCache(string(info.UserId), ctx, info)
 		if err != nil {
 			logger.Error("购买异步落库失败" + err.Error())
 		}
 		return nil
+
 	})
 }
