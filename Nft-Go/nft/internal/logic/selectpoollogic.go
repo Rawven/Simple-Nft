@@ -24,13 +24,7 @@ func NewSelectPoolLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Select
 }
 
 func (l *SelectPoolLogic) SelectPool(in *nft.SelectPoolRequest) (*nft.PoolPageVOList, error) {
-	//对热度榜进行操作
-	if in.Name != "" {
-		incrementRank(l.ctx, RankAddSearch, in.GetName())
-	}
-	if in.CreatorName != "" {
-		incrementRank(l.ctx, RankAddSearch, in.GetCreatorName())
-	}
+
 	info := dao.PoolInfo
 	//查询
 	find, err := info.WithContext(l.ctx).

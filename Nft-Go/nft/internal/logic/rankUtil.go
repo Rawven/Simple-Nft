@@ -5,7 +5,7 @@ import (
 	"context"
 )
 
-const RankAddSearch = "RankAddSearch"
+const RankAddClick = "RankAddClick"
 const RankAddBuy = "RankAddBuy"
 
 func incrementRank(ctx context.Context, h string, key string) {

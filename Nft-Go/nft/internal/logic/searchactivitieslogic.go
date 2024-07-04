@@ -25,12 +25,6 @@ func NewSearchActivitiesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *SearchActivitiesLogic) SearchActivities(in *nft.SearchActivitiesRequest) (*nft.ActivityPageVOList, error) {
-	if in.ActivityName != "" {
-		incrementRank(l.ctx, RankAddSearch, in.GetActivityName())
-	}
-	if in.HostName != "" {
-		incrementRank(l.ctx, RankAddSearch, in.GetHostName())
-	}
 	ad := dao.ActivityInfo
 	find, err := ad.WithContext(l.ctx).Where(ad.HostName.Like(in.HostName), ad.Name.Like(in.GetActivityName())).Find()
 	if err != nil {

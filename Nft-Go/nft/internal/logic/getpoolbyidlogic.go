@@ -30,6 +30,7 @@ func (l *GetPoolByIdLogic) GetPoolById(in *nft.GetPoolByIdRequest) (*nft.PoolDet
 	if err != nil {
 		return nil, xerror.New("查询失败")
 	}
+	incrementRank(l.ctx, RankAddClick, poolInfo.Name)
 	return &nft.PoolDetailsVO{
 		PoolId:          in.Id,
 		Name:            poolInfo.Name,

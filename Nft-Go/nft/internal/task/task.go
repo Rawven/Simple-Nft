@@ -36,7 +36,7 @@ func RankAdd() job.XxlTaskFunc {
 				return "获取购买热度失败"
 			}
 
-			searchResult, err := red.HGetAll(ctx, logic.RankAddSearch).Result()
+			searchResult, err := red.HGetAll(ctx, logic.RankAddClick).Result()
 			if err != nil {
 				logger.Error("获取搜索热度失败", err)
 				return "获取搜索热度失败"
@@ -60,11 +60,11 @@ func RankAdd() job.XxlTaskFunc {
 					logger.Error("转换搜索热度值失败", err)
 					continue
 				}
-				pipe.HIncrBy(ctx, logic.RankAddSearch, k, -searchValue)
+				pipe.HIncrBy(ctx, logic.RankAddClick, k, -searchValue)
 			}
 
 			// 计算新热度值并存储在新的哈希表中
-			// 热度公式：热度 = 购买热度 * 0.7 + 搜索热度 * 0.3
+			// 热度公式：热度 = 购买热度 * 0.6 + 点击热度 * 0.4
 			combinedHotness := make(map[string]float64)
 
 			for k, v := range buyResult {
