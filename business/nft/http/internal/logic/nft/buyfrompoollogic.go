@@ -4,8 +4,9 @@ import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/blc"
 	"Nft-Go/common/util"
-	"Nft-Go/nft/base/dao"
-	"Nft-Go/nft/base/model"
+	"Nft-Go/nft/http/internal/dao"
+	"Nft-Go/nft/http/internal/logic"
+	"Nft-Go/nft/http/model"
 	"context"
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/duke-git/lancet/v2/xerror"
@@ -83,8 +84,8 @@ func asyncUpdatePoolInfoInMysql(in *types.BuyFromPoolRequest, beforeMint *blc.Be
 			if err2 != nil {
 				return xerror.New("创建失败" + err2.Error())
 			}
-			incrementRank(ctx, RankAddBuy, pool.CreatorName)
-			incrementRank(ctx, RankAddBuy, pool.Name)
+			logic.IncrementRank(ctx, logic.RankAddBuy, pool.CreatorName)
+			logic.IncrementRank(ctx, logic.RankAddBuy, pool.Name)
 			return nil
 		})
 		if err != nil {

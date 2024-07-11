@@ -36,9 +36,9 @@ func InitNacos() {
 		LogLevel:            "debug",
 	}
 }
-func RegiService(serviceName string, c Config) {
+func RegiService(serviceName string, listenOn string) {
 	// register service to nacos
-	opts := nacos.NewNacosConfig(serviceName, c.ListenOn, sc, cc)
+	opts := nacos.NewNacosConfig(serviceName, listenOn, sc, cc)
 	_ = nacos.RegisterService(opts)
 }
 

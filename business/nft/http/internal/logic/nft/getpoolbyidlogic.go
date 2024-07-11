@@ -1,7 +1,11 @@
 package nft
 
 import (
+	"Nft-Go/nft/http/internal/dao"
+	"Nft-Go/nft/http/internal/logic"
 	"context"
+	"github.com/duke-git/lancet/v2/xerror"
+	"github.com/spf13/viper"
 
 	"Nft-Go/nft/http/internal/svc"
 	"Nft-Go/nft/http/internal/types"
@@ -24,7 +28,21 @@ func NewGetPoolByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPo
 }
 
 func (l *GetPoolByIdLogic) GetPoolById(req *types.GetPoolByIdRequest) (resp *types.CommonResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	poolInfo, err := dao.PoolInfo.WithContext(l.ctx).Where(dao.PoolInfo.PoolId.Eq(req.Id)).First()
+	if err != nil {
+		return nil, xerror.New("查询失败")
+	}
+	logic.IncrementRank(l.ctx, logic.RankAddClick, poolInfo.Name)
+	return logic.OperateSuccess(&types.PoolDetailsVO{
+		PoolId:          req.Id,
+		Name:            poolInfo.Name,
+		Description:     poolInfo.Description,
+		Cid:             poolInfo.Cid,
+		Price:           poolInfo.Price,
+		Amount:          poolInfo.Amount,
+		Left:            poolInfo.Left,
+		CreatorName:     poolInfo.CreatorName,
+		CreatorAddress:  poolInfo.CreatorAddress,
+		ContractAddress: viper.GetString("fisco.contract.address.poolData"),
+	}, "success")
 }

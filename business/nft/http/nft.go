@@ -6,14 +6,13 @@ import (
 	"Nft-Go/common/job"
 	"Nft-Go/common/registry"
 	"Nft-Go/common/util"
-	"Nft-Go/nft/base/dao"
-	"Nft-Go/nft/base/mq"
-	"Nft-Go/nft/base/task"
 	"Nft-Go/nft/http/internal/config"
+	"Nft-Go/nft/http/internal/dao"
 	"Nft-Go/nft/http/internal/handler"
 	"Nft-Go/nft/http/internal/svc"
+	"Nft-Go/nft/http/mq"
+	"Nft-Go/nft/http/task"
 	"flag"
-	"github.com/dubbogo/gost/log/logger"
 	"github.com/spf13/viper"
 
 	"github.com/zeromicro/go-zero/core/conf"
@@ -47,8 +46,5 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 	server.Start()
-	var cR registry.Config
-	conf.MustLoad(*configFile, &cR)
-	logger.Info("Starting server at %s...\n", cR.ListenOn)
-	registry.RegiService("nft", cR)
+	registry.RegiService("nft", c.RestConf.Host)
 }
