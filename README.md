@@ -6,12 +6,6 @@
 - **bussiness模块**：业务逻辑服务
 - **gateway模块** ： 网关服务
 
-## TODO
-
-架构存在严重问题，需要做以下改进：
-- **接口调整**：
-  - Go 模块下的服务均为 RPC 暴露接口，需要改为 HTTP 接口暴露给网关，RPC 暴露给其它服务。
-
 ## 技术栈
 
 - **Go 方面**：Go-Zero Redis Mysql RocketMQ Nacos xxl-job
