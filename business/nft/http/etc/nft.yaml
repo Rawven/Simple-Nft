@@ -1,0 +1,6 @@
+Name: nft
+Host: 0.0.0.0
+Port: 8888
+nacos:
+  Hosts:
+    - 10.21.32.154:8848
