@@ -3,7 +3,7 @@ package nft
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/nft"
-	"Nft-Go/gateway/internal/result"
+	"Nft-Go/common/result"
 	"Nft-Go/gateway/internal/svc"
 	"Nft-Go/gateway/internal/types"
 	"context"

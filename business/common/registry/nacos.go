@@ -2,7 +2,6 @@ package registry
 
 import (
 	"Nft-Go/common/api"
-	"Nft-Go/common/api/nft"
 	"Nft-Go/common/api/user"
 	"fmt"
 	"github.com/dubbogo/gost/log/logger"
@@ -68,8 +67,6 @@ func Discovery(serviceNames []string) {
 			log.Fatalf("监听%s:%d失败:%s", instance.Ip, instance.Port, err.Error())
 		}
 		switch service {
-		case "nft.rpc":
-			api.SetNftClient(nft.NewNftClient(conn))
 		case "user.rpc":
 			api.SetUserClient(user.NewUserClient(conn))
 		}

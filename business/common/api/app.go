@@ -2,7 +2,6 @@ package api
 
 import (
 	"Nft-Go/common/api/blc"
-	"Nft-Go/common/api/nft"
 	"Nft-Go/common/api/user"
 	"dubbo.apache.org/dubbo-go/v3/config"
 	_ "dubbo.apache.org/dubbo-go/v3/imports"
@@ -13,7 +12,6 @@ import (
 // 引入生成的接口结构
 var grpcBlcImpl = new(blc.BlcRpcServiceClientImpl)
 var userRpc user.UserClient
-var nftRpc nft.NftClient
 
 // export DUBBO_GO_CONFIG_PATH=$PATH_TO_APP/conf/dubbogo.yaml
 func InitDubbo() {
@@ -28,16 +26,10 @@ func InitDubbo() {
 func GetBlcService() *blc.BlcRpcServiceClientImpl {
 	return grpcBlcImpl
 }
-func GetNftClient() nft.NftClient {
-	return nftRpc
-}
 func GetUserService() user.UserClient {
 	return userRpc
 }
 
 func SetUserClient(client user.UserClient) {
 	userRpc = client
-}
-func SetNftClient(client nft.NftClient) {
-	nftRpc = client
 }

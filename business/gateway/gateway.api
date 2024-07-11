@@ -50,66 +50,7 @@ service gateway {
     get /user/refreshToken returns (CommonResponse)
 }
 
-@server(
-    middleware: RateLimitMiddleware,JwtMiddleware
-    group: nft
-    prefix:     /v1
-)
-service gateway {
-    @handler GetMessageByAddressOrHash
-    post /nft/GetMessageByAddressOrHash (GetMessageByAddressOrHashRequest) returns (CommonResponse)
 
-    @handler CreateActivity
-    post /nft/CreateActivity (CreateActivityRequest) returns (CommonResponse)
-
-    @handler GetDcFromActivity
-    post /nft/GetDcFromActivity (GetDcFromActivityRequest) returns (CommonResponse)
-
-    @handler GetActivityPages
-    get /nft/GetActivityPages (PageRequest) returns (CommonResponse)
-
-    @handler GetOneActivity
-    post /nft/GetOneActivity (GetOneActivityRequest) returns (CommonResponse)
-
-    @handler SearchActivities
-    post /nft/SearchActivities (SearchActivitiesRequest) returns (CommonResponse)
-
-    @handler GiveDc
-    post /nft/GiveDc (GiveDcRequest) returns (CommonResponse)
-
-    @handler GetDcPages
-    get /nft/GetDcPages (PageRequest) returns (CommonResponse)
-
-    @handler SelectDc
-    post /nft/SelectDc (SelectDcRequest) returns (CommonResponse)
-
-    @handler GetDcById
-    post /nft/GetDcById (GetDcByIdRequest) returns (CommonResponse)
-
-    @handler GetMyDc
-    get /nft/GetMyDc returns (CommonResponse)
-
-    @handler GetDcHistory
-    post /nft/GetDcHistory (GetDcHistoryRequest) returns (CommonResponse)
-
-    @handler CreatePool
-    post /nft/CreatePool (CreatePoolRequest) returns (CommonResponse)
-
-    @handler BuyFromPool
-    post /nft/BuyFromPool (BuyFromPoolRequest) returns (CommonResponse)
-
-    @handler SelectPool
-    post /nft/SelectPool (SelectPoolRequest) returns (CommonResponse)
-
-    @handler GetPoolById
-    post /nft/GetPoolById (GetPoolByIdRequest) returns (CommonResponse)
-
-    @handler GetPoolPages
-    get /nft/GetPoolPages (PageRequest) returns (CommonResponse)
-
-    @handler GetMyPool
-    get /nft/GetMyPool returns (CommonResponse)
-}
 
 type CommonResponse {
     Code int `json:"code"`

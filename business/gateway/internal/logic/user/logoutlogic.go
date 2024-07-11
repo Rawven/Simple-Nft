@@ -3,7 +3,7 @@ package user
 import (
 	"Nft-Go/common/api"
 	"Nft-Go/common/api/user"
-	"Nft-Go/gateway/internal/result"
+	"Nft-Go/common/result"
 	"context"
 
 	"Nft-Go/gateway/internal/svc"

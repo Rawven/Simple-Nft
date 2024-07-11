@@ -5,22 +5,24 @@ go 1.22.0
 require (
 	dubbo.apache.org/dubbo-go/v3 v3.1.1
 	github.com/apache/rocketmq-client-go/v2 v2.1.2
+	github.com/avast/retry-go v2.7.0+incompatible
 	github.com/dubbogo/gost v1.14.0
 	github.com/dubbogo/grpc-go v1.42.10
 	github.com/dubbogo/triple v1.2.2-rc3
 	github.com/duke-git/lancet/v2 v2.3.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/gorilla/websocket v1.5.1
 	github.com/ipfs/go-ipfs-api v0.7.0
-	github.com/nacos-group/nacos-sdk-go v1.1.4
 	github.com/nacos-group/nacos-sdk-go/v2 v2.2.5
 	github.com/redis/go-redis/v9 v9.5.1
 	github.com/spf13/viper v1.18.2
 	github.com/valyala/fastjson v1.6.4
+	github.com/xxl-job/xxl-job-executor-go v1.2.0
 	github.com/zeromicro/go-zero v1.6.3
 	github.com/zeromicro/zero-contrib/zrpc/registry/nacos v0.0.0-20231030135404-af9ae855016f
+	go.uber.org/multierr v1.9.0
 	google.golang.org/grpc v1.62.1
 	google.golang.org/protobuf v1.33.0
-	gopkg.in/antage/eventsource.v1 v1.0.0-20150318155416-803f4c5af225
 	gorm.io/driver/mysql v1.5.5
 	gorm.io/gen v0.3.25
 	gorm.io/gorm v1.25.8
@@ -42,7 +44,6 @@ require (
 	github.com/aliyun/alibabacloud-dkms-transfer-go-sdk v0.1.7 // indirect
 	github.com/apache/dubbo-getty v1.4.9 // indirect
 	github.com/apache/dubbo-go-hessian2 v1.12.2 // indirect
-	github.com/avast/retry-go v2.7.0+incompatible // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bits-and-blooms/bitset v1.2.0 // indirect
@@ -91,7 +92,6 @@ require (
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0 // indirect
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -173,7 +173,6 @@ require (
 	github.com/uber/jaeger-client-go v2.29.1+incompatible // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
-	github.com/xxl-job/xxl-job-executor-go v1.2.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.12 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.12 // indirect
@@ -192,7 +191,6 @@ require (
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/automaxprocs v1.5.3 // indirect
-	go.uber.org/multierr v1.9.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect

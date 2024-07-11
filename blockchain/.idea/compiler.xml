@@ -7,8 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="dc-blc" />
+        <module name="gdut-digital-colletion" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="dc-blc" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>
